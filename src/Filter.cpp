@@ -101,7 +101,20 @@ void Filter::rotateImage(Image &orig, int degree) {
 }
 
 void Filter::darkenLightn(Image &orig, int percent) {
-
+    // percent -100 to 100
+    double v = (double) percent / 100;
+    
+    bool dark = 0;
+    if(percent < 0) dark = 1;
+    
+    for(int x = 0; x < orig.width; ++x) {
+        for(int y = 0; y < orig.height; ++y) {
+            for(int c = 0; c < orig.channels; ++c) {
+                if(dark) orig(x,y,c) = std::max(0.0,v * orig(x,y,c) + orig(x,y,c));
+                else orig(x,y,c) = std::min(255.0,v * orig(x,y,c) + orig(x,y,c));
+            }
+        }
+    }
 }
 
 void Filter::cropImage(Image &orig, std::pair<int, int> st, std::pair<int, int> end) {

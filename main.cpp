@@ -4,10 +4,12 @@ using namespace std;
 
 int main(){
     Image h;
-    h.loadNewImage("image/arrow.jpg");
+    h.loadNewImage("image/building.jpg");
     Filter temp;
-    temp.blackWhite(h);
+    cout << "Enter Percentage: ";
+    int x; cin >> x;
+    temp.darkenLightn(h,x);
     h.saveImage("image/test.jpg");
-    system("pause");
+    cout << "Done\n";
     return 0;
 }
