@@ -1,7 +1,7 @@
 #include "header/Winged_Dragon/Filter.h"
 
 void Filter::grayScale(Image &orig) {
-    for(int i = 0; i < ori)
+    
 }
 
 void Filter::blackWhite(Image &orig) {
