@@ -43,8 +43,16 @@ void Filter::blackWhite(Image &orig) {
 }
 
 
-void Filter::invertImage(Image &orig, bool& horiz) {
-    int l = 0;
+void Filter::invertImage(Image &orig) {
+    
+}
+
+void Filter::mergeImage(Image &orig, int option, int transpaerncy) {
+
+}
+
+void Filter::flipImage(Image &orig, bool& horiz) {
+int l = 0;
     int r = (horiz) ? (orig.width - 1) : (orig.height - 1);
     int direction = (horiz) ? orig.height : orig.width;
 
@@ -62,14 +70,6 @@ void Filter::invertImage(Image &orig, bool& horiz) {
     }
 }
 
-void Filter::mergeImage(Image &orig, int option, int transpaerncy) {
-
-}
-
-void Filter::flipImage(Image &orig, int option) {
-
-}
-
 void Filter::rotateImage(Image &orig, int degree) {
 
 }
@@ -78,9 +78,19 @@ void Filter::darkenLightn(Image &orig, int percent) {
 
 }
 
-void Filter::cropImage(Image &orig, std::pair<int, int> st, std::pair<int, int> end) {
-
+void const Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> end) {
+    Image temp(end.first, end.second); 
+    for (int i =0; i < end.first; i++) {           
+        for (int j = 0; j < end.second; j++) {       
+            for (int c = 0; c < orig.channels; c++) {
+                temp(i, j, c) = orig(st.first + i-1, st.second + j-1, c);
+            }
+        }
+    }
+    orig = temp;
 }
+
+
 
 void Filter::addFrame(Image &orig, Image *frame) {
 
