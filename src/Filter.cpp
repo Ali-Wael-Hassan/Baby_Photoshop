@@ -1,5 +1,5 @@
-
-
+#include <cstdint>   
+#include <algorithm> 
 #include "Winged_Dragon/Filter.h"
 
 
@@ -78,7 +78,7 @@ void Filter::darkenLightn(Image &orig, int percent) {
 
 }
 
-void const Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> end) {
+void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> end) {
     Image temp(end.first, end.second); 
     for (int i =0; i < end.first; i++) {           
         for (int j = 0; j < end.second; j++) {       
@@ -101,8 +101,40 @@ void Filter::detectEdges(Image &orig) {
 }
 
 void Filter::resizeImage(Image &orig, int width, int height) {
+    Image temp(width, height);
+    double sw = static_cast<double>(orig.width) / width;
+    double sh = static_cast<double>(orig.height) / height;
 
+    for (int j = 0; j < height; j++) {
+        double sy = j * sh;
+        int y = static_cast<int>(sy);
+        double dy = sy - y;
+
+        for (int i = 0; i < width; i++) {
+            double sx = i * sw;
+            int x = static_cast<int>(sx);
+            double dx = sx - x;
+
+            for (int c = 0; c < orig.channels; c++) {
+
+                int x0 = std::clamp(x, 0, orig.width - 1);
+                int x1 = std::clamp(x + 1, 0, orig.width - 1);
+                int y0 = std::clamp(y, 0, orig.height - 1);
+                int y1 = std::clamp(y + 1, 0, orig.height - 1);
+
+                double top = orig(x0, y0, c) * (1 - dx) + orig(x1, y0, c) * dx;
+                double bottom = orig(x0, y1, c) * (1 - dx) + orig(x1, y1, c) * dx;
+                double val = top * (1 - dy) + bottom * dy;
+
+                temp(i, j, c) = static_cast<uint8_t>(std::clamp(val, 0.0, 255.0));
+            }
+        }
+    }
+
+    orig = temp;
 }
+
+
 
 void Filter::blurImage(Image &orig, int radious) {
     

@@ -30,7 +30,7 @@ public:
     virtual void flipImage(Image &orig,bool& horiz) = 0; // Flip Image
     virtual void rotateImage(Image &orig, int degree) = 0; // Rotate Image
     virtual void darkenLightn(Image &orig, int percent) = 0; // Darken and Lighten Image
-    virtual const void cropImage(Image &orig, std::pair<int,int> st, std::pair<int,int> end) = 0; // Crop Image
+    virtual  void cropImage(Image &orig, std::pair<int,int> st, std::pair<int,int> end) = 0; // Crop Image
     virtual void addFrame(Image &orig, Image* frame) = 0; // Adding a Frame to the Picture
     virtual void detectEdges(Image &orig) = 0; // Detect Image Edges
     virtual void resizeImage(Image &orig, int width, int height) = 0; // resize image
