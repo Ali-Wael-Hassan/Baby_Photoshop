@@ -1,5 +1,3 @@
-
-
 #include "Winged_Dragon/Filter.h"
 
 
@@ -59,7 +57,7 @@ void Filter::invertImage(Image &orig) {
 
 }
 
-void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX = 0, int startY = 0) {
+void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX, int startY) {
     // Contribution of Second Image
     double dx = (double) transpaerncy / 100;
     int w;
