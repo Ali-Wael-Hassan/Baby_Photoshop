@@ -11,7 +11,9 @@
 
 #pragma once
 
-#include "Image_Class.h"
+#include "D:\programming\ramly_assigment\Baby_Photoshop\header\Image_Class\Image_Class.h"
+
+
 
 /**
  * @class
