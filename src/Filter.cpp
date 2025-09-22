@@ -1,5 +1,6 @@
 #include "Winged_Dragon/Filter.h"
-
+#include <cmath>
+#include <algorithm>
 
 
 void Filter::grayScale(Image &orig) {
@@ -73,8 +74,8 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
     } else {
         w = std::min(orig.width, merged.width);
         h = std::min(orig.height, merged.height);
-        cropImage(orig,{startX,startY}, {startX+w-1,startY+h-1});
-        cropImage(merged,{startX,startY}, {startX+w-1,startY+h-1});
+        cropImage(orig,{startX,startY}, {w,h});
+        cropImage(merged,{startX,startY}, {w,h});
     }
 
     // creat Temp image
@@ -102,7 +103,7 @@ void Filter::rotateImage(Image &orig, int degree) {
 
 void Filter::darkenLightn(Image &orig, int percent) {
     // percent -100 to 100
-    double v = (double) percent / 100;
+    double v = pow((double) std::abs(percent) / 100,1.5);
     
     bool dark = 0;
     if(percent < 0) dark = 1;
@@ -110,8 +111,8 @@ void Filter::darkenLightn(Image &orig, int percent) {
     for(int x = 0; x < orig.width; ++x) {
         for(int y = 0; y < orig.height; ++y) {
             for(int c = 0; c < orig.channels; ++c) {
-                if(dark) orig(x,y,c) = std::max(0.0,v * orig(x,y,c) + orig(x,y,c));
-                else orig(x,y,c) = std::min(255.0,v * orig(x,y,c) + orig(x,y,c));
+                if(dark) orig(x,y,c) = std::max(0.0,(1-v) * orig(x,y,c));
+                else orig(x,y,c) = std::min(255.0,(1-v) * orig(x,y,c) + v * 255.0);
             }
         }
     }
@@ -135,4 +136,21 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 
 void Filter::blurImage(Image &orig, int radious) {
     
+}
+
+void Filter::contrast(Image &orig, int percent){
+    // percent -100 to 100
+    double v = (double) percent / 100;
+    
+    bool dark = 0;
+    if(percent < 0) dark = 1;
+    
+    for(int x = 0; x < orig.width; ++x) {
+        for(int y = 0; y < orig.height; ++y) {
+            for(int c = 0; c < orig.channels; ++c) {
+                if(dark) orig(x,y,c) = std::max(0.0,(255-orig(x,y,c)) * v+ orig(x,y,c));
+                else orig(x,y,c) = std::min(255.0,v *orig(x,y,c) + orig(x,y,c));
+            }
+        }
+    }
 }

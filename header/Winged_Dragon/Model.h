@@ -35,4 +35,5 @@ public:
     virtual void detectEdges(Image &orig) = 0; // Detect Image Edges
     virtual void resizeImage(Image &orig, int width, int height) = 0; // resize image
     virtual void blurImage(Image &orig, int radious) = 0; // Blur Image
+    virtual void contrast(Image &orig, int percent) = 0; // Adjust Contrast
 };

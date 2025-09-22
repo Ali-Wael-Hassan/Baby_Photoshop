@@ -38,4 +38,5 @@ public:
     void detectEdges(Image &orig) override; // Detect Image Edges
     void resizeImage(Image &orig, int width, int height) override; // resize image
     void blurImage(Image &orig, int radious) override; // Blur Image
+    void contrast(Image &orig, int percent) override; // Adjust Contrast
 };
