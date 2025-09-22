@@ -1,7 +1,20 @@
 #include "header/Winged_Dragon/Filter.h"
+#include <algorithm>
 
 void Filter::grayScale(Image &orig) {
-    
+    for(int x = 0; x < orig.width; ++x) {
+        for(int y = 0; y < orig.height; ++y) {
+            int R = orig(x,y,0),
+                G = orig(x,y,1),
+                B = orig(x,y,2);
+            
+            int gray= std::min(0.299*R+0.587*G+0.114*B + 0.5, 255.0);
+
+            for(int c = 0; c < orig.channels; ++ c) {
+                orig(x,y,c) = gray;
+            }
+        }
+    }
 }
 
 void Filter::blackWhite(Image &orig) {
