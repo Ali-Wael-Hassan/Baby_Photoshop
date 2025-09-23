@@ -50,7 +50,6 @@ void Filter::flipImage(Image &orig, int option) {
 }
 
 void Filter::rotateImage(Image &orig, int degree) {
-
     if (degree == 90) {
         Image res(orig.height, orig.width);
         for (int y = 0; y < res.height; ++y) {
@@ -108,7 +107,7 @@ void test() {
     Filter f;
     //f.invertImage(img);
     f.rotateImage(img, 180);
-    img.saveImage("luffy20.jpg");
+    img.saveImage("luffy21.jpg");
     cout << "Finished Successfully!!\n";
 }
 
