@@ -7,35 +7,47 @@
 using namespace std;
 
 void Filter::grayScale(Image &orig) {
+    Image res(orig.width, orig.height);
+    for (int y = 0; y < orig.height; ++y) {
+        for (int x = 0; x < orig.width; ++x) {
+            int r = orig(x, y, 0);
+            int g = orig(x, y, 1);
+            int b = orig(x, y, 2);
+
+            int gray = 0.299 * r + 0.587 * g + 0.114 * b;
+
+            orig(x, y, 0) = orig(x, y, 1) =
+            orig(x, y, 2) = gray;
+        }
+    }
 
 }
 
 void Filter::blackWhite(Image &orig) {
+    Image res(orig.width, orig.height);
+    for (int y = 0; y < orig.height; ++y) {
+        for (int x = 0; x < orig.width; ++x) {
+            int r = orig(x, y, 0);
+            int g = orig(x, y, 1);
+            int b = orig(x, y, 2);
+
+            int gray = 0.299 * r + 0.587 * g + 0.114 * b;
+
+            if (gray >= (255) / 2) gray = 255;
+            else gray = 0;
+            orig(x, y, 0) = orig(x, y, 1) =
+            orig(x, y, 2) = gray;
+        }
+    }
 
 }
 
 void Filter::invertImage(Image &orig) {
     for (int i = 0; i < orig.width; ++i) {
         for (int j = 0; j < orig.height; ++j) {
-            unsigned int avg = 0; // Initialize average value
-
-            for (int k = 0; k < 3; ++k) {
-                avg += orig(i, j, k); // Accumulate pixel values
-            }
-
-            avg /= 3; // Calculate average
-
-            unsigned int nr = orig(i, j, 0);
-            unsigned int ng = orig(i, j, 1);
-            unsigned int nb = orig(i, j, 2);
-
-            nr = 255 - nr;
-            ng = 255 - ng;
-            nb = 255 - nb;
-
-            orig(i, j, 0) = nr;
-            orig(i, j, 1) = ng;
-            orig(i, j, 2) = nb;
+            orig(i, j, 0) = 255 - orig(i, j, 0);
+            orig(i, j, 1) = 255 - orig(i, j, 1);
+            orig(i, j, 2) = 255 - orig(i, j, 2);
         }
     }
 
@@ -49,52 +61,15 @@ void Filter::flipImage(Image &orig, int option) {
 
 }
 
-// We can use Amr's way.
-void Filter::rotateImage(Image &orig, int degree) {
-    // This format can be used as well with same effect and more error-prone.
-    //res.setPixel(x, y, c, orig.getPixel(y, orig.height - 1 - x, c));
-    /*if (degree == 90) {
-        Image res(orig.height, orig.width);
-        for (int y = 0; y < res.height; ++y) {
-            for (int x = 0; x < res.width; ++x) {
-                for (int c = 0; c < 3; ++c) {
-                    res.imageData[(y * res.width + x) * 3 + c] =
-                            orig.imageData[((orig.height - 1 - x) * orig.width + y) * 3 + c];
-                }
-            }
-        }
-        orig = res;
-    } else if (degree == 180) {
-        Image res(orig.width, orig.height);
-        for (int x = 0; x < res.height; ++x) {
-            for (int y = 0; y < res.width; ++y) {
-                for (int c = 0; c < 3; ++c) {
-                    res.imageData[(y * res.width + x) * 3 + c] =
-                            orig.imageData[((orig.height - 1 - y) * orig.width + (orig.width - x - 1)) * 3 + c];
-                }
-            }
-        }
-        orig = res;
-    } else if (degree == 270) {
-        Image res(orig.height, orig.width);
-        for (int y = 0; y < res.height; ++y) {
-            for (int x = 0; x < res.width; ++x) {
-                for (int c = 0; c < 3; ++c) {
-                    res.imageData[(y * res.width + x) * 3 + c] =
-                            orig.imageData[(x * orig.width + (orig.width - 1 - y)) * 3 + c];
-                }
-            }
-        }
-        orig = res;
-    }*/
-    int n = degree / 90;
 
+void Filter::rotateImage(Image &orig, int degree) {
+    int n = degree / 90; // dependent on degree % 90 == 0
     while (n--) {
         Image res(orig.height, orig.width);
         for (int y = 0; y < orig.height; ++y) {
             for (int x = 0; x < orig.width; ++x) {
                 for (int c = 0; c < 3; ++c) {
-                    res.setPixel( orig.height - 1 - y,x, c, orig.getPixel(x, y, c));
+                    res(orig.height - 1 - y, x, c) = orig(x, y, c);
                 }
             }
         }
@@ -127,8 +102,11 @@ inline int check(int cur, int low, int high) {
     return (cur < low) ? low : (cur > high ? high : cur);
 }
 
-void Filter::blurImage(Image &orig, int radious) {
+// needs fixing
+void Filter::blurImage(Image &orig, int radius) {
     Image res(orig.width, orig.height);
+    // kernel size is dependent on radius:
+    // size = 2* radius + 1;
 
     double kernel[3][3] = {2, 4, 2, 4, 8, 4,
                            2, 4, 2};
@@ -162,12 +140,18 @@ void Filter::blurImage(Image &orig, int radious) {
 
 // ########################################################Testing Area##################################################################
 void test() {
-    Image img("luffy.jpg");
+    Image img("colorfulparrot.jpg");
     Filter f;
     //f.invertImage(img);
     //f.rotateImage(img, 180);
+    //f.grayScale(img);
+    //f.blackWhite(img);
+    /*int n = 100;
+    while(n--){
+        f.blurImage(img, 19000);
+    } */
 
-    img.saveImage("luffy24.jpg");
+    img.saveImage("luffy25.jpg");
     cout << "Finished Successfully!!\n";
 }
 
