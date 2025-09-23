@@ -53,7 +53,7 @@ void Filter::flipImage(Image &orig, int option) {
 void Filter::rotateImage(Image &orig, int degree) {
     // This format can be used as well with same effect and more error-prone.
     //res.setPixel(x, y, c, orig.getPixel(y, orig.height - 1 - x, c));
-    if (degree == 90) {
+    /*if (degree == 90) {
         Image res(orig.height, orig.width);
         for (int y = 0; y < res.height; ++y) {
             for (int x = 0; x < res.width; ++x) {
@@ -82,6 +82,19 @@ void Filter::rotateImage(Image &orig, int degree) {
                 for (int c = 0; c < 3; ++c) {
                     res.imageData[(y * res.width + x) * 3 + c] =
                             orig.imageData[(x * orig.width + (orig.width - 1 - y)) * 3 + c];
+                }
+            }
+        }
+        orig = res;
+    }*/
+    int n = degree / 90;
+
+    while (n--) {
+        Image res(orig.height, orig.width);
+        for (int y = 0; y < orig.height; ++y) {
+            for (int x = 0; x < orig.width; ++x) {
+                for (int c = 0; c < 3; ++c) {
+                    res.setPixel( orig.height - 1 - y,x, c, orig.getPixel(x, y, c));
                 }
             }
         }
@@ -117,7 +130,7 @@ inline int check(int cur, int low, int high) {
 void Filter::blurImage(Image &orig, int radious) {
     Image res(orig.width, orig.height);
 
-    double kernel[3][3] = {2, 4, 2, 4,8 , 4,
+    double kernel[3][3] = {2, 4, 2, 4, 8, 4,
                            2, 4, 2};
     int ksum = 32;
     for (int y = 0; y < orig.height; ++y) {
@@ -152,10 +165,7 @@ void test() {
     Image img("luffy.jpg");
     Filter f;
     //f.invertImage(img);
-    int n = 150;
-    while(--n){
-        f.blurImage(img, 3);
-    }
+    //f.rotateImage(img, 180);
 
     img.saveImage("luffy24.jpg");
     cout << "Finished Successfully!!\n";
