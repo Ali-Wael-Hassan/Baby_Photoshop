@@ -26,7 +26,7 @@ public:
     virtual void grayScale(Image &orig) = 0; // Grayscale Conversion
     virtual void blackWhite(Image &orig) = 0; // Black and White
     virtual void invertImage(Image &orig) = 0; // Invert Images
-    virtual void mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX, int startY) = 0; // Merge Images
+    virtual void mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX = 0, int startY = 0) = 0; // Merge Images
     virtual void flipImage(Image &orig,bool& horiz) = 0; // Flip Image
     virtual void rotateImage(Image &orig, int degree) = 0; // Rotate Image
     virtual void darkenLightn(Image &orig, int percent) = 0; // Darken and Lighten Image

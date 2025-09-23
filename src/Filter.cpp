@@ -48,7 +48,7 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
         cropImage(merged,{startX,startY}, {w,h});
     }
 
-    // creat Temp image
+    // create Temp image
     Image temp(w,h);
 
     for(int x = 0; x < w; ++x) {
@@ -99,7 +99,46 @@ void Filter::addFrame(Image &orig, Image *frame) {
 }
 
 void Filter::detectEdges(Image &orig) {
+    grayScale(orig);
+    blurImage(orig, 1);
 
+    int w = orig.width;
+    int h = orig.height;
+
+    int g1[3][3] = {{-1,0,1},{-2,0,2},{-1,0,1}};
+    int g2[3][3] = {{-1,-2,-1},{0,0,0},{1,2,1}};
+
+    double *arr = new double[w*h], mx = 0.0;
+
+    for (int x = 1; x < w - 1; ++x) {
+        for (int y = 1; y < h - 1; ++y) {
+            double sum1 = 0, sum2 = 0;
+            
+            for (int dx = -1; dx <= 1; ++dx) {
+                for (int dy = -1; dy <= 1; ++dy) {
+                    double val = orig(x + dx, y + dy, 0);
+                    sum1 += val * g1[dy + 1][dx + 1];
+                    sum2 += val * g2[dy + 1][dx + 1];
+                }
+            }
+            
+            double grad = sqrt(sum1 * sum1 + sum2 * sum2);
+            mx = std::max(mx,grad);
+
+            arr[y * w + x] = grad;
+        }
+    }
+
+    for (int x = 1; x < w - 1; ++x) {
+        for (int y = 1; y < h - 1; ++y) {
+            int out = (arr[y * w + x] >= 60? 0 : 255);
+            for(int c = 0; c < orig.channels; ++c) {
+                orig(x,y,c) = out;
+            }
+        }
+    }
+
+    delete [] arr;
 }
 
 void Filter::resizeImage(Image &orig, int width, int height) {
