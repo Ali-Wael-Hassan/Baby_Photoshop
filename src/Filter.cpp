@@ -50,6 +50,8 @@ void Filter::flipImage(Image &orig, int option) {
 }
 
 void Filter::rotateImage(Image &orig, int degree) {
+    // This format can be used as well with same effect and more error-prone.
+    //res.setPixel(x, y, c, orig.getPixel(y, orig.height - 1 - x, c));
     if (degree == 90) {
         Image res(orig.height, orig.width);
         for (int y = 0; y < res.height; ++y) {
