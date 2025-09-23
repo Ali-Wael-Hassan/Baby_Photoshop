@@ -49,6 +49,7 @@ void Filter::flipImage(Image &orig, int option) {
 
 }
 
+// We can use Amr's way.
 void Filter::rotateImage(Image &orig, int degree) {
     // This format can be used as well with same effect and more error-prone.
     //res.setPixel(x, y, c, orig.getPixel(y, orig.height - 1 - x, c));
@@ -109,8 +110,40 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 
 }
 
-void Filter::blurImage(Image &orig, int radious) {
+inline int check(int cur, int low, int high) {
+    return (cur < low) ? low : (cur > high ? high : cur);
+}
 
+void Filter::blurImage(Image &orig, int radious) {
+    Image res(orig.width, orig.height);
+
+    double kernel[3][3] = {2, 4, 2, 4,8 , 4,
+                           2, 4, 2};
+    int ksum = 32;
+    for (int y = 0; y < orig.height; ++y) {
+        for (int x = 0; x < orig.width; ++x) {
+            int sum[3] = {0, 0, 0};
+
+            for (int dy = -1; dy <= 1; ++dy) {
+                for (int dx = -1; dx <= 1; ++dx) {
+                    int nx = check(x + dx, 0, orig.width - 1);
+                    int ny = check(y + dy, 0, orig.height - 1);
+
+
+                    int weight = kernel[dx + 1][dy + 1];
+                    for (int i = 0; i < 3; ++i) {
+                        sum[i] += weight * orig.getPixel(nx, ny, i);
+                    }
+                }
+            }
+
+            for (int i = 0; i < 3; ++i) {
+                res.setPixel(x, y, i, sum[i] / ksum);
+            }
+        }
+    }
+
+    orig = res;
 }
 
 
@@ -119,8 +152,12 @@ void test() {
     Image img("luffy.jpg");
     Filter f;
     //f.invertImage(img);
-    f.rotateImage(img, 270);
-    img.saveImage("luffy23.jpg");
+    int n = 150;
+    while(--n){
+        f.blurImage(img, 3);
+    }
+
+    img.saveImage("luffy24.jpg");
     cout << "Finished Successfully!!\n";
 }
 
