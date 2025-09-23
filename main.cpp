@@ -5,10 +5,10 @@ using namespace std;
 int main(){
     Image h;
     Filter j;
-    h.loadNewImage("image/toy1.jpg");
+    h.loadNewImage("image/luffy.jpg");
     int gg =1000,gb= 1000;
-    j.resizeImage(h,gg,gb);
-    h.saveImage("image/testtoy1.jpg");
+    j.blackWhite(h);
+    h.saveImage("image/testluffy.jpg");
     system("pause");
     return 0;
 }
