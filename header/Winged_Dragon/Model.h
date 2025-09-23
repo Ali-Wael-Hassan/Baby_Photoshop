@@ -27,7 +27,7 @@ public:
     virtual void blackWhite(Image &orig) = 0; // Black and White
     virtual void invertImage(Image &orig) = 0; // Invert Images
     virtual void mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX, int startY) = 0; // Merge Images
-    virtual void flipImage(Image &orig, int option) = 0; // Flip Image
+    virtual void flipImage(Image &orig,bool& horiz) = 0; // Flip Image
     virtual void rotateImage(Image &orig, int degree) = 0; // Rotate Image
     virtual void darkenLightn(Image &orig, int percent) = 0; // Darken and Lighten Image
     virtual void cropImage(Image &orig, std::pair<int,int> st, std::pair<int,int> end) = 0; // Crop Image

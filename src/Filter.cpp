@@ -20,42 +20,12 @@ void Filter::grayScale(Image &orig) {
 }
 
 void Filter::blackWhite(Image &orig) {
-    static const int bayer8[8][8] = {
-        { 0, 32,  8, 40,  2, 34, 10, 42},
-        {48, 16, 56, 24, 50, 18, 58, 26},
-        {12, 44,  4, 36, 14, 46,  6, 38},
-        {60, 28, 52, 20, 62, 30, 54, 22},
-        { 3, 35, 11, 43,  1, 33,  9, 41},
-        {51, 19, 59, 27, 49, 17, 57, 25},
-        {15, 47,  7, 39, 13, 45,  5, 37},
-        {63, 31, 55, 23, 61, 29, 53, 21}
-    };
-    const int N = 8;              
-    const double scale = 255.0 / (N * N);
-
-    for (int j = 0; j < orig.height; ++j) {
-        for (int i = 0; i < orig.width; ++i) {
-            
-            double R = orig(i, j, 0);
-            double G = orig(i, j, 1);
-            double B = orig(i, j, 2);
-
-            
-            double lum = 0.2126 * R + 0.7152 * G + 0.0722 * B;
-            int m = bayer8[j % N][i % N];
-            double thresh = (m + 0.5) * scale; 
-
-            int out = (lum >= thresh) ? 255 : 0;
-            orig.setPixel(i, j, 0, out);
-            orig.setPixel(i, j, 1, out);
-            orig.setPixel(i, j, 2, out);
-        }
-    }
+    
 }
 
 
 void Filter::invertImage(Image &orig) {
-
+    
 }
 
 void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX, int startY) {
@@ -93,8 +63,8 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
     orig = temp;
 }
 
-void Filter::flipImage(Image &orig, int option) {
-
+void Filter::flipImage(Image &orig, bool& horiz) {
+    
 }
 
 void Filter::rotateImage(Image &orig, int degree) {
@@ -112,15 +82,17 @@ void Filter::darkenLightn(Image &orig, int percent) {
         for(int y = 0; y < orig.height; ++y) {
             for(int c = 0; c < orig.channels; ++c) {
                 if(dark) orig(x,y,c) = std::max(0.0,(1-v) * orig(x,y,c));
-                else orig(x,y,c) = std::min(255.0,(1-v) * orig(x,y,c) + v * 255.0);
+                else orig(x,y,c) = std::min(255.0,(1+v) * orig(x,y,c));
             }
         }
     }
 }
 
-void Filter::cropImage(Image &orig, std::pair<int, int> st, std::pair<int, int> end) {
-
+void Filter::cropImage(Image &orig, std::pair<int,int> st, std::pair<int,int> dimention) {
+    
 }
+
+
 
 void Filter::addFrame(Image &orig, Image *frame) {
 
@@ -135,21 +107,56 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 }
 
 void Filter::blurImage(Image &orig, int radious) {
-    
+    int h = orig.height, w = orig.width, ch = orig.channels;
+    int* arr = new int[h*w*ch];
+    Image res(w,h);
+
+    for(int y = 0; y < h; ++y) {
+        for(int x = 0; x < w; ++x) {
+            for(int c = 0; c < ch; ++c) {
+                arr[y*w*ch + x*ch + c] = orig(x,y,c);
+                if(y > 0) arr[y*w*ch + x*ch + c] += arr[(y-1)*w*ch + x*ch + c];
+                if(x > 0) arr[y*w*ch + x*ch + c] += arr[y*w*ch + (x-1)*ch + c];
+                if(x > 0 && y > 0) arr[y*w*ch + x*ch + c] -= arr[(y-1)*w*ch + (x-1)*ch + c];
+            }
+        }
+    }
+
+    for(int y = 0; y < h; ++y) {
+        for(int x = 0; x < w; ++x) {
+            for(int c = 0; c < ch; ++c) {
+                int x1 = std::max(0, x - radious);
+                int y1 = std::max(0, y - radious);
+                int x2 = std::min(w - 1, x + radious);
+                int y2 = std::min(h - 1, y + radious);
+
+                int val = arr[y2*w*ch + x2*ch + c];
+                if(y1 > 0) val -= arr[(y1-1)*w*ch + x2*ch + c];
+                if(x1 > 0) val -= arr[y2*w*ch + (x1-1)*ch + c];
+                if(x1 > 0 && y1 > 0) val += arr[(y1-1)*w*ch + (x1-1)*ch + c];
+
+                int cnt = (x2-x1+1)*(y2-y1+1);
+                res(x,y,c) = std::min(255, val / cnt);
+            }
+        }
+    }
+
+    delete[] arr;
+    orig = res;
 }
 
 void Filter::contrast(Image &orig, int percent){
     // percent -100 to 100
-    double v = (double) percent / 100;
-    
-    bool dark = 0;
-    if(percent < 0) dark = 1;
+    double v = 1.0 + (double) percent / 100;
+    if(percent >= 0) v = 1.0 + (double) percent / 100;
+    else v = 1.0 + (double) percent / 200;
     
     for(int x = 0; x < orig.width; ++x) {
         for(int y = 0; y < orig.height; ++y) {
             for(int c = 0; c < orig.channels; ++c) {
-                if(dark) orig(x,y,c) = std::max(0.0,(255-orig(x,y,c)) * v+ orig(x,y,c));
-                else orig(x,y,c) = std::min(255.0,v *orig(x,y,c) + orig(x,y,c));
+                double val = (orig(x,y,c)-128.0) * v + 128.0;
+                val = std::max(0.0,std::min(255.0,val));
+                orig(x,y,c) = val;
             }
         }
     }
