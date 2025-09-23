@@ -66,8 +66,19 @@ void Filter::rotateImage(Image &orig, int degree) {
         for (int x = 0; x < res.height; ++x) {
             for (int y = 0; y < res.width; ++y) {
                 for (int c = 0; c < 3; ++c) {
-                    res.imageData[(y * res.width + x) * 3 + c ] =
-                            orig.imageData[((orig.height-1-y) * orig.width + (orig.width - x -1)) * 3 + c];
+                    res.imageData[(y * res.width + x) * 3 + c] =
+                            orig.imageData[((orig.height - 1 - y) * orig.width + (orig.width - x - 1)) * 3 + c];
+                }
+            }
+        }
+        orig = res;
+    } else if (degree == 270) {
+        Image res(orig.height, orig.width);
+        for (int y = 0; y < res.height; ++y) {
+            for (int x = 0; x < res.width; ++x) {
+                for (int c = 0; c < 3; ++c) {
+                    res.imageData[(y * res.width + x) * 3 + c] =
+                            orig.imageData[(x * orig.width + (orig.width - 1 - y)) * 3 + c];
                 }
             }
         }
@@ -106,8 +117,8 @@ void test() {
     Image img("luffy.jpg");
     Filter f;
     //f.invertImage(img);
-    f.rotateImage(img, 180);
-    img.saveImage("luffy21.jpg");
+    f.rotateImage(img, 270);
+    img.saveImage("luffy23.jpg");
     cout << "Finished Successfully!!\n";
 }
 
