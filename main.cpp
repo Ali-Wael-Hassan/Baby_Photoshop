@@ -1,5 +1,5 @@
 #include "Winged_Dragon/Filter.h"
-
+#include <string>
 using namespace std;
 
 int main(){
@@ -8,8 +8,12 @@ int main(){
     string name; cin >> name;
     h.loadNewImage("image/"+name);
     Filter temp;
-    temp.detectEdges(h);
-    h.saveImage("image/test5.jpg");
+    cout << "Enter alpha: ";
+    double alpha;
+    int size; cin >> size;
+    cin >> alpha;
+    temp.blurImage(h,alpha,size);
+    h.saveImage("image/test.jpg");
     cout << "Done\n";
     return 0;
 }

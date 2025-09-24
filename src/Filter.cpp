@@ -1,6 +1,8 @@
 #include "Winged_Dragon/Filter.h"
 #include <cmath>
 #include <algorithm>
+#include <vector>
+#include <queue>
 
 
 void Filter::grayScale(Image &orig) {
@@ -20,7 +22,21 @@ void Filter::grayScale(Image &orig) {
 }
 
 void Filter::blackWhite(Image &orig) {
-    
+    Image res(orig.width, orig.height);
+    for (int y = 0; y < orig.height; ++y) {
+        for (int x = 0; x < orig.width; ++x) {
+            int r = orig(x, y, 0);
+            int g = orig(x, y, 1);
+            int b = orig(x, y, 2);
+
+            int gray = 0.299 * r + 0.587 * g + 0.114 * b;
+
+            if (gray >= (255) / 2) gray = 255;
+            else gray = 0;
+            orig(x, y, 0) = orig(x, y, 1) =
+            orig(x, y, 2) = gray;
+        }
+    }
 }
 
 
@@ -98,9 +114,9 @@ void Filter::addFrame(Image &orig, Image *frame) {
 
 }
 
-void Filter::detectEdges(Image &orig) {
+void Filter::detectEdges(Image &orig, double alpha, int tresh) {
     grayScale(orig);
-    blurImage(orig, 1);
+    if(alpha > 0.0) blurImage(orig, alpha,1);
 
     int w = orig.width;
     int h = orig.height;
@@ -123,7 +139,6 @@ void Filter::detectEdges(Image &orig) {
             }
             
             double grad = sqrt(sum1 * sum1 + sum2 * sum2);
-            mx = std::max(mx,grad);
 
             arr[y * w + x] = grad;
         }
@@ -131,7 +146,7 @@ void Filter::detectEdges(Image &orig) {
 
     for (int x = 1; x < w - 1; ++x) {
         for (int y = 1; y < h - 1; ++y) {
-            int out = (arr[y * w + x] >= 60? 0 : 255);
+            int out = (arr[y * w + x] >= tresh? 0 : 255);
             for(int c = 0; c < orig.channels; ++c) {
                 orig(x,y,c) = out;
             }
@@ -145,43 +160,53 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 
 }
 
-void Filter::blurImage(Image &orig, int radious) {
-    int h = orig.height, w = orig.width, ch = orig.channels;
-    int* arr = new int[h*w*ch];
-    Image res(w,h);
+void generateKernel(std::vector<std::vector<double>>& kernel, int size, double sigma = 2) {
+    // size always odd
+    int half = size / 2;
+    kernel.assign(size, std::vector<double>(size, 0.0));
+    double PI = std::acos(-1.0);
 
-    for(int y = 0; y < h; ++y) {
-        for(int x = 0; x < w; ++x) {
-            for(int c = 0; c < ch; ++c) {
-                arr[y*w*ch + x*ch + c] = orig(x,y,c);
-                if(y > 0) arr[y*w*ch + x*ch + c] += arr[(y-1)*w*ch + x*ch + c];
-                if(x > 0) arr[y*w*ch + x*ch + c] += arr[y*w*ch + (x-1)*ch + c];
-                if(x > 0 && y > 0) arr[y*w*ch + x*ch + c] -= arr[(y-1)*w*ch + (x-1)*ch + c];
+    double sum = 0;
+    for(int y = -half; y <= half; ++y) {
+        for(int x = -half; x <= half; ++x) {
+            double G = std::exp(-(x*x+y*y)/(2*sigma*sigma)) / (2*PI*sigma*sigma); // G(x,y) = e^{-(x^2 + y^2)/(2* sigma^2)} * 1/(2*PI*sigma^2)
+            sum += (kernel[y + half][x + half] = G);
+        }
+    }
+
+    for(int y = -half; y <= half; ++y) {
+        for(int x = -half; x <= half; ++x) {
+            kernel[y + half][x + half] /= sum;
+        }
+    }
+}
+
+void Filter::blurImage(Image &orig, double alpha, int size) {
+    std::vector<std::vector<double>> kernel;
+    generateKernel(kernel,2*size+1,alpha);
+    
+    int half = (2*size+1)/2;
+    Image temp(orig);
+
+    for(int y = 0; y < temp.height; ++y) {
+        for(int x = 0; x < temp.width; ++x) {
+            for(int c = 0; c < temp.channels; ++ c) {
+                double val = 0;
+                // calculate the values depends on values
+                for(int dy = -half; dy <= half; ++dy) {
+                    for(int dx = -half; dx <= half; ++dx) {
+                        int y2 = std::max(0, std::min(y + dy, temp.height - 1));
+                        int x2 = std::max(0, std::min(x + dx, temp.width - 1));
+                        val += orig(x2,y2,c) *  kernel[dy+half][dx + half]; // value * contribution
+                    }
+                }
+
+                temp(x,y,c) = std::min(255.0, std::max(val,0.0));
             }
         }
     }
 
-    for(int y = 0; y < h; ++y) {
-        for(int x = 0; x < w; ++x) {
-            for(int c = 0; c < ch; ++c) {
-                int x1 = std::max(0, x - radious);
-                int y1 = std::max(0, y - radious);
-                int x2 = std::min(w - 1, x + radious);
-                int y2 = std::min(h - 1, y + radious);
-
-                int val = arr[y2*w*ch + x2*ch + c];
-                if(y1 > 0) val -= arr[(y1-1)*w*ch + x2*ch + c];
-                if(x1 > 0) val -= arr[y2*w*ch + (x1-1)*ch + c];
-                if(x1 > 0 && y1 > 0) val += arr[(y1-1)*w*ch + (x1-1)*ch + c];
-
-                int cnt = (x2-x1+1)*(y2-y1+1);
-                res(x,y,c) = std::min(255, val / cnt);
-            }
-        }
-    }
-
-    delete[] arr;
-    orig = res;
+    orig = temp;
 }
 
 void Filter::contrast(Image &orig, int percent){
