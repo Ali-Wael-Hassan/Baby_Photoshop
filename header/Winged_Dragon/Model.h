@@ -32,5 +32,5 @@ public:
     virtual void addFrame(Image &orig, Image* frame) = 0; // Adding a Frame to the Picture
     virtual void detectEdges(Image &orig) = 0; // Detect Image Edges
     virtual void resizeImage(Image &orig, int width, int height) = 0; // resize image
-    virtual void blurImage(Image &orig, int radious) = 0; // Blur Image
+    virtual void blurImage(Image &orig, int radius, double alpha) = 0; // Blur Image
 };

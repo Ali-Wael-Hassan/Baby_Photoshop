@@ -37,5 +37,5 @@ public:
     void addFrame(Image &orig, Image* frame) override; // Adding a Frame to the Picture
     void detectEdges(Image &orig) override; // Detect Image Edges
     void resizeImage(Image &orig, int width, int height) override; // resize image
-    void blurImage(Image &orig, int radious) override; // Blur Image
+    void blurImage(Image &orig, int radius, double alpha) override; // Blur Image
 };

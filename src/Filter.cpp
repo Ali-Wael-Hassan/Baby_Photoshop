@@ -3,11 +3,14 @@
 
 #include "header/Winged_Dragon/Filter.h"
 #include <iostream>
+#include <cstdint>
+#include <algorithm>
+#include <vector>
+
 
 using namespace std;
 
 void Filter::grayScale(Image &orig) {
-    Image res(orig.width, orig.height);
     for (int y = 0; y < orig.height; ++y) {
         for (int x = 0; x < orig.width; ++x) {
             int r = orig(x, y, 0);
@@ -24,7 +27,6 @@ void Filter::grayScale(Image &orig) {
 }
 
 void Filter::blackWhite(Image &orig) {
-    Image res(orig.width, orig.height);
     for (int y = 0; y < orig.height; ++y) {
         for (int x = 0; x < orig.width; ++x) {
             int r = orig(x, y, 0);
@@ -39,7 +41,6 @@ void Filter::blackWhite(Image &orig) {
             orig(x, y, 2) = gray;
         }
     }
-
 }
 
 void Filter::invertImage(Image &orig) {
@@ -58,6 +59,24 @@ void Filter::mergeImage(Image &orig, int option, int transpaerncy) {
 }
 
 void Filter::flipImage(Image &orig, int option) {
+    if (option == 1) { // horizontally
+        for (int x = 0; x < orig.width; ++x) {
+            for (int y = 0; y < orig.height / 2; ++y) {
+                for (int c = 0; c < 3; ++c) {
+                    swap(orig(x, y, c), orig(x, orig.height - 1 - y, c));
+                }
+            }
+        }
+    } else { // vertically
+        for (int y = 0; y < orig.height; ++y) {
+            for (int x = 0; x < orig.width/2; ++x) {
+                for (int c = 0; c < 3; ++c) {
+                    swap(orig(x, y, c), orig(orig.width - x - 1, y, c));
+                }
+            }
+        }
+    }
+
 
 }
 
@@ -65,7 +84,7 @@ void Filter::flipImage(Image &orig, int option) {
 void Filter::rotateImage(Image &orig, int degree) {
     int n = degree / 90; // dependent on degree % 90 == 0
     while (n--) {
-        Image res(orig.height, orig.width);
+        Image res(orig);
         for (int y = 0; y < orig.height; ++y) {
             for (int x = 0; x < orig.width; ++x) {
                 for (int c = 0; c < 3; ++c) {
@@ -98,49 +117,14 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 
 }
 
-inline int check(int cur, int low, int high) {
-    return (cur < low) ? low : (cur > high ? high : cur);
-}
+void Filter::blurImage(Image &orig, int radius, double alpha) {
 
-// needs fixing
-void Filter::blurImage(Image &orig, int radius) {
-    Image res(orig.width, orig.height);
-    // kernel size is dependent on radius:
-    // size = 2* radius + 1;
-
-    double kernel[3][3] = {2, 4, 2, 4, 8, 4,
-                           2, 4, 2};
-    int ksum = 32;
-    for (int y = 0; y < orig.height; ++y) {
-        for (int x = 0; x < orig.width; ++x) {
-            int sum[3] = {0, 0, 0};
-
-            for (int dy = -1; dy <= 1; ++dy) {
-                for (int dx = -1; dx <= 1; ++dx) {
-                    int nx = check(x + dx, 0, orig.width - 1);
-                    int ny = check(y + dy, 0, orig.height - 1);
-
-
-                    int weight = kernel[dx + 1][dy + 1];
-                    for (int i = 0; i < 3; ++i) {
-                        sum[i] += weight * orig.getPixel(nx, ny, i);
-                    }
-                }
-            }
-
-            for (int i = 0; i < 3; ++i) {
-                res.setPixel(x, y, i, sum[i] / ksum);
-            }
-        }
-    }
-
-    orig = res;
 }
 
 
 // ########################################################Testing Area##################################################################
 void test() {
-    Image img("colorfulparrot.jpg");
+    Image img("mario.jpg");
     Filter f;
     //f.invertImage(img);
     //f.rotateImage(img, 180);
@@ -151,6 +135,8 @@ void test() {
         f.blurImage(img, 19000);
     } */
 
+    //f.blurImage(img, 3, 20);
+    f.flipImage(img, 2);
     img.saveImage("luffy25.jpg");
     cout << "Finished Successfully!!\n";
 }
