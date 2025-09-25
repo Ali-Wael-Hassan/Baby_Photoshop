@@ -59,20 +59,20 @@ void Filter::mergeImage(Image &orig, int option, int transpaerncy) {
 }
 
 void Filter::flipImage(Image &orig, int option) {
-    if (option == 1) { // horizontally
+    for (int y = 0; y < orig.height; ++y) {
         for (int x = 0; x < orig.width; ++x) {
-            for (int y = 0; y < orig.height / 2; ++y) {
-                for (int c = 0; c < 3; ++c) {
-                    swap(orig(x, y, c), orig(x, orig.height - 1 - y, c));
-                }
+            if (option == 1 && y >= orig.height / 2) continue; //  horizontal flips
+            if (option != 1 && x >= orig.width / 2) continue; // vertical flips
+
+            int nx = x, ny = y;
+            if (option == 1) {
+                ny = orig.height - 1 - y;
+            } else {
+                nx = orig.width - 1 - x;
             }
-        }
-    } else { // vertically
-        for (int y = 0; y < orig.height; ++y) {
-            for (int x = 0; x < orig.width/2; ++x) {
-                for (int c = 0; c < 3; ++c) {
-                    swap(orig(x, y, c), orig(orig.width - x - 1, y, c));
-                }
+
+            for (int c = 0; c < 3; ++c) {
+                swap(orig(x, y, c), orig(nx, ny, c));
             }
         }
     }
@@ -82,6 +82,7 @@ void Filter::flipImage(Image &orig, int option) {
 
 
 void Filter::rotateImage(Image &orig, int degree) {
+
     int n = degree / 90; // dependent on degree % 90 == 0
     while (n--) {
         Image res(orig);
@@ -102,7 +103,15 @@ void Filter::darkenLightn(Image &orig, int percent) {
 }
 
 void Filter::cropImage(Image &orig, std::pair<int, int> st, std::pair<int, int> end) {
-
+    Image tmp(end.first, end.second);
+    for (int i = st.first; i <= end.first ; ++i) {
+        for (int j = st.second; j <= end.second ; ++j) {
+            for (int k = 0; k < 3; ++k) {
+                tmp(i,j,k) = orig(i,j,k);
+            }
+        }
+    }
+    orig = tmp;
 }
 
 void Filter::addFrame(Image &orig, Image *frame) {
@@ -134,9 +143,9 @@ void test() {
     while(n--){
         f.blurImage(img, 19000);
     } */
-
     //f.blurImage(img, 3, 20);
-    f.flipImage(img, 2);
+    //f.rotateImage(img, 180);
+    f.cropImage(img, {1,1}, {2000, 1800 });
     img.saveImage("luffy25.jpg");
     cout << "Finished Successfully!!\n";
 }
