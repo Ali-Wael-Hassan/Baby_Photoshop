@@ -10,10 +10,15 @@ int main(){
     Filter temp;
     cout << "Enter alpha: ";
     double alpha;
-    int size; cin >> size;
+    int size;
     cin >> alpha;
-    temp.blurImage(h,alpha,size);
-    h.saveImage("image/test.jpg");
+    for(int i = 20; i <= 254; ++i) {
+        string name = "image/test";
+        name += to_string(i);
+        Image cpy(h);
+        temp.detectEdges(cpy,alpha,i);
+        cpy.saveImage(name+".jpg");
+    }
     cout << "Done\n";
     return 0;
 }

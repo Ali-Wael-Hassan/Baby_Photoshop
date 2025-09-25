@@ -121,8 +121,8 @@ void Filter::detectEdges(Image &orig, double alpha, int tresh) {
     int w = orig.width;
     int h = orig.height;
 
-    int g1[3][3] = {{-1,0,1},{-2,0,2},{-1,0,1}};
-    int g2[3][3] = {{-1,-2,-1},{0,0,0},{1,2,1}};
+    int g1[3][3] = {{-1,0,1},{-2,0,2},{-1,0,1}}; // horizontal
+    int g2[3][3] = {{-1,-2,-1},{0,0,0},{1,2,1}}; // vertical
 
     double *arr = new double[w*h], mx = 0.0;
 
@@ -160,32 +160,28 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 
 }
 
-void generateKernel(std::vector<std::vector<double>>& kernel, int size, double sigma = 2) {
-    // size always odd
-    int half = size / 2;
-    kernel.assign(size, std::vector<double>(size, 0.0));
-    double PI = std::acos(-1.0);
+void generateKernel(std::vector<double>& kernel, double sigma) {
+    int radius = std::ceil(3 * sigma);
+    int size = 2*radius + 1;
+    kernel.assign(size, 0.0);
 
     double sum = 0;
-    for(int y = -half; y <= half; ++y) {
-        for(int x = -half; x <= half; ++x) {
-            double G = std::exp(-(x*x+y*y)/(2*sigma*sigma)) / (2*PI*sigma*sigma); // G(x,y) = e^{-(x^2 + y^2)/(2* sigma^2)} * 1/(2*PI*sigma^2)
-            sum += (kernel[y + half][x + half] = G);
-        }
+    double PI = std::acos(-1.0);
+
+    for(int x=-radius; x<=radius; ++x) {
+        double G = std::exp(-(x*x)/(2*sigma*sigma)) / (2*PI*sigma*sigma);
+        kernel[x+radius] = G;
+        sum += G;
     }
 
-    for(int y = -half; y <= half; ++y) {
-        for(int x = -half; x <= half; ++x) {
-            kernel[y + half][x + half] /= sum;
-        }
-    }
+    for(int x=0; x<size; ++x)
+            kernel[x] /= sum;
 }
 
 void Filter::blurImage(Image &orig, double alpha, int size) {
-    std::vector<std::vector<double>> kernel;
-    generateKernel(kernel,2*size+1,alpha);
-    
-    int half = (2*size+1)/2;
+    std::vector<double> kernel;
+    generateKernel(kernel,alpha);
+    int half = kernel.size()/2;
     Image temp(orig);
 
     for(int y = 0; y < temp.height; ++y) {
@@ -193,12 +189,26 @@ void Filter::blurImage(Image &orig, double alpha, int size) {
             for(int c = 0; c < temp.channels; ++ c) {
                 double val = 0;
                 // calculate the values depends on values
-                for(int dy = -half; dy <= half; ++dy) {
-                    for(int dx = -half; dx <= half; ++dx) {
-                        int y2 = std::max(0, std::min(y + dy, temp.height - 1));
-                        int x2 = std::max(0, std::min(x + dx, temp.width - 1));
-                        val += orig(x2,y2,c) *  kernel[dy+half][dx + half]; // value * contribution
-                    }
+                for(int dk = -half; dk <= half; ++dk) {
+                    int x2 = std::max(0, std::min(x + dk, temp.width - 1));
+                    val += orig(x2,y,c) *  kernel[dk + half]; // value * contribution
+                }
+
+                temp(x,y,c) = std::min(255.0, std::max(val,0.0));
+            }
+        }
+    }
+
+    orig = temp;
+    
+    for(int y = 0; y < temp.height; ++y) {
+        for(int x = 0; x < temp.width; ++x) {
+            for(int c = 0; c < temp.channels; ++ c) {
+                double val = 0;
+                // calculate the values depends on values
+                for(int dk = -half; dk <= half; ++dk) {
+                    int y2 = std::max(0, std::min(y + dk, temp.height - 1));
+                    val += orig(x,y2,c) *  kernel[dk + half]; // value * contribution
                 }
 
                 temp(x,y,c) = std::min(255.0, std::max(val,0.0));
