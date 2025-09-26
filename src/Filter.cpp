@@ -1,8 +1,4 @@
 #include "Winged_Dragon/Filter.h"
-#include <cmath>
-#include <algorithm>
-#include <vector>
-#include <queue>
 
 
 void Filter::grayScale(Image &orig) {
@@ -56,9 +52,9 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
     int w;
     int h;
 
-    // define the Option 0: Resize with max h,w;
-    //Option 1: crop and get the area with min h,w with starting point
-    if(option) {
+    // define the Option 1: Resize with max h,w;
+    //Option 2: crop and get the area with min h,w with starting point
+    if(option == 1) {
         w = std::max(orig.width, merged.width);
         h = std::max(orig.height, merged.height);
         resizeImage(orig,w,h);

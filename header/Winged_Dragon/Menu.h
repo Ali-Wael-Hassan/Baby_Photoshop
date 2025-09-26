@@ -2,14 +2,17 @@
 #include "Filter.h"
 #include <iostream>
 #include <exception>
+#include <limits>
 
 class Menu {
     private:
         Filter applyFilter;
         Image img;
         std::string path = "image/";
+        std::string name;
         enum TYPE {
-            SAVE,
+            SAVE = 1,
+            LOAD,
             BACK,
             GRAY, 
             BLACK_WHITE, 
@@ -27,12 +30,13 @@ class Menu {
 
         void clear();
         void pause();
+        bool invalidChoice(int option, int max, const std::string &message);
         void printStart();
         void printFilter();
 
     public:
         void startMenu(); // first menu
-        bool loadImage();
+        bool loadImage(Image& orig, std::string& origName);
         void filterMenu();
         void saveImage();
         void mergeImage();

@@ -12,6 +12,10 @@
 #pragma once
 
 #include "Model.h"
+#include <cmath>
+#include <algorithm>
+#include <vector>
+#include <queue>
 
 /**
  * @class
