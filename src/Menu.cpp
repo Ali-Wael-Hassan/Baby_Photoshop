@@ -1,29 +1,69 @@
 #include "Winged_Dragon/Menu.h"
+
 using namespace std;
 
-void Menu::startMenu() {
+void Menu::clear()
+{
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+void Menu::pause() {
+    cout << "Press Enter to continue...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+
+void Menu::printStart()
+{
     cout << "1: Load Image\n2: Exit\n";
-    int option;
-    cout << "Choose Option: ";
-    cin >> option;
+}
 
-    if(cin.fail() || option > 2 || option < 1) {
-        cin.clear();
-        cin.ignore(1000,'\n');
-        cout << "Input must be from options\n";
-        system("pause");
-        startMenu();
-    }
+void Menu::printFilter()
+{
+    cout << "1: Save\n2: Back\n";
+    cout << "3: Gray Filter\n4: Black and White Filter\n";
+    cout << "5: Invert Filter\n6: Merge Filter\n";
+    cout << "7: Flip Filter\n8: Rotate Filter\n";
+    cout << "9: Brightness Filter\n10: Crop Filter\n";
+    cout << "11: Detect Edges\n12: Resize Filter\n";
+    cout << "13: Blur Filter\n14: Contrast\n\n";
+}
 
-    if(option == 1) {
-        if(loadImage()) {
-            filterMenu();
+void Menu::startMenu() {
+
+    while (true) {
+        printStart();
+        int option;
+        cout << "Choose Option: ";
+        cin >> option;
+    
+        if(cin.fail() || option > 2 || option < 1) {
+            clear();
+            cout << "Input must be from options\n";
+            pause();
+            continue;
         }
-        else {
-            system("pause");
-            startMenu();
+    
+        switch (option)
+        {
+        case 1:
+            if(loadImage()) {
+                filterMenu();
+                cout << "RETURNED SUCCESSFULLY\n";
+                pause();
+            } else {
+                pause();
+                continue;
+            }
+            break;
+        
+        case 2:
+            cout << "Good Bye\n";
+            return;
         }
     }
+    
 }
 
 bool Menu::loadImage() {
@@ -33,99 +73,96 @@ bool Menu::loadImage() {
     try {
         img.loadNewImage(path+name);
     }
-    catch(exception e) {
+    catch(const exception& e) {
         cout << e.what() << '\n';
         return false;
     }
+
+    cout << "LOADED SUCCESSFULLY\n";
+    pause();
+    cout << "\n\n";
 
     return true;
 }
 
 void Menu::filterMenu() {
-    bool valid = true;
-    cout << "1: Save\n2: Back\n3: Exit\n";
-    cout << "4: Gray Filter\n5: Black and White Filter\n";
-    cout << "6: Invert Filter\n7: Merge Filter\n";
-    cout << "8: Flip Filter\n9: Rotate Filter\n";
-    cout << "10: Brightness Filter\n11: Crop Filter\n";
-    cout << "12: Detect Edges\n13: Resize Filter\n";
-    cout << "14: Blur Filter\n15: Contrast\n\n";
+    
+    while(true) {
 
-    int option;
-    cout << "Enter Option: ";
-    cin >> option;
-
-    if(cin.fail() || option > 16 || option < 1) {
-        cin.clear();
-        cin.ignore(1000,'\n');
-        cout << "Input must be from options\n";
-        system("pause");
-        filterMenu();
-    }
-
-    switch (option)
-    {
-    case SAVE:
-        saveImage();
-        return;
-        break;
-
-    case BACK:
-        startMenu();
-        break;
-
-    case EXIT:
-        return;
-        break;
-
-    case GRAY:
-        /* code */
-        break;
-
-    case BLACK_WHITE:
-        /* code */
-        break;
-
-    case INVERT:
-        applyFilter.invertImage(img);
-        filterMenu();
-        break;
-
-    case MERGE:
-        /* code */
-        break;
-
-    case FLIP:
-        /* code */
-        break;
-
-    case ROTATE:
-        /* code */
-        break;
-
-    case BRIGHTNESS:
-        /* code */
-        break;
-
-    case CROP:
-        /* code */
-        break;
-
-    case DETECT_EDGES:
-        /* code */
-        break;
-
-    case RESIZE:
-        /* code */
-        break;
-
-    case BLUR:
-        /* code */
-        break;
-
-    case CONTRAST:
-        /* code */
-        break;
+        printFilter();
+    
+        int option;
+        cout << "Enter Option: ";
+        cin >> option;
+    
+        if(cin.fail() || option > 14 || option < 1) {
+            clear();
+            cout << "Input must be from options\n";
+            pause();
+            continue;
+        }
+    
+        switch (option)
+        {
+        case SAVE:
+            saveImage();
+            break;
+    
+        case BACK:
+            return;
+    
+        case GRAY:
+            applyFilter.grayScale(img);
+            cout << "DONE SUCCESSFULLY\n";
+            break;
+    
+        case BLACK_WHITE:
+            applyFilter.blackWhite(img);
+            cout << "DONE SUCCESSFULLY\n";
+            break;
+    
+        case INVERT:
+            applyFilter.invertImage(img);
+            cout << "DONE SUCCESSFULLY\n";
+            break;
+    
+        case MERGE:
+            mergeImage();
+            break;
+    
+        case FLIP:
+            flipImage();
+            break;
+    
+        case ROTATE:
+            rotateImage();
+            break;
+    
+        case BRIGHTNESS:
+            brightness();
+            break;
+    
+        case CROP:
+            cropImage();
+            break;
+    
+        case DETECT_EDGES:
+            detectEdges();
+            break;
+    
+        case RESIZE:
+            resizeImage();
+            break;
+    
+        case BLUR:
+            blurImage();
+            break;
+    
+        case CONTRAST:
+            contrast();
+            break;
+        }
+        pause();
     }
 }
 
@@ -138,6 +175,8 @@ void Menu::saveImage() {
     catch(const exception& e)
     {
        cout << e.what() << '\n';
-       filterMenu();
+       return;
     }
+
+    cout << "SAVED SUCCESSFULLY\n";
 }

@@ -9,9 +9,8 @@ class Menu {
         Image img;
         std::string path = "image/";
         enum TYPE {
-            SAVE = 1,
+            SAVE,
             BACK,
-            EXIT,
             GRAY, 
             BLACK_WHITE, 
             INVERT, 
@@ -25,6 +24,11 @@ class Menu {
             BLUR,
             CONTRAST
         };
+
+        void clear();
+        void pause();
+        void printStart();
+        void printFilter();
 
     public:
         void startMenu(); // first menu
