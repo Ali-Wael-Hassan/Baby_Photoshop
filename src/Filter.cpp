@@ -41,7 +41,13 @@ void Filter::blackWhite(Image &orig) {
 
 
 void Filter::invertImage(Image &orig) {
-    
+    for (int i = 0; i < orig.width; ++i) {
+        for (int j = 0; j < orig.height; ++j) {
+            orig(i, j, 0) = 255 - orig(i, j, 0);
+            orig(i, j, 1) = 255 - orig(i, j, 1);
+            orig(i, j, 2) = 255 - orig(i, j, 2);
+        }
+    }
 }
 
 void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX, int startY) {

@@ -1,19 +1,9 @@
-#include "Winged_Dragon/Filter.h"
+#include "Winged_Dragon/Menu.h"
 #include <string>
 using namespace std;
 
 int main(){
-    Image h;
-    cout << "Enter Name: ";
-    string name; cin >> name;
-    h.loadNewImage("image/"+name);
-    Filter temp;
-    cout << "Enter alpha, t: ";
-    double alpha;
-    int thresh;
-    cin >> alpha >> thresh;
-    temp.detectEdges(h,alpha,thresh);
-    h.saveImage("image/test.jpg");
-    cout << "Done\n";
-    return 0;
+    cout << "\n\n==Welcome to Baby Photoshop\n\n";
+    Menu run;
+    run.startMenu();
 }
