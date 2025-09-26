@@ -8,17 +8,12 @@ int main(){
     string name; cin >> name;
     h.loadNewImage("image/"+name);
     Filter temp;
-    cout << "Enter alpha: ";
+    cout << "Enter alpha, t: ";
     double alpha;
-    int size;
-    cin >> alpha;
-    for(int i = 20; i <= 254; ++i) {
-        string name = "image/test";
-        name += to_string(i);
-        Image cpy(h);
-        temp.detectEdges(cpy,alpha,i);
-        cpy.saveImage(name+".jpg");
-    }
+    int thresh;
+    cin >> alpha >> thresh;
+    temp.detectEdges(h,alpha,thresh);
+    h.saveImage("image/test.jpg");
     cout << "Done\n";
     return 0;
 }
