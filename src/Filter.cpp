@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <vector>
 
+#define vd vector<double>
+#define vvd vector<vector<double>>
+
 
 using namespace std;
 
@@ -54,7 +57,7 @@ void Filter::invertImage(Image &orig) {
 
 }
 
-void Filter::mergeImage(Image &orig, int option, int transpaerncy) {
+void Filter::mergeImage(Image &orig, int option, int transparency) {
 
 }
 
@@ -76,8 +79,6 @@ void Filter::flipImage(Image &orig, int option) {
             }
         }
     }
-
-
 }
 
 
@@ -104,10 +105,10 @@ void Filter::darkenLightn(Image &orig, int percent) {
 
 void Filter::cropImage(Image &orig, std::pair<int, int> st, std::pair<int, int> end) {
     Image tmp(end.first, end.second);
-    for (int i = st.first; i <= end.first ; ++i) {
-        for (int j = st.second; j <= end.second ; ++j) {
+    for (int i = st.first; i <= end.first; ++i) {
+        for (int j = st.second; j <= end.second; ++j) {
             for (int k = 0; k < 3; ++k) {
-                tmp(i,j,k) = orig(i,j,k);
+                tmp(i, j, k) = orig(i, j, k);
             }
         }
     }
@@ -126,14 +127,67 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 
 }
 
-void Filter::blurImage(Image &orig, int radius, double alpha) {
+void generateKernel(vd& kernel, double sigma) {
+    int radius = ceil(3 * sigma);
+    int size = 2*radius + 1;
+    kernel.assign(size, 0.0);
 
+    double sum = 0;
+    double PI = acos(-1.0);
+
+    for(int x=-radius; x<=radius; ++x) {
+        double G = exp(-(x*x)/(2*sigma*sigma)) / (2*PI*sigma*sigma);
+        kernel[x+radius] = G;
+        sum += G;
+    }
+
+    for(int x=0; x<size; ++x)
+        kernel[x] /= sum;
+}
+
+void Filter::blurImage(Image &orig, double alpha, int size) {
+    vd kernel;
+    generateKernel(kernel,alpha);
+    int half = kernel.size()/2;
+    Image temp(orig);
+
+    for(int y = 0; y < temp.height; ++y) {
+        for(int x = 0; x < temp.width; ++x) {
+            for(int c = 0; c < temp.channels; ++ c) {
+                double val = 0;
+                for(int dk = -half; dk <= half; ++dk) {
+                    int x2 = std::max(0, min(x + dk, temp.width - 1));
+                    val += orig(x2,y,c) *  kernel[dk + half];
+                }
+
+                temp(x,y,c) = min(255.0, std::max(val,0.0));
+            }
+        }
+    }
+
+    orig = temp;
+
+    for(int y = 0; y < temp.height; ++y) {
+        for(int x = 0; x < temp.width; ++x) {
+            for(int c = 0; c < temp.channels; ++ c) {
+                double val = 0;
+                for(int dk = -half; dk <= half; ++dk) {
+                    int y2 = std::max(0, std::min(y + dk, temp.height - 1));
+                    val += orig(x,y2,c) *  kernel[dk + half];
+                }
+
+                temp(x,y,c) = std::min(255.0, std::max(val,0.0));
+            }
+        }
+    }
+
+    orig = temp;
 }
 
 
 // ########################################################Testing Area##################################################################
 void test() {
-    Image img("mario.jpg");
+    Image img("building.jpg");
     Filter f;
     //f.invertImage(img);
     //f.rotateImage(img, 180);
@@ -143,9 +197,10 @@ void test() {
     while(n--){
         f.blurImage(img, 19000);
     } */
-    //f.blurImage(img, 3, 20);
+
+    f.blurImage(img, 20, 5);
     //f.rotateImage(img, 180);
-    f.cropImage(img, {1,1}, {2000, 1800 });
+    // f.cropImage(img, {1, 1}, {2000, 1800});
     img.saveImage("luffy25.jpg");
     cout << "Finished Successfully!!\n";
 }
