@@ -1,8 +1,7 @@
 #include "Winged_Dragon/Filter.h"
 
-
-
-void Filter::grayScale(Image &orig) { // Ali-Wael
+// Ali-Wael
+void Filter::grayScale(Image &orig) {
     for(int x = 0; x < orig.width; ++x) {
         for(int y = 0; y < orig.height; ++y) {
             int R = orig(x,y,0),
@@ -16,6 +15,7 @@ void Filter::grayScale(Image &orig) { // Ali-Wael
 
             }
         }
+    }
 }
 // amr atif
 void Filter::blackWhite(Image &orig) {
@@ -30,15 +30,11 @@ void Filter::blackWhite(Image &orig) {
         }
 }
 
-
-
-
-
 void Filter::invertImage(Image &orig) {
     
 }
-
-void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX, int startY) { // Ali-Wael
+// Ali-Wael
+void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX, int startY) {
     double dx = (double) transpaerncy / 100;
     int w;
     int h;
@@ -77,21 +73,8 @@ void Filter::flipImage(Image &orig, bool& horiz) {
 void Filter::rotateImage(Image &orig, int degree) {
 
 }
-
-
-void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> end) {//amr atif
-    Image temp(end.first, end.second); 
-    for (int i =0; i < end.first; i++) {           
-        for (int j = 0; j < end.second; j++) {       
-            for (int c = 0; c < orig.channels; c++) {
-                temp(i, j, c) = orig(st.first + i-1, st.second + j-1, c);
-            }
-        }
-    }
-    orig = temp;
-}
-
-  void Filter::darkenLightn(Image &orig, int percent) { // Ali-Wael
+// Ali-Wael
+void Filter::darkenLightn(Image &orig, int percent) { // Ali-Wael
     // percent -100 to 100
     double v = pow((double) std::abs(percent) / 100,1.5);
     
@@ -107,17 +90,23 @@ void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> 
         }
     }
 }
-
-void Filter::cropImage(Image &orig, std::pair<int,int> st, std::pair<int,int> dimention) {
-    
+// amr atif
+void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> end) {
+    Image temp(end.first, end.second); 
+    for (int i =0; i < end.first; i++) {           
+        for (int j = 0; j < end.second; j++) {       
+            for (int c = 0; c < orig.channels; c++) {
+                temp(i, j, c) = orig(st.first + i-1, st.second + j-1, c);
+            }
+        }
+    }
+    orig = temp;
 }
-
-
 
 void Filter::addFrame(Image &orig, Image *frame) {
 
 }
-
+// Ali-Wael
 void Filter::detectEdges(Image &orig, double alpha, int tresh) { // Ali-Wael
     grayScale(orig);
     if(alpha > 0.0) blurImage(orig, alpha,1);
@@ -193,15 +182,11 @@ void Filter::resizeImage(Image &orig, int width, int height) {
     orig = temp;
 }
 
-
-
-
-
 void Filter::blurImage(Image &orig, double alpha, int size) {
     
 }
-
-void Filter::contrast(Image &orig, int percent){ // Ali-Wael
+// Ali-Wael
+void Filter::contrast(Image &orig, int percent){ 
     double v = 1.0 + (double) percent / 100;
     if(percent >= 0) v = 1.0 + (double) percent / 100;
     else v = 1.0 + (double) percent / 200;
