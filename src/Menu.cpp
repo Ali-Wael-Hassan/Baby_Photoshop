@@ -9,8 +9,7 @@ void Menu::clear()
 }
 
 void Menu::pause() {
-    cout << "Press Enter to continue...";
-    cin.get();
+    system("pause");
 }
 
 bool Menu::invalidChoice(int option, int max, const string& message) {
@@ -70,7 +69,7 @@ void Menu::startMenu() {
         int option;
         cout << "Choose Option: ";
         cin >> option;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
 
         if(invalidChoice(option,2,"Input must be from options")) {
             continue;
@@ -80,6 +79,7 @@ void Menu::startMenu() {
         {
         case 1:
             if(loadImage(this->img, this->name)) {
+                pause();
                 filterMenu();
                 cout << "RETURNED SUCCESSFULLY\n";
                 pause();
@@ -102,7 +102,7 @@ void Menu::startMenu() {
 bool Menu::loadImage(Image& orig, string& origName) {
     cout << "Enter image name with extension: ";
     cin >> origName;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     try {
         orig.loadNewImage(path+origName);
     }
@@ -112,7 +112,6 @@ bool Menu::loadImage(Image& orig, string& origName) {
     }
 
     cout << "LOADED SUCCESSFULLY\n";
-    pause();
     cout << "\n\n";
 
     return true;
@@ -127,7 +126,7 @@ void Menu::filterMenu() {
         int option;
         cout << "Enter Option: ";
         cin >> option;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
 
         if(invalidChoice(option,15,"Input must be from options")) {
             continue;
@@ -141,6 +140,7 @@ void Menu::filterMenu() {
 
         case LOAD:
             loadImage(this->img, this->name);
+            pause();
             break;
     
         case BACK:
@@ -149,16 +149,19 @@ void Menu::filterMenu() {
         case GRAY:
             applyFilter.grayScale(this->img);
             cout << "DONE SUCCESSFULLY\n";
+            pause();
             break;
     
         case BLACK_WHITE:
             applyFilter.blackWhite(this->img);
             cout << "DONE SUCCESSFULLY\n";
+            pause();
             break;
     
         case INVERT:
             applyFilter.invertImage(this->img);
             cout << "DONE SUCCESSFULLY\n";
+            pause();
             break;
     
         case MERGE:
@@ -197,7 +200,6 @@ void Menu::filterMenu() {
             contrast();
             break;
         }
-        pause();
         cout << "\n\n";
     }
 }
@@ -207,33 +209,32 @@ void Menu::saveImage() {
     int option;
     cout << "Enter option: ";
     cin >> option;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    if(cin.fail() || option > 2 || option < 1) {
-            clear();
-            cout << "Input must be from options\n";
-            pause();
-            return;
+    
+    if(invalidChoice(option,2,"Input must be from options")) {
+        return;
     }
 
     if(option == 1) {
         this->img.saveImage(path+name);
         cout << "SAVED SUCCESSFULLY\n";
+        pause();
         return;
     }
     cout << "Enter name of the new image with extension: ";
     string newName; cin >> newName;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     try {
         img.saveImage(path+newName);
     }
     catch(const exception& e)
     {
        cout << e.what() << "\n";
+       pause();
        return;
     }
 
     cout << "SAVED SUCCESSFULLY\n";
+    pause();
 }
 void Menu::mergeImage() {
     string newName;
@@ -248,7 +249,7 @@ void Menu::mergeImage() {
     cout << "Enter Option: ";
     int option; 
     cin >> option;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     if(invalidChoice(option,2,"Input must be from options")) {
         return;
     }
@@ -257,7 +258,7 @@ void Menu::mergeImage() {
 
     cout << "Enter Transparency of first image: ";
     cin >> transparency;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
 
     if(invalidChoice(transparency,100,"Input must be integer between [0,100]")) {
         return;
@@ -269,7 +270,7 @@ void Menu::mergeImage() {
         cout << "Enter the top left where you want to drag the new image\n";
         cout << "Enter x: ";
         cin >> x;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
         string msg1 = "x must be integer between [1," + to_string(this->img.width) + "]"; 
         string msg2 = "y must be integer between [1," + to_string(this->img.height) + "]"; 
         if(invalidChoice(x,this->img.width,msg1)) {
@@ -277,7 +278,7 @@ void Menu::mergeImage() {
         }
         cout << "Enter y: ";
         cin >> y;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
         if(invalidChoice(y,this->img.height,msg2)) {
             return;
         }
@@ -286,6 +287,7 @@ void Menu::mergeImage() {
     applyFilter.mergeImage(this->img,merged,option,transparency,x-1,y-1);
 
     cout << "DONE SUCCESSFULLY\n";
+    pause();
 }
 void Menu::flipImage()
 {
@@ -293,13 +295,14 @@ void Menu::flipImage()
     cout << left << setw(3) << 2 << " : Vertical\n\n";
     cout << "Enter option: ";
     int option; cin >> option;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     if(invalidChoice(option,2,"Input must be from options")) {
         return;
     }
     bool horiz = (option == 1? true : false);
     applyFilter.flipImage(this->img,horiz);
     cout << "DONE SUCCESSFULLY\n";
+    pause();
 }
 
 void Menu::rotateImage()
@@ -310,12 +313,13 @@ void Menu::brightness()
 {
     cout << "Enter percentage[-100,100]: ";
     int option; cin >> option;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     if(invalidChoice(option,100,"Input must be integer from range [-100,100]")) {
         return;
     }
     applyFilter.darkenLightn(this->img,option);
     cout << "DONE SUCCESSFULLY\n";
+    pause();
 }
 
 void Menu::cropImage()
@@ -324,7 +328,7 @@ void Menu::cropImage()
     cout << "Enter x: ";
     int x,y;
     cin >> x;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     string msg1 = "x must be integer between [1," + to_string(this->img.width) + "]"; 
     string msg2 = "y must be integer between [1," + to_string(this->img.height) + "]"; 
     if(invalidChoice(x,this->img.width,msg1)) {
@@ -332,26 +336,27 @@ void Menu::cropImage()
     }
     cout << "Enter y: ";
     cin >> y;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     if(invalidChoice(y,this->img.height,msg2)) {
         return;
     }
     int width, height;
     cout << "Enter width: ";
     cin >> width;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     if(invalidChoice(width,this->img.width - x,"Invalid width")) {
         return;
     }
     cout << "Enter height: ";
     cin >> height;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     if(invalidChoice(height,this->img.height - y,"Invalid width")) {
         return;
     }
 
     applyFilter.cropImage(this->img, {x-1,y-1}, {width,height});
     cout << "DONE SUCCESSFULLY\n";
+    pause();
 }
 
 void Menu::detectEdges()
@@ -363,20 +368,21 @@ void Menu::resizeImage()
     cout << "Enter new width: ";
     int width;
     cin >> width;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     if(invalidChoice(width,INT_MAX,"Invalid width")) {
         return;
     }
     cout << "Enter new height: ";
     int height;
     cin >> height;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     if(invalidChoice(height,INT_MAX,"Invalid height")) {
         return;
     }
 
     applyFilter.resizeImage(this->img,width,height);
     cout << "DONE SUCCESSFULLY\n";
+    pause();
 }
 
 void Menu::blurImage()
@@ -387,10 +393,11 @@ void Menu::contrast()
 {
     cout << "Enter percentage[-100,100]: ";
     int option; cin >> option;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     if(invalidChoice(option,100,"Input must be integer from range [-100,100]")) {
         return;
     }
     applyFilter.contrast(this->img,option);
     cout << "DONE SUCCESSFULLY\n";
+    pause();
 }
