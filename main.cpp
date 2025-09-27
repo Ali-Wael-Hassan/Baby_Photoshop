@@ -1,14 +1,14 @@
-#include "header/Winged_Dragon/Filter.h"
-#include <cstdlib>
+#include "Winged_Dragon/Menu.h"
+#include <string>
 using namespace std;
 
 int main(){
-    Image h;
-    Filter j;
-    h.loadNewImage("image/luffy.jpg");
-    int gg =1000,gb= 1000;
-    j.blackWhite(h);
-    h.saveImage("image/testluffy.jpg");
-    system("pause");
-    return 0;
+    cout << string(45,'=') << '\n';
+    string menuName = "== Welcom to Baby Photoshop ==";
+    int spaces = max(0,(int)(45 - menuName.size()) / 2);
+    cout << string(spaces, ' ') << menuName << "\n";
+    cout << string(45,'=') << "\n\n\n\n";
+    Menu run;
+    run.startMenu();
 }
+
