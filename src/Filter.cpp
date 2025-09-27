@@ -106,12 +106,12 @@ void Filter::darkenLightn(Image &orig, int percent) { // Ali-Wael
     }
 }
 // amr atif
-void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> end) {
-    Image temp(end.first, end.second); 
-    for (int i =0; i < end.first; i++) {           
-        for (int j = 0; j < end.second; j++) {       
+void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> dimension) {
+    Image temp(dimension.first, dimension.second); 
+    for (int i = 0; i < dimension.first; i++) {           
+        for (int j = 0; j < dimension.second; j++) {       
             for (int c = 0; c < orig.channels; c++) {
-                temp(i, j, c) = orig(st.first + i-1, st.second + j-1, c);
+                temp(i, j, c) = orig(st.first + i, st.second + j, c);
             }
         }
     }
