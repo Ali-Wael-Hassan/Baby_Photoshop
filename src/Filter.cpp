@@ -65,9 +65,24 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
 
     orig = temp;
 }
-
+// amr atif
 void Filter::flipImage(Image &orig, bool& horiz) {
-    
+    int l = 0;
+    int r = (horiz) ? (orig.width - 1) : (orig.height - 1);
+    int direction = (horiz) ? orig.height : orig.width;
+
+    while (l < r) {
+        for (int i = 0; i < direction; i++) {
+            for (int c = 0; c < orig.channels; c++) {
+                if (horiz)
+                    std::swap(orig(l, i, c), orig(r, i, c));
+                else
+                    std::swap(orig(i, l, c), orig(i, r, c));
+            }
+        }
+        l++;
+        r--;
+    }
 }
 
 void Filter::rotateImage(Image &orig, int degree) {
