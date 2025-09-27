@@ -3,7 +3,11 @@
 using namespace std;
 
 int main(){
-    cout << "\n\n==Welcome to Baby Photoshop==\n\n";
+    cout << string(45,'=') << '\n';
+    string menuName = "== Welcom to Baby Photoshop ==";
+    int spaces = max(0,(int)(45 - menuName.size()) / 2);
+    cout << string(spaces, ' ') << menuName << "\n";
+    cout << string(45,'=') << "\n\n\n\n";
     Menu run;
     run.startMenu();
 }

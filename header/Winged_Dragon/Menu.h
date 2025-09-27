@@ -3,13 +3,15 @@
 #include <iostream>
 #include <exception>
 #include <limits>
+#include <string>
+#include <iomanip>
 
 class Menu {
     private:
         Filter applyFilter;
         Image img;
         std::string path = "image/";
-        std::string name;
+        std::string name = "";
         enum TYPE {
             SAVE = 1,
             LOAD,
@@ -31,6 +33,7 @@ class Menu {
         void clear();
         void pause();
         bool invalidChoice(int option, int max, const std::string &message);
+        void centerize(const std::string &menuName, int width);
         void printStart();
         void printFilter();
 
