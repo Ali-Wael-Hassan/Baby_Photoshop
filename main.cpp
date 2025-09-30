@@ -1,7 +1,7 @@
 /*
     Project : Baby Photoshop
-    File    : main.cpp
-    Section : S
+    File    : CS213_A1_Part1_17_20240354_20240398_20240707.cpp
+    Section : S27
 
     Team Members:
     - Ali Wael       (ID 20240354)  -> Gray Scale (1), Merge Image (4), Darken & Lighten (7), Detect Edges (10)
