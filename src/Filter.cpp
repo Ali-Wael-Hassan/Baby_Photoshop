@@ -339,7 +339,7 @@ void generateKernel(vd &kernel, double sigma) { // generates the kernel used to 
         kernel[x] /= sum;
 }
 // Youssef Mohamed Hassib 20240707
-void Filter::blurImage(Image &orig, double alpha, int size) {
+void Filter::blurImage(Image &orig, int rad, double alpha) {
     vd kernel;
     generateKernel(kernel, alpha);
     int half = kernel.size() / 2;
