@@ -492,7 +492,7 @@ void Menu::startMenu() {
             if(loadImage(this->img, this->name)) {
                 pause();
                 filterMenu();
-                cout << "RETURNED SUCCESSFULLY\n";
+                cout << "Returned successfully\n";
                 pause();
                 cout << "\n\n";
             } else {
@@ -503,7 +503,7 @@ void Menu::startMenu() {
             break;
         
         case 2:
-            cout << "Good Bye\n\n";
+            cout << "Goodbye\n\n";
             return;
         }
     }
@@ -522,7 +522,7 @@ bool Menu::loadImage(Image& orig, string& origName) {
         return false;
     }
 
-    cout << "LOADED SUCCESSFULLY\n";
+    cout << "Loaded successfully\n";
     cout << "\n\n";
 
     return true;
@@ -616,7 +616,7 @@ void Menu::filterMenu() {
 }
 
 void Menu::saveImage() {
-    cout << "Option 1: Save on current image\nOption 2: Make new image\n\n";
+    cout << "Option 1: Save to current image\nOption 2: Save as new image\n\n";
     int option;
     cout << "Enter option: ";
     cin >> option;
@@ -667,7 +667,7 @@ void Menu::mergeImage() {
 
     int transparency;
 
-    cout << "Enter Transparency of first image(integer betweem [0,100]): ";
+    cout << "Enter Transparency of first image(integer between [0,100]): ";
     cin >> transparency;
     
 
@@ -678,7 +678,7 @@ void Menu::mergeImage() {
     if (option == 2) {
     
     
-        cout << "Enter the top left where you want to drag the new image\n";
+        cout << "Enter the top-left coordinates where you want to place the new image\n";
         cout << "Enter x(inteher between [1," << this->img.width << "]) : ";
         cin >> x;
         
@@ -718,7 +718,7 @@ void Menu::flipImage()
 
 void Menu::rotateImage()
 {
-    cout << "Enter degree (must be divisable by 90): ";
+    cout << "Enter degree (must be divisible by 90): ";
     int degree; cin >> degree;
     if(invalidChoice(degree,INT_MAX,"Input must be integer",INT_MIN)) {
         return;
@@ -758,20 +758,20 @@ void Menu::cropImage()
     
     string msg1 = "x must be integer between [1," + to_string(this->img.width) + "]"; 
     string msg2 = "y must be integer between [1," + to_string(this->img.height) + "]"; 
-    if(invalidChoice(x,this->img.width,msg1),1) {
+    if(invalidChoice(x,this->img.width,msg1,1)) {
         return;
     }
     cout << "Enter y: ";
     cin >> y;
     
-    if(invalidChoice(y,this->img.height,msg2),1) {
+    if(invalidChoice(y,this->img.height,msg2,1)) {
         return;
     }
     int width, height;
     cout << "Enter width: ";
     cin >> width;
     
-    if(invalidChoice(width,this->img.width - x + 1,"Invalid width"),1) {
+    if(invalidChoice(width,this->img.width - x + 1,"Invalid width",1)) {
         return;
     }
     cout << "Enter height: ";
@@ -852,7 +852,7 @@ void Menu::contrast()
 
 int main(){
     cout << string(45,'=') << '\n';
-    string menuName = "== Welcom to Baby Photoshop ==";
+    string menuName = "== Welcome to Baby Photoshop ==";
     int spaces = max(0,(int)(45 - menuName.size()) / 2);
     cout << string(spaces, ' ') << menuName << "\n";
     cout << string(45,'=') << "\n\n\n\n";
