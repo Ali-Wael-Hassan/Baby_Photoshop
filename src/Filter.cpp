@@ -12,8 +12,8 @@ using namespace std;
 
     Team Members:
     - Ali Wael       (ID 20240354)  -> Gray Scale (1), Merge Image (4), Darken & Lighten (7), Detect Edges (10)
-    - Amr Atif       (ID 2024xxxx)  -> Black & White (2), Flip Image (5), Crop Image (8), Resize Image (11)
-    - Yousef Hassib  (ID 2024yyyy)  -> Invert Colors (3), Rotate Image (6), Add Frame (9), Blur Image (12)
+    - Amr Atif       (ID 20240398)  -> Black & White (2), Flip Image (5), Crop Image (8), Resize Image (11)
+    - Yousef Hassib  (ID 20240707)  -> Invert Colors (3), Rotate Image (6), Add Frame (9), Blur Image (12)
 
     Description:
     The program starts with the main menu which has two options:
@@ -36,7 +36,7 @@ using namespace std;
 */
 
 /*
-    Ali-Wael
+    Ali-Wael 20240354
     Gray Scale use luminance formula that makes it weighted from sudies of eye's percpectoin
     0.299 for Red
     0.587 for Green
@@ -58,7 +58,7 @@ void Filter::grayScale(Image &orig) {
         }
     }
 }
-// amr atif
+// amr atif 20240398
 void Filter::blackWhite(Image &orig) {
         Filter temp;
         temp.grayScale(orig);
@@ -82,7 +82,7 @@ void Filter::invertImage(Image &orig) {
     }
 }
 /*
-    Ali-Wael
+    Ali-Wael 20240354
     Merging two images with contribution (for slide bar)
     to Merge two images the two must have the same size so we have two options:
     1) resize them to max width and max height
@@ -122,7 +122,7 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
 
     orig = temp;
 }
-// amr atif
+// amr atif 20240398
 void Filter::flipImage(Image &orig, bool& horiz) {
     int l = 0;
     int r = (horiz) ? (orig.width - 1) : (orig.height - 1);
@@ -160,7 +160,7 @@ void Filter::rotateImage(Image &orig, int degree) {
 
 }
 /*
-    Ali-Wael
+    Ali-Wael 20240354
     Adjusting brightness of an image
 
     Input: percent in range [-100, 100]
@@ -193,7 +193,7 @@ void Filter::darkenLightn(Image &orig, int percent) { // Ali-Wael
         }
     }
 }
-// amr atif
+// amr atif 20240398
 void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> dimension) {
     Image temp(dimension.first, dimension.second); 
     for (int i = 0; i < dimension.first; i++) {           
@@ -210,7 +210,7 @@ void Filter::addFrame(Image &orig, Image *frame) {
 
 }
 /*
-    Ali-Wael
+    Ali-Wael 20240354
     Detect Edges of an Image
 
     Algorithm: Sobel Operator
@@ -286,7 +286,7 @@ void Filter::detectEdges(Image &orig, double alpha, int tresh) { // Ali-Wael
 
     delete [] arr;
 }
-// amr atif
+// amr atif 20240398
 void Filter::resizeImage(Image &orig, int width, int height) {
     Image temp(width, height);
     double sw = static_cast<double>(orig.width) / width;
@@ -321,7 +321,7 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 }
 
 // Youssef Mohamed Hassib 20240707
-void generateKernel(vd &kernel, double sigma) { // generates the kernel used to blur efficiently
+void Filter::generateKernel(vd kernel, double sigma) { // generates the kernel used to blur efficiently
     int radius = ceil(3 * sigma);
     int size = 2 * radius + 1;
     kernel.assign(size, 0.0);
@@ -376,7 +376,7 @@ void Filter::blurImage(Image &orig, int rad, double alpha) {
     orig = temp;
 }
 /*
-    Ali-Wael
+    Ali-Wael 20240354
     Adjusting contrast of an image
 
     Input: percent in range [-100, 100]
