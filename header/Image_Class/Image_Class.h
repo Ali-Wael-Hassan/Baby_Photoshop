@@ -8,7 +8,7 @@
  * @version   : v2.0 (Added operator= and copy constructor)
  * @date      : 27/3/2024
  */
-#include <cstring>
+
 
 // stb_image header definitions
 #ifndef _IMAGE_CLASS_H
@@ -24,20 +24,14 @@
 
 
 // stb_image header definitions
-/*
-#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"*/
-#define PIXEL_UINT unsigned int
+#include "stb_image_write.h"
+#define pixel unsigned int
 
 #include <iostream>
 #include <exception>
-#define STB_IMAGE_IMPLEMENTATION    // Only in one .cpp file before including stb_image.h!
-#include "stb_image.h"
+#include <cstring>
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION  // Only in one .cpp file before including stb_image_write.h!
-#include "stb_image_write.h"
 
 
 /**
