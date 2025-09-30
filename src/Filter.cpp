@@ -44,7 +44,7 @@ void Filter::flipImage(Image &orig, int option) {
 void Filter::rotateImage(Image &orig, int degree) {
     int n = degree / 90; // dependent on degree % 90 == 0, further updates to come to make it valid all 360 degrees
     while (n--) {
-        Image res(orig);
+        Image res(orig.height, orig.width);
         for (int y = 0; y < orig.height; ++y) {
             for (int x = 0; x < orig.width; ++x) {
                 for (int c = 0; c < 3; ++c) {
@@ -54,6 +54,7 @@ void Filter::rotateImage(Image &orig, int degree) {
         }
         orig = res;
     }
+
 }
 
 void Filter::darkenLightn(Image &orig, int percent) {
@@ -146,7 +147,7 @@ void test() {
     //f.blurImage(img, 20, 5);
     //f.rotateImage(img, 180);
     // f.cropImage(img, {1, 1}, {2000, 1800});
-    f.darkenLightn(img, -50);
+    f.rotateImage(img, 180);
     img.saveImage("luffy25.jpg");
     cout << "Finished Successfully!!\n";
 }
