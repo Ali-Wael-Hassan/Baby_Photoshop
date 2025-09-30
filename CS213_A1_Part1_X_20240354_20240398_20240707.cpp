@@ -41,6 +41,7 @@
 #include <exception>
 #include <limits>
 #include <iomanip>
+#include <climits>
 #include "Image_Class.h"
 using namespace std;
 
@@ -681,7 +682,7 @@ void Menu::mergeImage() {
     
     
         cout << "Enter the top-left coordinates where you want to place the new image\n";
-        cout << "Enter x(inteher between [1," << this->img.width << "]) : ";
+        cout << "Enter x(integer between [1," << this->img.width << "]) : ";
         cin >> x;
         
         string msg1 = "x must be integer between [1," + to_string(this->img.width) + "]"; 
@@ -689,7 +690,7 @@ void Menu::mergeImage() {
         if(invalidChoice(x,this->img.width,msg1,1)) {
             return;
         }
-        cout << "Enter y(inteher between [1," << this->img.height << "]) : ";
+        cout << "Enter y(integer between [1," << this->img.height << "]) : ";
         cin >> y;
         
         if(invalidChoice(y,this->img.height,msg2,1)) {
