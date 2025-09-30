@@ -1,4 +1,5 @@
 #include "Winged_Dragon/Menu.h"
+#include "Menu.h"
 
 using namespace std;
 
@@ -12,16 +13,18 @@ void Menu::pause() {
     system("pause");
 }
 
-bool Menu::invalidChoice(int option, int max, const string& message) {
-    if(cin.fail() || option < 1 || option > max) {
-        clear();
-        cout << message << "\n";
-        pause();
-        cout << "\n\n";
-        return true;
+bool Menu::invalidChoice(int option, int mx, const string &message, int mn)
+    {
+        if (cin.fail() || option < mn || option > mx)
+        {
+            clear();
+            cerr << message << "\n";
+            pause();
+            cout << "\n\n";
+            return true;
+        }
+        return false;
     }
-    return false;
-}
 
 void Menu::centerize(const string &menuName, int width) {
     int spaces = max(0,(int)(width - menuName.size()) / 2);
@@ -71,7 +74,7 @@ void Menu::startMenu() {
         cin >> option;
         
 
-        if(invalidChoice(option,2,"Input must be from options")) {
+        if(invalidChoice(option,2,"Input must be from options",1)) {
             continue;
         }
     
@@ -107,7 +110,7 @@ bool Menu::loadImage(Image& orig, string& origName) {
         orig.loadNewImage(path+origName);
     }
     catch(const exception& e) {
-        cout << e.what() << "\n";
+        cerr << e.what() << "\n";
         return false;
     }
 
@@ -128,7 +131,7 @@ void Menu::filterMenu() {
         cin >> option;
         
 
-        if(invalidChoice(option,15,"Input must be from options")) {
+        if(invalidChoice(option,15,"Input must be from options",1)) {
             continue;
         }
     
@@ -210,7 +213,7 @@ void Menu::saveImage() {
     cout << "Enter option: ";
     cin >> option;
     
-    if(invalidChoice(option,2,"Input must be from options")) {
+    if(invalidChoice(option,2,"Input must be from options",1)) {
         return;
     }
 
@@ -228,7 +231,7 @@ void Menu::saveImage() {
     }
     catch(const exception& e)
     {
-       cout << e.what() << "\n";
+       cerr << e.what() << "\n";
        pause();
        return;
     }
@@ -250,17 +253,17 @@ void Menu::mergeImage() {
     int option; 
     cin >> option;
     
-    if(invalidChoice(option,2,"Input must be from options")) {
+    if(invalidChoice(option,2,"Input must be from options",1)) {
         return;
     }
 
     int transparency;
 
-    cout << "Enter Transparency of first image: ";
+    cout << "Enter Transparency of first image(integer betweem [0,100]): ";
     cin >> transparency;
     
 
-    if(invalidChoice(transparency,100,"Input must be integer between [0,100]")) {
+    if(invalidChoice(transparency,100,"Input must be integer between [0,100]",1)) {
         return;
     }
 
@@ -268,18 +271,18 @@ void Menu::mergeImage() {
     
     
         cout << "Enter the top left where you want to drag the new image\n";
-        cout << "Enter x: ";
+        cout << "Enter x(inteher between [1," << this->img.width << "]) : ";
         cin >> x;
         
         string msg1 = "x must be integer between [1," + to_string(this->img.width) + "]"; 
         string msg2 = "y must be integer between [1," + to_string(this->img.height) + "]"; 
-        if(invalidChoice(x,this->img.width,msg1)) {
+        if(invalidChoice(x,this->img.width,msg1,1)) {
             return;
         }
-        cout << "Enter y: ";
+        cout << "Enter y(inteher between [1," << this->img.height << "]) : ";
         cin >> y;
         
-        if(invalidChoice(y,this->img.height,msg2)) {
+        if(invalidChoice(y,this->img.height,msg2,1)) {
             return;
         }
     }
@@ -296,7 +299,7 @@ void Menu::flipImage()
     cout << "Enter option: ";
     int option; cin >> option;
     
-    if(invalidChoice(option,2,"Input must be from options")) {
+    if(invalidChoice(option,2,"Input must be from options",1)) {
         return;
     }
     bool horiz = (option == 1? true : false);
@@ -314,7 +317,7 @@ void Menu::brightness()
     cout << "Enter percentage[-100,100]: ";
     int option; cin >> option;
     
-    if(invalidChoice(option,100,"Input must be integer from range [-100,100]")) {
+    if(invalidChoice(option,100,"Input must be integer from range [-100,100]", -100)) {
         return;
     }
     applyFilter.darkenLightn(this->img,option);
@@ -331,26 +334,26 @@ void Menu::cropImage()
     
     string msg1 = "x must be integer between [1," + to_string(this->img.width) + "]"; 
     string msg2 = "y must be integer between [1," + to_string(this->img.height) + "]"; 
-    if(invalidChoice(x,this->img.width,msg1)) {
+    if(invalidChoice(x,this->img.width,msg1),1) {
         return;
     }
     cout << "Enter y: ";
     cin >> y;
     
-    if(invalidChoice(y,this->img.height,msg2)) {
+    if(invalidChoice(y,this->img.height,msg2),1) {
         return;
     }
     int width, height;
     cout << "Enter width: ";
     cin >> width;
     
-    if(invalidChoice(width,this->img.width - x,"Invalid width")) {
+    if(invalidChoice(width,this->img.width - x + 1,"Invalid width"),1) {
         return;
     }
     cout << "Enter height: ";
     cin >> height;
     
-    if(invalidChoice(height,this->img.height - y,"Invalid width")) {
+    if(invalidChoice(height,this->img.height - y + 1,"Invalid width",1)) {
         return;
     }
 
@@ -369,14 +372,14 @@ void Menu::resizeImage()
     int width;
     cin >> width;
     
-    if(invalidChoice(width,INT_MAX,"Invalid width")) {
+    if(invalidChoice(width,INT_MAX,"Invalid width",1)) {
         return;
     }
     cout << "Enter new height: ";
     int height;
     cin >> height;
     
-    if(invalidChoice(height,INT_MAX,"Invalid height")) {
+    if(invalidChoice(height,INT_MAX,"Invalid height",1)) {
         return;
     }
 
@@ -394,7 +397,7 @@ void Menu::contrast()
     cout << "Enter percentage[-100,100]: ";
     int option; cin >> option;
     
-    if(invalidChoice(option,100,"Input must be integer from range [-100,100]")) {
+    if(invalidChoice(option,100,"Input must be integer from range [-100,100]", -100)) {
         return;
     }
     applyFilter.contrast(this->img,option);

@@ -5,6 +5,7 @@
 #include <limits>
 #include <string>
 #include <iomanip>
+
 /*
     Ready
     1-SAVE
@@ -45,7 +46,7 @@ class Menu {
 
         void clear();
         void pause();
-        bool invalidChoice(int option, int max, const std::string &message);
+        bool invalidChoice(int option, int mx, const std::string &message, int mn = 1);
         void centerize(const std::string &menuName, int width);
         void printStart();
         void printFilter();

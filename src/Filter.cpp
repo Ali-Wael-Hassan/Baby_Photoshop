@@ -1,6 +1,42 @@
 #include "Winged_Dragon/Filter.h"
 
-// Ali-Wael
+/*
+    Project : Baby Photoshop
+    File    : main.cpp
+    Section : S
+
+    Team Members:
+    - Ali Wael       (ID 20240354)  -> Gray Scale (1), Merge Image (4), Darken & Lighten (7), Detect Edges (10)
+    - Amr Atif       (ID 2024xxxx)  -> Black & White (2), Flip Image (5), Crop Image (8), Resize Image (11)
+    - Yousef Hassib  (ID 2024yyyy)  -> Invert Colors (3), Rotate Image (6), Add Frame (9), Blur Image (12)
+
+    Description:
+    The program starts with the main menu which has two options:
+        1) Load Image
+        2) Exit
+
+    After loading the first image, the Filter Menu appears:
+        == File Options == 
+            - Save image
+            - Load new image
+            - Back to main menu
+        == Filters ==
+            - All filters listed above
+
+    First Note: darkenLight is Darken and Lighten combined: 
+          (-v) applies Darken and (+v) applies Lighten.
+    
+    Second Note: images must be put in folder in the main directory with name image example: image/myImg.jpg
+    Second Note: put only name of the image + extension
+*/
+
+/*
+    Ali-Wael
+    Gray Scale use luminance formula that makes it weighted from sudies of eye's percpectoin
+    0.299 for Red
+    0.587 for Green
+    0.114 for Blue
+*/ 
 void Filter::grayScale(Image &orig) {
     for(int x = 0; x < orig.width; ++x) {
         for(int y = 0; y < orig.height; ++y) {
@@ -33,7 +69,16 @@ void Filter::blackWhite(Image &orig) {
 void Filter::invertImage(Image &orig) {
     
 }
-// Ali-Wael
+/*
+    Ali-Wael
+    Merging two images with contribution (for slide bar)
+    to Merge two images the two must have the same size so we have two options:
+    1) resize them to max width and max height
+    2) take the min width and min height
+    to make the ability to drag we use start x, start y so that we can put the second image to make different overlapping area
+
+    Note: the drag makes start x, start y in the dimensions of first image (orig)
+*/ 
 void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX, int startY) {
     double dx = (double) transpaerncy / 100;
     int w;
@@ -88,7 +133,24 @@ void Filter::flipImage(Image &orig, bool& horiz) {
 void Filter::rotateImage(Image &orig, int degree) {
 
 }
-// Ali-Wael
+/*
+    Ali-Wael
+    Adjusting brightness of an image
+
+    Input: percent in range [-100, 100]
+      1) -ve → Darken
+      2) +ve → Lighten
+
+    - We compute a factor based on abs(percent) / 100.
+    - the factor is raised to the power of 1.5 to make the adjustment smoother (not just linear), 
+
+    - +ve (lighten):
+        multiplier = 1 + factor
+        Example: factor = 0.5 → multiplier = 1.5 → pixel = 1.5 * pixel
+    - If -ve (darken):
+        multiplier = 1 - factor
+        Example: factor = 0.3 → multiplier = 0.7 → pixel = 0.7 * pixel
+*/
 void Filter::darkenLightn(Image &orig, int percent) { // Ali-Wael
     // percent -100 to 100
     double v = pow((double) std::abs(percent) / 100,1.5);
@@ -121,10 +183,45 @@ void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> 
 void Filter::addFrame(Image &orig, Image *frame) {
 
 }
-// Ali-Wael
+/*
+    Ali-Wael
+    Detect Edges of an Image
+
+    Algorithm: Sobel Operator
+
+    Steps:
+    1) Convert the image to grayscale to simplify edge detection 
+    2) Apply a Gaussian blur (alpha/sigma parameter) to reduce noise.
+
+    Sobel Kernels:
+    For horizontal edges (changes left - right):
+          {-1, 0, 1}
+    Gx =  {-2, 0, 2}
+          {-1, 0, 1}
+
+    For vertical edges (changes top - bottom):
+          {-1, -2, -1}
+    Gy =  { 0,  0,  0}
+          { 1,  2,  1}
+
+    Gradient is the best to represent the edge since it is horizontal and vertical
+    by pythagoras
+    grad = sqrt(horizontal_edge^2 + vertical_edge^2)
+
+
+    Use a user-defined threshold to decide if a pixel is an edge.
+    If value >= threshold  mark as edge.
+
+    Optional:
+    Invert colors so edges appear white on black background.
+
+    Parameters:
+    alpha (sigma): blur factor to smooth the image.
+    threshold: minimum gradient magnitude to consider a pixel an edge.
+*/
 void Filter::detectEdges(Image &orig, double alpha, int tresh) { // Ali-Wael
     grayScale(orig);
-    if(alpha > 0.0) blurImage(orig, alpha,1);
+    if(alpha > 1e-9) blurImage(orig, alpha,1);
 
     int w = orig.width;
     int h = orig.height;
@@ -200,7 +297,24 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 void Filter::blurImage(Image &orig, double alpha, int size) {
     
 }
-// Ali-Wael
+/*
+    Ali-Wael
+    Adjusting contrast of an image
+
+    Input: percent in range [-100, 100]
+      1) -ve → reduce contrast
+      2) +ve → increase contrast
+
+    - We compute a factor based on abs(percent) / 100.
+
+    multiplier = 1 + factor
+    Example: factor = 0.5 → multiplier = 1.5 → pixel = 1.5 * pixel
+
+    we iterate over pixels and if it is dark (x < 128) then it will be -ve so gets darker
+    else gets lighter 
+
+    Note: all of that based on the factor and the factor is /200 in dark to make -100 not fully gray
+*/
 void Filter::contrast(Image &orig, int percent){ 
     double v = 1.0 + (double) percent / 100;
     if(percent >= 0) v = 1.0 + (double) percent / 100;
