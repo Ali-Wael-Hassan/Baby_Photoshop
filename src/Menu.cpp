@@ -1,5 +1,4 @@
 #include "Winged_Dragon/Menu.h"
-#include "Menu.h"
 
 using namespace std;
 
@@ -310,6 +309,21 @@ void Menu::flipImage()
 
 void Menu::rotateImage()
 {
+    cout << "Enter degree (must be divisable by 90): ";
+    int degree; cin >> degree;
+    if(invalidChoice(degree,INT_MAX,"Input must be integer",INT_MIN)) {
+        return;
+    }
+    int n = (-degree + 359)/360;
+    if(degree < 0) degree += n * 360;
+
+    if(degree%90 != 0) {
+        cerr << "Input must be divisible by 90\n\n\n";
+        return;
+    }
+    applyFilter.rotateImage(this->img, degree);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
 }
 
 void Menu::brightness()
@@ -364,6 +378,16 @@ void Menu::cropImage()
 
 void Menu::detectEdges()
 {
+    int percent;
+    cout << "Enter Edge sharpness[0,100]: ";
+    cin >> percent;
+    if(invalidChoice(percent,100,"Input must be integer from range [0,100]", 0)) {
+        return;
+    }
+    int threshhold = 120 - 0.9 * percent;
+    applyFilter.detectEdges(this->img,2.5,threshhold);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
 }
 
 void Menu::resizeImage()
@@ -390,6 +414,16 @@ void Menu::resizeImage()
 
 void Menu::blurImage()
 {
+    cout << "Enter percentage[0,100]: ";
+    int percent; cin >> percent;
+    
+    if(invalidChoice(percent,100,"Input must be integer from range [0,100]", 0)) {
+        return;
+    }
+    double sigma = (15.0 * percent) / 100.0;
+    applyFilter.blurImage(this->img,sigma);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
 }
 
 void Menu::contrast()

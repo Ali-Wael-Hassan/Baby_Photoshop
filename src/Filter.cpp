@@ -1,4 +1,5 @@
 #include "Winged_Dragon/Filter.h"
+#include "Filter.h"
 
 using namespace std;
 
@@ -13,7 +14,7 @@ using namespace std;
     Team Members:
     - Ali Wael       (ID 20240354)  -> Gray Scale (1), Merge Image (4), Darken & Lighten (7), Detect Edges (10)
     - Amr Atif       (ID 20240398)  -> Black & White (2), Flip Image (5), Crop Image (8), Resize Image (11)
-    - Yousef Hassib  (ID 20240707)  -> Invert Colors (3), Rotate Image (6), Add Frame (9), Blur Image (12)
+    - Yousef Hassib  (ID 20240707)  -> Invert Colors (3), Rotate Image (6), Blur Image (12)
 
     Description:
     The program starts with the main menu which has two options:
@@ -49,7 +50,7 @@ void Filter::grayScale(Image &orig) {
                 G = orig(x,y,1),
                 B = orig(x,y,2);
             
-            int gray= std::min(0.299*R+0.587*G+0.114*B + 0.5, 255.0);
+            int gray= min(0.299*R+0.587*G+0.114*B + 0.5, 255.0);
 
             for(int c = 0; c < orig.channels; ++ c) {
                 orig(x,y,c) = gray;
@@ -97,13 +98,13 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
     int h;
 
     if(option == 1) {
-        w = std::max(orig.width, merged.width);
-        h = std::max(orig.height, merged.height);
+        w = max(orig.width, merged.width);
+        h = max(orig.height, merged.height);
         resizeImage(orig,w,h);
         resizeImage(merged,w,h);
     } else {
-        w = std::min(orig.width - startX, merged.width);
-        h = std::min(orig.height - startY, merged.height);
+        w = min(orig.width - startX, merged.width);
+        h = min(orig.height - startY, merged.height);
         cropImage(orig,{startX,startY}, {w,h});
         cropImage(merged,{0,0}, {w,h});
     }
@@ -115,7 +116,7 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
         for(int y = 0; y < h; ++y) {
             for(int c = 0; c < temp.channels; ++c) {
                 double val = (1-dx) * orig(x,y,c) + dx * merged(x,y,c);
-                temp(x,y,c) = std::min(255.0, std::max(0.0,val));
+                temp(x,y,c) = min(255.0, max(0.0,val));
             }
         }
     }
@@ -187,8 +188,8 @@ void Filter::darkenLightn(Image &orig, int percent) { // Ali-Wael
     for(int x = 0; x < orig.width; ++x) {
         for(int y = 0; y < orig.height; ++y) {
             for(int c = 0; c < orig.channels; ++c) {
-                if(dark) orig(x,y,c) = std::max(0.0,(1-v) * orig(x,y,c));
-                else orig(x,y,c) = std::min(255.0,(1+v) * orig(x,y,c));
+                if(dark) orig(x,y,c) = max(0.0,(1-v) * orig(x,y,c));
+                else orig(x,y,c) = min(255.0,(1+v) * orig(x,y,c));
             }
         }
     }
@@ -247,7 +248,7 @@ void Filter::addFrame(Image &orig, Image *frame) {
 */
 void Filter::detectEdges(Image &orig, double alpha, int tresh) { // Ali-Wael
     grayScale(orig);
-    if(alpha > 1e-9) blurImage(orig, alpha,1);
+    blurImage(orig, alpha);
 
     int w = orig.width;
     int h = orig.height;
@@ -304,15 +305,15 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 
             for (int c = 0; c < orig.channels; c++) {
                 
-                int x0 = std::min(orig.width-1,std::max(0,x));
-                int x1 = std::min(orig.width-1,std::max(0,x+1));
-                int y0 = std::min(orig.height-1,std::max(0,y));
-                int y1 = std::min(orig.height-1,std::max(0,y+1));
+                int x0 = min(orig.width-1,max(0,x));
+                int x1 = min(orig.width-1,max(0,x+1));
+                int y0 = min(orig.height-1,max(0,y));
+                int y1 = min(orig.height-1,max(0,y+1));
                 double top = orig(x0, y0, c) * (1 - dx) + orig(x1, y0, c) * dx;
                 double bottom = orig(x0, y1, c) * (1 - dx) + orig(x1, y1, c) * dx;
                 double val = top * (1 - dy) + bottom * dy;
 
-                temp(i, j, c) = static_cast<uint8_t>(std::min(255.0,std::max(0.0,val)));
+                temp(i, j, c) = static_cast<uint8_t>(min(255.0,max(0.0,val)));
             }
         }
     }
@@ -321,7 +322,7 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 }
 
 // Youssef Mohamed Hassib 20240707
-void Filter::generateKernel(vd kernel, double sigma) { // generates the kernel used to blur efficiently
+void Filter::generateKernel(vd& kernel, double sigma) { // generates the kernel used to blur efficiently
     int radius = ceil(3 * sigma);
     int size = 2 * radius + 1;
     kernel.assign(size, 0.0);
@@ -339,7 +340,8 @@ void Filter::generateKernel(vd kernel, double sigma) { // generates the kernel u
         kernel[x] /= sum;
 }
 // Youssef Mohamed Hassib 20240707
-void Filter::blurImage(Image &orig, int rad, double alpha) {
+void Filter::blurImage(Image &orig, double alpha) {
+    if(alpha < 1e-9) return;
     vd kernel;
     generateKernel(kernel, alpha);
     int half = kernel.size() / 2;
@@ -365,7 +367,7 @@ void Filter::blurImage(Image &orig, int rad, double alpha) {
             for (int c = 0; c < temp.channels; ++c) {
                 double val = 0;
                 for (int dk = -half; dk <= half; ++dk) {
-                    int y2 = max(0, std::min(y + dk, temp.height - 1));
+                    int y2 = max(0, min(y + dk, temp.height - 1));
                     val += orig(x, y2, c) * kernel[dk + half];
                 }
 
@@ -402,7 +404,7 @@ void Filter::contrast(Image &orig, int percent){
         for(int y = 0; y < orig.height; ++y) {
             for(int c = 0; c < orig.channels; ++c) {
                 double val = (orig(x,y,c)-128.0) * v + 128.0;
-                val = std::max(0.0,std::min(255.0,val));
+                val = max(0.0,min(255.0,val));
                 orig(x,y,c) = val;
             }
         }
