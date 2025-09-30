@@ -728,6 +728,7 @@ void Menu::rotateImage()
 
     if(degree%90 != 0) {
         cerr << "Input must be divisible by 90\n\n\n";
+        pause();
         return;
     }
     applyFilter.rotateImage(this->img, degree);
