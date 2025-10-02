@@ -41,10 +41,10 @@ public:
     void darkenLightn(Image &orig, int percent) override; // Darken and Lighten Image
     void cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> dimension) override;// Crop Image
     void addFrame(Image &orig, Image* frame) override; // Adding a Frame to the Picture
-    void detectEdges(Image &orig, double alpha, int tresh) override; // Detect Image Edges
+    void detectEdges(Image &orig, float alpha, int tresh) override; // Detect Image Edges
     void resizeImage(Image &orig, int width, int height) override;
-    void generateKernel(std::vector<double>& kernel, double sigma);
+    void generateKernel(std::vector<float>& kernel, float sigma);
     // resize image
-    void blurImage(Image &orig, double alpha) override; // Blur Image
+    void blurImage(Image &orig, float alpha) override; // Blur Image
     void contrast(Image &orig, int percent) override; // Adjust Contrast
 };

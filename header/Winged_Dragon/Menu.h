@@ -5,17 +5,21 @@
 #include <limits>
 #include <string>
 #include <iomanip>
+#include <stack>
 
+using namespace std;
 class Menu {
     private:
         Filter applyFilter;
         Image img;
-        std::string path = "image/";
-        std::string name = "";
+        string path = "image/";
+        string name = "";
         enum TYPE {
             SAVE = 1,
             LOAD,
             BACK,
+            UNDO,
+            REDO,
             GRAY,
             BLACK_WHITE, 
             INVERT, 
@@ -29,7 +33,7 @@ class Menu {
             BLUR,
             CONTRAST
         };
-
+        stack<Image> undo, redo;
         void clear();
         void pause();
         bool invalidChoice(int option, int mx, const std::string &message, int mn = 1);
@@ -51,4 +55,5 @@ class Menu {
         void resizeImage();
         void blurImage();
         void contrast();
+        void xdoF(stack<Image> &st, stack<Image> &en, const string &msg);
 };

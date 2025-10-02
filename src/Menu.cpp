@@ -1,7 +1,5 @@
 #include "Winged_Dragon/Menu.h"
 
-using namespace std;
-
 void Menu::clear()
 {
     cin.clear();
@@ -46,21 +44,23 @@ void Menu::printFilter()
     cout << left << setw(3) << 1 << " : Save Image\n";
     cout << left << setw(3) << 2 << " : Load new Image\n";
     cout << left << setw(3) << 3 << " : Back\n";
+    cout << left << setw(3) << 4 << " : Undo\n";
+    cout << left << setw(3) << 5 << " : Redo\n";
     cout << '\n' << string(37,'=') << '\n';
     centerize("== Filter ==", 37);
     cout << string(37,'=') << '\n';
-    cout << left << setw(3) << 4 << " : Gray Filter\n";
-    cout << left << setw(3) << 5 << " : Black and White Filter\n";
-    cout << left << setw(3) << 6 << " : Invert Filter\n";
-    cout << left << setw(3) << 7 << " : Merge Filter\n";
-    cout << left << setw(3) << 8 << " : Flip Filter\n";
-    cout << left << setw(3) << 9 << " : Rotate Filter\n";
-    cout << left << setw(3) << 10 << " : Brightness Filter\n";
-    cout << left << setw(3) << 11 << " : Crop Filter\n";
-    cout << left << setw(3) << 12 <<" : Detect Edges\n";
-    cout << left << setw(3) << 13 << " : Resize Filter\n";
-    cout << left << setw(3) << 14 << " : Blur Filter\n";
-    cout << left << setw(3) << 15 << " : Contrast\n\n";
+    cout << left << setw(3) << 6 << " : Gray Filter\n";
+    cout << left << setw(3) << 7 << " : Black and White Filter\n";
+    cout << left << setw(3) << 8 << " : Invert Filter\n";
+    cout << left << setw(3) << 9 << " : Merge Filter\n";
+    cout << left << setw(3) << 10 << " : Flip Filter\n";
+    cout << left << setw(3) << 11 << " : Rotate Filter\n";
+    cout << left << setw(3) << 12 << " : Brightness Filter\n";
+    cout << left << setw(3) << 13 << " : Crop Filter\n";
+    cout << left << setw(3) << 14 <<" : Detect Edges\n";
+    cout << left << setw(3) << 15 << " : Resize Filter\n";
+    cout << left << setw(3) << 16 << " : Blur Filter\n";
+    cout << left << setw(3) << 17 << " : Contrast\n\n";
 }
 
 void Menu::startMenu() {
@@ -146,6 +146,14 @@ void Menu::filterMenu() {
     
         case BACK:
             return;
+
+        case UNDO:
+            xdoF(this->undo, this->redo, "No more actions to undo!\n");
+            break;
+
+        case REDO:
+            xdoF(this->redo, this->undo, "No more actions to redo!\n");
+            break;
     
         case GRAY:
             applyFilter.grayScale(this->img);
@@ -420,7 +428,7 @@ void Menu::blurImage()
     if(invalidChoice(percent,100,"Input must be integer from range [0,100]", 0)) {
         return;
     }
-    double sigma = (15.0 * percent) / 100.0;
+    float sigma = (15.0f * percent) / 100.0f;
     applyFilter.blurImage(this->img,sigma);
     cout << "DONE SUCCESSFULLY\n";
     pause();
@@ -435,6 +443,19 @@ void Menu::contrast()
         return;
     }
     applyFilter.contrast(this->img,option);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
+}
+void Menu::xdoF(stack<Image> &st, stack<Image> &en, const string &msg)
+{
+    if(st.empty()) {
+        cout << msg << '\n';
+        pause();
+        return;
+    }
+    en.push(this->img);
+    this->img = st.top();
+    st.pop();
     cout << "DONE SUCCESSFULLY\n";
     pause();
 }

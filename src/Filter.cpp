@@ -3,8 +3,8 @@
 
 using namespace std;
 
-#define vd vector<double>
-#define vvd vector<vector<double>>
+#define vf vector<float>
+#define vvf vector<vector<float>>
 
 /*
     Project : Baby Photoshop
@@ -51,7 +51,7 @@ void Filter::grayScale(Image &orig) {
                 G = orig(x,y,1),
                 B = orig(x,y,2);
             
-            int gray= min(0.299*R+0.587*G+0.114*B + 0.5, 255.0);
+            int gray= min(0.299f*R+0.587f*G+0.114f*B + 0.5f, 255.0f);
 
             for(int c = 0; c < orig.channels; ++ c) {
                 orig(x,y,c) = gray;
@@ -87,7 +87,7 @@ void Filter::invertImage(Image &orig) {
 
 // Ali Wael 20240354
 void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX, int startY) {
-    double dx = (double) transpaerncy / 100;
+    float dx = (float) transpaerncy / 100;
     int w;
     int h;
 
@@ -109,8 +109,8 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
     for(int x = 0; x < w; ++x) {
         for(int y = 0; y < h; ++y) {
             for(int c = 0; c < temp.channels; ++c) {
-                double val = (1-dx) * orig(x,y,c) + dx * merged(x,y,c);
-                temp(x,y,c) = min(255.0, max(0.0,val));
+                float val = (1-dx) * orig(x,y,c) + dx * merged(x,y,c);
+                temp(x,y,c) = min(255.0f, max(0.0f,val));
             }
         }
     }
@@ -159,7 +159,7 @@ void Filter::rotateImage(Image &orig, int degree) {
 //Ali-Wael 20240354
 void Filter::darkenLightn(Image &orig, int percent) {
     // percent -100 to 100
-    double v = pow((double) std::abs(percent) / 100,1.5);
+    float v = pow((float) std::abs(percent) / 100,1.5);
     
     bool dark = 0;
     if(percent < 0) dark = 1;
@@ -167,8 +167,8 @@ void Filter::darkenLightn(Image &orig, int percent) {
     for(int x = 0; x < orig.width; ++x) {
         for(int y = 0; y < orig.height; ++y) {
             for(int c = 0; c < orig.channels; ++c) {
-                if(dark) orig(x,y,c) = max(0.0,(1-v) * orig(x,y,c));
-                else orig(x,y,c) = min(255.0,(1+v) * orig(x,y,c));
+                if(dark) orig(x,y,c) = max(0.0f,(1-v) * orig(x,y,c));
+                else orig(x,y,c) = min(255.0f,(1+v) * orig(x,y,c));
             }
         }
     }
@@ -187,8 +187,11 @@ void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> 
     orig = temp;
 }
 
+void Filter::addFrame(Image &orig, Image *frame)
+{
+}
 // Ali Wael 20240354
-void Filter::detectEdges(Image &orig, double alpha, int tresh) {
+void Filter::detectEdges(Image &orig, float alpha, int tresh) {
     grayScale(orig);
     blurImage(orig, alpha);
 
@@ -198,21 +201,21 @@ void Filter::detectEdges(Image &orig, double alpha, int tresh) {
     int g1[3][3] = {{-1,0,1},{-2,0,2},{-1,0,1}};
     int g2[3][3] = {{-1,-2,-1},{0,0,0},{1,2,1}};
 
-    double *arr = new double[w*h], mx = 0.0;
+    float *arr = new float[w*h], mx = 0.0f;
 
     for (int x = 1; x < w - 1; ++x) {
         for (int y = 1; y < h - 1; ++y) {
-            double sum1 = 0, sum2 = 0;
+            float sum1 = 0, sum2 = 0;
             
             for (int dx = -1; dx <= 1; ++dx) {
                 for (int dy = -1; dy <= 1; ++dy) {
-                    double val = orig(x + dx, y + dy, 0);
+                    float val = orig(x + dx, y + dy, 0);
                     sum1 += val * g1[dy + 1][dx + 1];
                     sum2 += val * g2[dy + 1][dx + 1];
                 }
             }
             
-            double grad = sqrt(sum1 * sum1 + sum2 * sum2);
+            float grad = sqrt(sum1 * sum1 + sum2 * sum2);
 
             arr[y * w + x] = grad;
         }
@@ -233,18 +236,18 @@ void Filter::detectEdges(Image &orig, double alpha, int tresh) {
 // Amr Atif 20240398
 void Filter::resizeImage(Image &orig, int width, int height) {
     Image temp(width, height);
-    double sw = static_cast<double>(orig.width) / width;
-    double sh = static_cast<double>(orig.height) / height;
+    float sw = static_cast<float>(orig.width) / width;
+    float sh = static_cast<float>(orig.height) / height;
 
     for (int j = 0; j < height; j++) {
-        double sy = j * sh;
+        float sy = j * sh;
         int y = static_cast<int>(sy);
-        double dy = sy - y;
+        float dy = sy - y;
 
         for (int i = 0; i < width; i++) {
-            double sx = i * sw;
+            float sx = i * sw;
             int x = static_cast<int>(sx);
-            double dx = sx - x;
+            float dx = sx - x;
 
             for (int c = 0; c < orig.channels; c++) {
                 
@@ -252,11 +255,11 @@ void Filter::resizeImage(Image &orig, int width, int height) {
                 int x1 = min(orig.width-1,max(0,x+1));
                 int y0 = min(orig.height-1,max(0,y));
                 int y1 = min(orig.height-1,max(0,y+1));
-                double top = orig(x0, y0, c) * (1 - dx) + orig(x1, y0, c) * dx;
-                double bottom = orig(x0, y1, c) * (1 - dx) + orig(x1, y1, c) * dx;
-                double val = top * (1 - dy) + bottom * dy;
+                float top = orig(x0, y0, c) * (1 - dx) + orig(x1, y0, c) * dx;
+                float bottom = orig(x0, y1, c) * (1 - dx) + orig(x1, y1, c) * dx;
+                float val = top * (1 - dy) + bottom * dy;
 
-                temp(i, j, c) = static_cast<uint8_t>(min(255.0,max(0.0,val)));
+                temp(i, j, c) = static_cast<uint8_t>(min(255.0f,max(0.0f,val)));
             }
         }
     }
@@ -265,16 +268,16 @@ void Filter::resizeImage(Image &orig, int width, int height) {
 }
 
 // Youssef Mohamed Hassib 20240707
-void Filter::generateKernel(vd& kernel, double sigma) { // generates the kernel used to blur efficiently
+void Filter::generateKernel(vf& kernel, float sigma) { // generates the kernel used to blur efficiently
     int radius = ceil(3 * sigma);
     int size = 2 * radius + 1;
-    kernel.assign(size, 0.0);
+    kernel.assign(size, 0.0f);
 
-    double sum = 0;
-    double PI = acos(-1.0);
+    float sum = 0;
+    float PI = acos(-1.0f);
 
     for (int x = -radius; x <= radius; ++x) {
-        double G = exp(-(x * x) / (2 * sigma * sigma)) / (2 * PI * sigma * sigma);
+        float G = exp(-(x * x) / (2 * sigma * sigma)) / (2 * PI * sigma * sigma);
         kernel[x + radius] = G;
         sum += G;
     }
@@ -284,9 +287,9 @@ void Filter::generateKernel(vd& kernel, double sigma) { // generates the kernel 
 }
 
 // Youssef Mohamed Hassib 20240707
-void Filter::blurImage(Image &orig, double alpha) {
+void Filter::blurImage(Image &orig, float alpha) {
     if(alpha < 1e-9) return;
-    vd kernel;
+    vf kernel;
     generateKernel(kernel, alpha);
     int half = kernel.size() / 2;
     Image temp(orig);
@@ -294,12 +297,12 @@ void Filter::blurImage(Image &orig, double alpha) {
     for (int y = 0; y < temp.height; ++y) {
         for (int x = 0; x < temp.width; ++x) {
             for (int c = 0; c < temp.channels; ++c) {
-                double val = 0;
+                float val = 0;
                 for (int dk = -half; dk <= half; ++dk) {
                     int x2 = max(0, min(x + dk, temp.width - 1));
                     val += orig(x2, y, c) * kernel[dk + half];
                 }
-                temp(x, y, c) = min(255.0, max(val, 0.0));
+                temp(x, y, c) = min(255.0f, max(val, 0.0f));
             }
         }
     }
@@ -309,13 +312,13 @@ void Filter::blurImage(Image &orig, double alpha) {
     for (int y = 0; y < temp.height; ++y) {
         for (int x = 0; x < temp.width; ++x) {
             for (int c = 0; c < temp.channels; ++c) {
-                double val = 0;
+                float val = 0;
                 for (int dk = -half; dk <= half; ++dk) {
                     int y2 = max(0, min(y + dk, temp.height - 1));
                     val += orig(x, y2, c) * kernel[dk + half];
                 }
 
-                temp(x, y, c) = min(255.0, max(val, 0.0));
+                temp(x, y, c) = min(255.0f, max(val, 0.0f));
             }
         }
     }
@@ -325,15 +328,15 @@ void Filter::blurImage(Image &orig, double alpha) {
 // Ali-Wael 20240354
 void Filter::contrast(Image &orig, int percent){ 
     // -100 to 100
-    double v = 1.0 + (double) percent / 100;
-    if(percent >= 0) v = 1.0 + (double) percent / 100;
-    else v = 1.0 + (double) percent / 200;
+    float v = 1.0f + (float) percent / 100;
+    if(percent >= 0) v = 1.0f + (float) percent / 100;
+    else v = 1.0f + (float) percent / 200;
     
     for(int x = 0; x < orig.width; ++x) {
         for(int y = 0; y < orig.height; ++y) {
             for(int c = 0; c < orig.channels; ++c) {
-                double val = (orig(x,y,c)-128.0) * v + 128.0;
-                val = max(0.0,min(255.0,val));
+                float val = (orig(x,y,c)-128.0f) * v + 128.0f;
+                val = max(0.0f,min(255.0f,val));
                 orig(x,y,c) = val;
             }
         }

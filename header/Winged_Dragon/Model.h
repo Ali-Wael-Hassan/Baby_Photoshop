@@ -32,8 +32,8 @@ public:
     virtual void darkenLightn(Image &orig, int percent) = 0; // Darken and Lighten Image
     virtual void cropImage(Image &orig, std::pair<int,int> st, std::pair<int,int> dimension) = 0; // Crop Image
     virtual void addFrame(Image &orig, Image* frame) = 0; // Adding a Frame to the Picture
-    virtual void detectEdges(Image &orig, double alpha, int tresh) = 0; // Detect Image Edges
+    virtual void detectEdges(Image &orig, float alpha, int tresh) = 0; // Detect Image Edges
     virtual void resizeImage(Image &orig, int width, int height) = 0; // resize image
-    virtual void blurImage(Image &orig, double alpha) = 0; // Blur Image
+    virtual void blurImage(Image &orig, float alpha) = 0; // Blur Image
     virtual void contrast(Image &orig, int percent) = 0; // Adjust Contrast
 };
