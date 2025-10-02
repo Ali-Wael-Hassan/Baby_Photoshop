@@ -43,6 +43,7 @@ using namespace std;
     0.587 for Green
     0.114 for Blue
 */ 
+// Ali Wael 20240354
 void Filter::grayScale(Image &orig) {
     for(int x = 0; x < orig.width; ++x) {
         for(int y = 0; y < orig.height; ++y) {
@@ -59,7 +60,8 @@ void Filter::grayScale(Image &orig) {
         }
     }
 }
-// amr atif 20240398
+
+// Amr Atif 20240398
 void Filter::blackWhite(Image &orig) {
         Filter temp;
         temp.grayScale(orig);
@@ -82,16 +84,8 @@ void Filter::invertImage(Image &orig) {
         }
     }
 }
-/*
-    Ali-Wael 20240354
-    Merging two images with contribution (for slide bar)
-    to Merge two images the two must have the same size so we have two options:
-    1) resize them to max width and max height
-    2) take the min width and min height
-    to make the ability to drag we use start x, start y so that we can put the second image to make different overlapping area
 
-    Note: the drag makes start x, start y in the dimensions of first image (orig)
-*/ 
+// Ali Wael 20240354
 void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy, int startX, int startY) {
     double dx = (double) transpaerncy / 100;
     int w;
@@ -123,7 +117,8 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
 
     orig = temp;
 }
-// amr atif 20240398
+
+// Amr Atif 20240398
 void Filter::flipImage(Image &orig, bool& horiz) {
     int l = 0;
     int r = (horiz) ? (orig.width - 1) : (orig.height - 1);
@@ -151,7 +146,7 @@ void Filter::rotateImage(Image &orig, int degree) {
         Image res(orig.height, orig.width);
         for (int y = 0; y < orig.height; ++y) {
             for (int x = 0; x < orig.width; ++x) {
-                for (int c = 0; c < 3; ++c) {
+                for (int c = 0; c < orig.channels; ++c) {
                     res(orig.height - 1 - y, x, c) = orig(x, y, c);
                 }
             }
@@ -160,25 +155,9 @@ void Filter::rotateImage(Image &orig, int degree) {
     }
 
 }
-/*
-    Ali-Wael 20240354
-    Adjusting brightness of an image
 
-    Input: percent in range [-100, 100]
-      1) -ve → Darken
-      2) +ve → Lighten
-
-    - We compute a factor based on abs(percent) / 100.
-    - the factor is raised to the power of 1.5 to make the adjustment smoother (not just linear), 
-
-    - +ve (lighten):
-        multiplier = 1 + factor
-        Example: factor = 0.5 → multiplier = 1.5 → pixel = 1.5 * pixel
-    - If -ve (darken):
-        multiplier = 1 - factor
-        Example: factor = 0.3 → multiplier = 0.7 → pixel = 0.7 * pixel
-*/
-void Filter::darkenLightn(Image &orig, int percent) { // Ali-Wael
+//Ali-Wael 20240354
+void Filter::darkenLightn(Image &orig, int percent) {
     // percent -100 to 100
     double v = pow((double) std::abs(percent) / 100,1.5);
     
@@ -194,7 +173,8 @@ void Filter::darkenLightn(Image &orig, int percent) { // Ali-Wael
         }
     }
 }
-// amr atif 20240398
+
+// Amr Atif 20240398
 void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> dimension) {
     Image temp(dimension.first, dimension.second); 
     for (int i = 0; i < dimension.first; i++) {           
@@ -207,54 +187,16 @@ void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> 
     orig = temp;
 }
 
-void Filter::addFrame(Image &orig, Image *frame) {
-
-}
-/*
-    Ali-Wael 20240354
-    Detect Edges of an Image
-
-    Algorithm: Sobel Operator
-
-    Steps:
-    1) Convert the image to grayscale to simplify edge detection 
-    2) Apply a Gaussian blur (alpha/sigma parameter) to reduce noise.
-
-    Sobel Kernels:
-    For horizontal edges (changes left - right):
-          {-1, 0, 1}
-    Gx =  {-2, 0, 2}
-          {-1, 0, 1}
-
-    For vertical edges (changes top - bottom):
-          {-1, -2, -1}
-    Gy =  { 0,  0,  0}
-          { 1,  2,  1}
-
-    Gradient is the best to represent the edge since it is horizontal and vertical
-    by pythagoras
-    grad = sqrt(horizontal_edge^2 + vertical_edge^2)
-
-
-    Use a user-defined threshold to decide if a pixel is an edge.
-    If value >= threshold  mark as edge.
-
-    Optional:
-    Invert colors so edges appear white on black background.
-
-    Parameters:
-    alpha (sigma): blur factor to smooth the image.
-    threshold: minimum gradient magnitude to consider a pixel an edge.
-*/
-void Filter::detectEdges(Image &orig, double alpha, int tresh) { // Ali-Wael
+// Ali Wael 20240354
+void Filter::detectEdges(Image &orig, double alpha, int tresh) {
     grayScale(orig);
     blurImage(orig, alpha);
 
     int w = orig.width;
     int h = orig.height;
 
-    int g1[3][3] = {{-1,0,1},{-2,0,2},{-1,0,1}}; // horizontal
-    int g2[3][3] = {{-1,-2,-1},{0,0,0},{1,2,1}}; // vertical
+    int g1[3][3] = {{-1,0,1},{-2,0,2},{-1,0,1}};
+    int g2[3][3] = {{-1,-2,-1},{0,0,0},{1,2,1}};
 
     double *arr = new double[w*h], mx = 0.0;
 
@@ -287,7 +229,8 @@ void Filter::detectEdges(Image &orig, double alpha, int tresh) { // Ali-Wael
 
     delete [] arr;
 }
-// amr atif 20240398
+
+// Amr Atif 20240398
 void Filter::resizeImage(Image &orig, int width, int height) {
     Image temp(width, height);
     double sw = static_cast<double>(orig.width) / width;
@@ -339,6 +282,7 @@ void Filter::generateKernel(vd& kernel, double sigma) { // generates the kernel 
     for (int x = 0; x < size; ++x)
         kernel[x] /= sum;
 }
+
 // Youssef Mohamed Hassib 20240707
 void Filter::blurImage(Image &orig, double alpha) {
     if(alpha < 1e-9) return;
@@ -377,25 +321,10 @@ void Filter::blurImage(Image &orig, double alpha) {
     }
     orig = temp;
 }
-/*
-    Ali-Wael 20240354
-    Adjusting contrast of an image
 
-    Input: percent in range [-100, 100]
-      1) -ve → reduce contrast
-      2) +ve → increase contrast
-
-    - We compute a factor based on abs(percent) / 100.
-
-    multiplier = 1 + factor
-    Example: factor = 0.5 → multiplier = 1.5 → pixel = 1.5 * pixel
-
-    we iterate over pixels and if it is dark (x < 128) then it will be -ve so gets darker
-    else gets lighter 
-
-    Note: all of that based on the factor and the factor is /200 in dark to make -100 not fully gray
-*/
+// Ali-Wael 20240354
 void Filter::contrast(Image &orig, int percent){ 
+    // -100 to 100
     double v = 1.0 + (double) percent / 100;
     if(percent >= 0) v = 1.0 + (double) percent / 100;
     else v = 1.0 + (double) percent / 200;

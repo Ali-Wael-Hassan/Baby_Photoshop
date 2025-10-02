@@ -6,20 +6,6 @@
 #include <string>
 #include <iomanip>
 
-/*
-    Ready
-    1-SAVE
-    2-LOAD
-    3-BACK
-    4-GRAY
-    5-BLACK_WHITE
-    7-MERGE
-    8-FLIP
-    10-BRIGHTNESS
-    11-CROP
-    13-RESIZE
-    15-CONTRAST
-*/
 class Menu {
     private:
         Filter applyFilter;
