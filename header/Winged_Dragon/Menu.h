@@ -40,12 +40,17 @@ class Menu {
         void centerize(const std::string &menuName, int width);
         void printStart();
         void printFilter();
+        bool backContinue();
+        void putToUndo();
 
     public:
         void startMenu(); // first menu
         bool loadImage(Image& orig, std::string& origName);
         void filterMenu();
         void saveImage();
+        void grayScale();
+        void blackWhite();
+        void invertImage();
         void mergeImage();
         void flipImage();
         void rotateImage();

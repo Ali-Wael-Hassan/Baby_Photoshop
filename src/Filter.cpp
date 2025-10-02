@@ -1,5 +1,4 @@
 #include "Winged_Dragon/Filter.h"
-#include "Filter.h"
 
 using namespace std;
 
@@ -115,7 +114,7 @@ void Filter::mergeImage(Image &orig, Image &merged, int option, int transpaerncy
         }
     }
 
-    orig = temp;
+    swap(orig,temp);
 }
 
 // Amr Atif 20240398
@@ -151,7 +150,7 @@ void Filter::rotateImage(Image &orig, int degree) {
                 }
             }
         }
-        orig = res;
+        swap(orig,res);
     }
 
 }
@@ -184,7 +183,7 @@ void  Filter::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> 
             }
         }
     }
-    orig = temp;
+    swap(orig,temp);
 }
 
 void Filter::addFrame(Image &orig, Image *frame)
@@ -264,7 +263,7 @@ void Filter::resizeImage(Image &orig, int width, int height) {
         }
     }
 
-    orig = temp;
+    swap(orig,temp);
 }
 
 // Youssef Mohamed Hassib 20240707
@@ -322,7 +321,7 @@ void Filter::blurImage(Image &orig, float alpha) {
             }
         }
     }
-    orig = temp;
+    swap(orig,temp);
 }
 
 // Ali-Wael 20240354

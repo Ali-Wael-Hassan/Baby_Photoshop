@@ -11,15 +11,15 @@ void Menu::pause() {
 }
 
 bool Menu::invalidChoice(int option, int mx, const string &message, int mn) {
-        if (cin.fail() || option < mn || option > mx)
-        {
-            clear();
-            cerr << message << "\n";
-            pause();
-            cout << "\n\n";
-            return true;
-        }
-        return false;
+    if (cin.fail() || option < mn || option > mx)
+    {
+        clear();
+        cerr << message << "\n";
+        pause();
+        cout << "\n\n";
+        return true;
+    }
+    return false;
 }
 
 void Menu::centerize(const string &menuName, int width) {
@@ -63,6 +63,35 @@ void Menu::printFilter()
     cout << left << setw(3) << 17 << " : Contrast\n\n";
 }
 
+bool Menu::backContinue()
+{
+    cout << setw(3) << 1 << " : Continue\n";
+    cout << setw(3) << 2 << " : Back\n\n";
+    int op;
+    cout << "Enter option: ";
+    cin >> op;
+    
+    if(invalidChoice(op,2,"Input must be from options",1)) {
+        return true;
+    }
+
+    if(op == 2) {
+        cout << "Return successfuly\n\n";
+        pause();
+        return true;
+    }
+
+    return false;
+}
+
+void Menu::putToUndo()
+{
+    undo.push(this->img);
+    while(!redo.empty()) {
+        redo.pop();
+    }
+}
+
 void Menu::startMenu() {
 
     while (true) {
@@ -101,6 +130,26 @@ void Menu::startMenu() {
 }
 
 bool Menu::loadImage(Image& orig, string& origName) {
+    
+    cout << setw(3) << 1 << " : Continue\n";
+    cout << setw(3) << 2 << " : Back\n\n";
+    int op;
+    cout << "Enter option: ";
+    cin >> op;
+    
+    if (cin.fail() || op < 1 || op > 2)
+    {
+        clear();
+        cerr << "Input must be from options" << "\n";
+        cout << "\n\n";
+        return false;
+    }
+
+    if(op == 2) {
+        cout << "Return successfuly\n\n";
+        return false;
+    }
+
     cout << "Enter image name with extension: ";
     cin >> origName;
     
@@ -156,21 +205,15 @@ void Menu::filterMenu() {
             break;
     
         case GRAY:
-            applyFilter.grayScale(this->img);
-            cout << "DONE SUCCESSFULLY\n";
-            pause();
+            grayScale();
             break;
     
         case BLACK_WHITE:
-            applyFilter.blackWhite(this->img);
-            cout << "DONE SUCCESSFULLY\n";
-            pause();
+            blackWhite();
             break;
     
         case INVERT:
-            applyFilter.invertImage(this->img);
-            cout << "DONE SUCCESSFULLY\n";
-            pause();
+            invertImage();
             break;
     
         case MERGE:
@@ -214,7 +257,13 @@ void Menu::filterMenu() {
 }
 
 void Menu::saveImage() {
-    cout << "Option 1: Save to current image\nOption 2: Save as new image\n\n";
+    if(backContinue()) {
+        return;
+    }
+
+    cout << setw(3) << 1 << " : Save to current image\n";
+    cout << setw(3) << 2 << " : Save as new image\n\n";
+
     int option;
     cout << "Enter option: ";
     cin >> option;
@@ -245,7 +294,38 @@ void Menu::saveImage() {
     cout << "SAVED SUCCESSFULLY\n";
     pause();
 }
+
+void Menu::grayScale()
+{
+    backContinue();
+    putToUndo();
+    applyFilter.grayScale(this->img);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
+}
+
+void Menu::blackWhite()
+{
+    backContinue();
+    putToUndo();
+    applyFilter.blackWhite(this->img);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
+}
+
+void Menu::invertImage()
+{
+    backContinue();
+    putToUndo();
+    applyFilter.invertImage(this->img);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
+}
+
 void Menu::mergeImage() {
+    if(backContinue()) {
+        return;
+    }
     string newName;
     Image merged;
     int x = 1, y = 1;
@@ -253,7 +333,8 @@ void Menu::mergeImage() {
         pause();
         return;
     }
-    cout << "Option 1: Resize both to max width and height\nOption 2: Get the common area\n\n";
+    cout << setw(3) << 1 << " : Resize both to max width and height\n";
+    cout << setw(3) << 2 << " : Get the common area\n\n";
     
     cout << "Enter Option: ";
     int option; 
@@ -293,6 +374,7 @@ void Menu::mergeImage() {
         }
     }
 
+    putToUndo();
     applyFilter.mergeImage(this->img,merged,option,transparency,x-1,y-1);
 
     cout << "DONE SUCCESSFULLY\n";
@@ -300,6 +382,9 @@ void Menu::mergeImage() {
 }
 void Menu::flipImage()
 {
+    if(backContinue()) {
+        return;
+    }
     cout << left << setw(3) << 1 << " : Horizontal\n";
     cout << left << setw(3) << 2 << " : Vertical\n\n";
     cout << "Enter option: ";
@@ -309,6 +394,7 @@ void Menu::flipImage()
         return;
     }
     bool horiz = (option == 1? true : false);
+    putToUndo();
     applyFilter.flipImage(this->img,horiz);
     cout << "DONE SUCCESSFULLY\n";
     pause();
@@ -316,6 +402,9 @@ void Menu::flipImage()
 
 void Menu::rotateImage()
 {
+    if(backContinue()) {
+        return;
+    }
     cout << "Enter degree (must be divisible by 90): ";
     int degree; cin >> degree;
     if(invalidChoice(degree,INT_MAX,"Input must be integer",INT_MIN)) {
@@ -329,6 +418,7 @@ void Menu::rotateImage()
         pause();
         return;
     }
+    putToUndo();
     applyFilter.rotateImage(this->img, degree);
     cout << "DONE SUCCESSFULLY\n";
     pause();
@@ -336,12 +426,16 @@ void Menu::rotateImage()
 
 void Menu::brightness()
 {
+    if(backContinue()) {
+        return;
+    }
     cout << "Enter percentage[-100,100]: ";
     int option; cin >> option;
     
     if(invalidChoice(option,100,"Input must be integer from range [-100,100]", -100)) {
         return;
     }
+    putToUndo();
     applyFilter.darkenLightn(this->img,option);
     cout << "DONE SUCCESSFULLY\n";
     pause();
@@ -349,6 +443,9 @@ void Menu::brightness()
 
 void Menu::cropImage()
 {
+    if(backContinue()) {
+        return;
+    }
     cout << "Enter the top left point\n";
     cout << "Enter x: ";
     int x,y;
@@ -378,7 +475,8 @@ void Menu::cropImage()
     if(invalidChoice(height,this->img.height - y + 1,"Invalid width",1)) {
         return;
     }
-
+    
+    putToUndo();
     applyFilter.cropImage(this->img, {x-1,y-1}, {width,height});
     cout << "DONE SUCCESSFULLY\n";
     pause();
@@ -386,6 +484,9 @@ void Menu::cropImage()
 
 void Menu::detectEdges()
 {
+    if(backContinue()) {
+        return;
+    }
     int percent;
     cout << "Enter Edge sharpness[0,100]: ";
     cin >> percent;
@@ -393,6 +494,8 @@ void Menu::detectEdges()
         return;
     }
     int threshhold = 120 - 0.9 * percent;
+
+    putToUndo();
     applyFilter.detectEdges(this->img,2.5,threshhold);
     cout << "DONE SUCCESSFULLY\n";
     pause();
@@ -400,6 +503,9 @@ void Menu::detectEdges()
 
 void Menu::resizeImage()
 {
+    if(backContinue()) {
+        return;
+    }
     cout << "Enter new width: ";
     int width;
     cin >> width;
@@ -415,6 +521,7 @@ void Menu::resizeImage()
         return;
     }
 
+    putToUndo();
     applyFilter.resizeImage(this->img,width,height);
     cout << "DONE SUCCESSFULLY\n";
     pause();
@@ -422,6 +529,9 @@ void Menu::resizeImage()
 
 void Menu::blurImage()
 {
+    if(backContinue()) {
+        return;
+    }
     cout << "Enter percentage[0,100]: ";
     int percent; cin >> percent;
     
@@ -429,6 +539,8 @@ void Menu::blurImage()
         return;
     }
     float sigma = (15.0f * percent) / 100.0f;
+
+    putToUndo();
     applyFilter.blurImage(this->img,sigma);
     cout << "DONE SUCCESSFULLY\n";
     pause();
@@ -436,12 +548,17 @@ void Menu::blurImage()
 
 void Menu::contrast()
 {
+    if(backContinue()) {
+        return;
+    }
     cout << "Enter percentage[-100,100]: ";
     int option; cin >> option;
     
     if(invalidChoice(option,100,"Input must be integer from range [-100,100]", -100)) {
         return;
     }
+
+    putToUndo();
     applyFilter.contrast(this->img,option);
     cout << "DONE SUCCESSFULLY\n";
     pause();
@@ -457,5 +574,4 @@ void Menu::xdoF(stack<Image> &st, stack<Image> &en, const string &msg)
     this->img = st.top();
     st.pop();
     cout << "DONE SUCCESSFULLY\n";
-    pause();
 }
