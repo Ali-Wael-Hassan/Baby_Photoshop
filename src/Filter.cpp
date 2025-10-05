@@ -342,14 +342,13 @@ void Filter::contrast(Image &orig, int percent){
         }
     }
 }
-
+// Ali Wael 20240354
 void Filter::oilPainting(Image &orig, int radius, int intensityLevel)
 {
     using vi = vector<int>;
     using vvi = vector<vi>;
 
     intensityLevel = min(intensityLevel, 20);
-    radius = max(1, radius / 2);
 
     Image temp(orig);
 
@@ -402,4 +401,29 @@ void Filter::oilPainting(Image &orig, int radius, int intensityLevel)
     }
 
     swap(orig, temp);
+}
+// Ali Wael 20240354
+void Filter::skew(Image &orig, float rad)
+{
+    int offset = ceil(fabs(tan(rad) * orig.height));
+    int w = orig.width + abs(offset);
+    int h = orig.height;
+
+    Image temp(w, h);
+    fill(temp.imageData, temp.imageData + w * h * temp.channels, 255);
+
+    for (int y = 0; y < h; ++y) {
+        float ratio = (float) y / (h - 1);
+        int shift = ceil(offset * (1.0f - ratio));
+
+        for (int x = 0; x < orig.width; ++x) {
+            int nx = x + shift;
+            if (nx >= 0 && nx < w) {
+                for (int c = 0; c < orig.channels; ++c)
+                    temp(nx, y, c) = orig(x, y, c);
+            }
+        }
+    }
+
+    swap(temp, orig);
 }

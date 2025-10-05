@@ -37,4 +37,5 @@ public:
     virtual void blurImage(Image &orig, float alpha) = 0; // Blur Image
     virtual void contrast(Image &orig, int percent) = 0; // Adjust Contrast
     virtual void oilPainting(Image &orig, int radius, int intensityLevel);
+    virtual void skew(Image &orig, float rad);
 };

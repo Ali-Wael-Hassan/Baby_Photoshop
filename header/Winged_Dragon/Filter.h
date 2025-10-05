@@ -47,4 +47,5 @@ public:
     void blurImage(Image &orig, float alpha) override; // Blur Image
     void contrast(Image &orig, int percent) override; // Adjust Contrast
     void oilPainting(Image &orig, int radius, int intensityLevel) override; // Image -> Oil Painting
+    void skew(Image &orig, float rad) override; // Image -> Oil Painting
 };
