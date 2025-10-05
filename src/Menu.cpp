@@ -178,7 +178,7 @@ void Menu::filterMenu() {
         cin >> option;
         
 
-        if(invalidChoice(option,15,"Input must be from options",1)) {
+        if(invalidChoice(option,17,"Input must be from options",1)) {
             continue;
         }
     

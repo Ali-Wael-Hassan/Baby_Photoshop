@@ -1,4 +1,5 @@
 #include "Winged_Dragon/Filter.h"
+#include "Filter.h"
 
 using namespace std;
 
@@ -340,4 +341,65 @@ void Filter::contrast(Image &orig, int percent){
             }
         }
     }
+}
+
+void Filter::oilPainting(Image &orig, int radius, int intensityLevel)
+{
+    using vi = vector<int>;
+    using vvi = vector<vi>;
+
+    intensityLevel = min(intensityLevel, 20);
+    radius = max(1, radius / 2);
+
+    Image temp(orig);
+
+    vvi intensityMap(orig.width, vi(orig.height));
+    for (int x = 0; x < orig.width; ++x) {
+        for (int y = 0; y < orig.height; ++y) {
+            int r = orig(x,y,0), g = orig(x,y,1), b = orig(x,y,2);
+            intensityMap[x][y] = ((r + g + b) * intensityLevel) / (3 * 255);
+        }
+    }
+
+    for (int x = 0; x < orig.width; ++x) {
+
+        int *bin = new int[intensityLevel + 2]{};
+        int *red = new int[intensityLevel + 2]{};
+        int *green = new int[intensityLevel + 2]{};
+        int *blue = new int[intensityLevel + 2]{};
+
+        for (int y = 0; y < orig.height; ++y) {
+            fill(bin, bin + intensityLevel + 2, 0);
+            fill(red, red + intensityLevel + 2, 0);
+            fill(green, green + intensityLevel + 2, 0);
+            fill(blue, blue + intensityLevel + 2, 0);
+            int bestI = 0, bestCount = 0;
+            for (int dx = -radius; dx <= radius; ++dx)
+                for (int dy = -radius; dy <= radius; ++dy) {
+                    int nx = x + dx, ny = y + dy;
+                    if (nx < 0 || nx >= orig.width || ny < 0 || ny >= orig.height) continue;
+
+                    int i = intensityMap[nx][ny];
+                    bin[i]++;
+                    red[i] += orig(nx,ny,0);
+                    green[i] += orig(nx,ny,1);
+                    blue[i] += orig(nx,ny,2);
+
+                    if (bin[i] > bestCount) {
+                        bestCount = bin[i];
+                        bestI = i;
+                    }
+                }
+
+            temp(x,y,0) = red[bestI] / bestCount;
+            temp(x,y,1) = green[bestI] / bestCount;
+            temp(x,y,2) = blue[bestI] / bestCount;
+        }
+        delete [] bin;
+        delete [] red;
+        delete [] green;
+        delete [] blue;
+    }
+
+    swap(orig, temp);
 }
