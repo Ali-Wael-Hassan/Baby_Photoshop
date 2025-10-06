@@ -310,7 +310,9 @@ void Menu::saveImage() {
 
 void Menu::grayScale()
 {
-    backContinue();
+    if(backContinue()) {
+        return;
+    }
     putToUndo();
     applyFilter.grayScale(this->img);
     cout << "DONE SUCCESSFULLY\n";
@@ -319,7 +321,9 @@ void Menu::grayScale()
 
 void Menu::blackWhite()
 {
-    backContinue();
+    if(backContinue()) {
+        return;
+    }
     putToUndo();
     applyFilter.blackWhite(this->img);
     cout << "DONE SUCCESSFULLY\n";
@@ -328,7 +332,9 @@ void Menu::blackWhite()
 
 void Menu::invertImage()
 {
-    backContinue();
+    if(backContinue()) {
+        return;
+    }
     putToUndo();
     applyFilter.invertImage(this->img);
     cout << "DONE SUCCESSFULLY\n";

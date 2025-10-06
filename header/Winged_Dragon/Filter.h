@@ -42,11 +42,12 @@ public:
     void cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> dimension) override;// Crop Image
     void addFrame(Image &orig, Image* frame) override; // Adding a Frame to the Picture
     void detectEdges(Image &orig, float alpha, int tresh) override; // Detect Image Edges
-    void resizeImage(Image &orig, int width, int height) override;
+    void resizeImage(Image &orig, int width, int height) override; // Resize Image
     void generateKernel(std::vector<float>& kernel, float sigma);
-    // resize image
     void blurImage(Image &orig, float alpha) override; // Blur Image
     void contrast(Image &orig, int percent) override; // Adjust Contrast
+    void oilPainting(Image &orig, int radius, int intensityLevel) override; // Image -> Oil Painting
+    void skew(Image &orig, float rad) override; // Image -> Oil Painting
     void purbleFilter(Image &orig) override; // purble filter.
     void infraredFilter(Image &orig,float precent) override; // infrared filter.
 };
