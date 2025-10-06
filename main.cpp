@@ -10,4 +10,13 @@ int main(){
     cout << string(45,'=') << "\n\n\n\n";
     Menu run;
     run.startMenu();
+
+    // Filter f;
+    // Image img("image/building.jpg");
+    // const double PI = acos(-1);
+    // cout << "Enter deg: ";
+    // int deg; cin >> deg;
+    // f.skew(img, deg * PI/180);
+    // img.saveImage("x.jpg");
+    // cout << "Done";
 }
