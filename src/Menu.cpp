@@ -1,4 +1,5 @@
 #include "Winged_Dragon/Menu.h"
+#include "Winged_Dragon/Menu.h"
 
 void Menu::clear()
 {
@@ -60,7 +61,9 @@ void Menu::printFilter()
     cout << left << setw(3) << 14 <<" : Detect Edges\n";
     cout << left << setw(3) << 15 << " : Resize Filter\n";
     cout << left << setw(3) << 16 << " : Blur Filter\n";
-    cout << left << setw(3) << 17 << " : Contrast\n\n";
+    cout << left << setw(3) << 17 << " : Contrast\n";
+    cout << left << setw(3) << 18 << " : Purble Filter\n";
+    cout << left << setw(3) << 19 << " : Infrared Filter\n\n";
 }
 
 bool Menu::backContinue()
@@ -178,7 +181,7 @@ void Menu::filterMenu() {
         cin >> option;
         
 
-        if(invalidChoice(option,15,"Input must be from options",1)) {
+        if(invalidChoice(option,19,"Input must be from options",1)) {
             continue;
         }
     
@@ -251,7 +254,17 @@ void Menu::filterMenu() {
         case CONTRAST:
             contrast();
             break;
+
+        case PURBLEFILTER:
+            purbleFilter();
+            break;
+
+        case INFRAREDFILTER:
+            infraredFilter();
+            break;
         }
+        
+        
         cout << "\n\n";
     }
 }
@@ -563,6 +576,7 @@ void Menu::contrast()
     cout << "DONE SUCCESSFULLY\n";
     pause();
 }
+
 void Menu::xdoF(stack<Image> &st, stack<Image> &en, const string &msg)
 {
     if(st.empty()) {
@@ -575,3 +589,33 @@ void Menu::xdoF(stack<Image> &st, stack<Image> &en, const string &msg)
     st.pop();
     cout << "DONE SUCCESSFULLY\n";
 }
+
+void Menu::purbleFilter()
+{
+    if(backContinue()){
+        return;
+    }
+    putToUndo();
+    applyFilter.purbleFilter(this -> img);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
+}
+
+void Menu::infraredFilter()
+{
+    if(backContinue()){
+        return;
+    }
+    putToUndo();
+    cout << "Enter percentage: ";
+    int op;
+    cin >> op;
+    if(invalidChoice(op,100,"Enter integer between 0 to 100",0)){
+        return;
+    }
+    applyFilter.infraredFilter(this -> img,op/100.0f);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
+}
+
+

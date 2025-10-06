@@ -1,4 +1,5 @@
 #include "Winged_Dragon/Filter.h"
+#include "Filter.h"
 
 using namespace std;
 
@@ -341,3 +342,31 @@ void Filter::contrast(Image &orig, int percent){
         }
     }
 }
+
+void Filter::purbleFilter(Image &orig)
+{
+    for (int i = 0; i < orig.width; i++) {
+        for (int j = 0; j < orig.height; j++) {
+
+            float R_new =min(max(orig(i, j, 0) * 1.2 + 10.0, 0.0), 255.0);
+            float G_new =min(max(orig(i, j, 1) * 0.8 - 10.0, 0.0), 255.0);
+            float B_new =min(max(orig(i, j, 2) * 1.3 + 20.0, 0.0), 255.0);
+
+            orig(i, j, 0) = static_cast<unsigned char>(R_new);
+            orig(i, j, 1) = static_cast<unsigned char>(G_new);
+            orig(i, j, 2) = static_cast<unsigned char>(B_new);
+        }
+    }
+}
+
+void Filter::infraredFilter(Image &orig,float precent)
+{
+    invertImage(orig);
+    for (int i = 0; i < orig.width; ++i) {
+        for (int j = 0; j < orig.height; ++j) {
+            orig(i, j, 0) = min(255.0f,max(0.0f,(orig(i, j, 0) + 100) * (1 + precent)));
+        }
+    }
+}
+
+

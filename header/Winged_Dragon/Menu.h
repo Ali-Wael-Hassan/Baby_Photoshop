@@ -31,7 +31,9 @@ class Menu {
             DETECT_EDGES,
             RESIZE,
             BLUR,
-            CONTRAST
+            CONTRAST,
+            PURBLEFILTER,
+            INFRAREDFILTER
         };
         stack<Image> undo, redo;
         void clear();
@@ -60,5 +62,7 @@ class Menu {
         void resizeImage();
         void blurImage();
         void contrast();
+        void purbleFilter();
+        void infraredFilter();
         void xdoF(stack<Image> &st, stack<Image> &en, const string &msg);
 };

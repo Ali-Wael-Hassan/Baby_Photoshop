@@ -47,4 +47,6 @@ public:
     // resize image
     void blurImage(Image &orig, float alpha) override; // Blur Image
     void contrast(Image &orig, int percent) override; // Adjust Contrast
+    void purbleFilter(Image &orig) override; // purble filter.
+    void infraredFilter(Image &orig,float precent) override; // infrared filter.
 };
