@@ -1,5 +1,6 @@
 #include "Winged_Dragon/Filter.h"
 
+
 using namespace std;
 
 #define vf vector<float>
@@ -449,6 +450,110 @@ void Filter::infraredFilter(Image &orig,float precent)
     for (int i = 0; i < orig.width; ++i) {
         for (int j = 0; j < orig.height; ++j) {
             orig(i, j, 0) = min(255.0f,max(0.0f,(orig(i, j, 0) + 100) * (1 + precent)));
+        }
+    }
+}
+
+
+void Filter::addSolidFrame(Image &orig, double thickness) { // add(r, g, b sliders to play with the color of the frame
+    int nw = orig.width + (2 * thickness);
+    int nh = orig.height + (2 * thickness);
+
+    Image framed(nw, nh);
+    for (int y = 0; y < nh; ++y) {
+        for (int x = 0; x < nw; ++x) {
+            framed(x, y, 0) = 0;
+            framed(x, y, 1) = 255;
+            framed(x, y, 2) = 0;
+        }
+    }
+
+    for (int y = 0; y < orig.height; ++y) {
+        for (int x = 0; x < orig.width; ++x) {
+            for (int c = 0; c < 3; ++c) {
+                framed(x + thickness, y + thickness, c) = orig(x, y, c);
+            }
+        }
+    }
+    orig = framed;
+}
+
+void Filter::addBee(Image &orig, double thickness) {
+    int nw = orig.width + (2 * thickness);
+    int nh = orig.height + (2 * thickness);
+
+    Image framed(nw, nh);
+    for (int y = 0; y < nh; ++y) {
+        for (int x = 0; x < nw; ++x) {
+            for (int i = 0; i < framed.channels; ++i) {
+                framed(x, y, i) = 0;
+            }
+        }
+    }
+    if ((int) thickness == 0) thickness += 1;
+
+    for (int by = 0; by < nh; by += (int) thickness) {
+        for (int bx = 0; bx < nw; bx += (int) thickness) {
+            if (((bx / (int) thickness) + (by / (int) thickness)) % 2 == 0) {
+                for (int y = by; y < by + thickness && y < nh; ++y) {
+                    for (int x = bx; x < bx + thickness && x < nw; ++x) {
+                        framed(x, y, 0) = 255;
+                        framed(x, y, 1) = 165;
+                        framed(x, y, 2) = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    for (int y = thickness; y < framed.height - thickness + 1; ++y) {
+        for (int x = thickness; x < framed.width - thickness + 1; ++x) {
+            for (int k = 0; k < orig.channels; ++k) {
+                framed(x, y, k) = orig(x - thickness, y - thickness, k);
+            }
+        }
+    }
+    orig = framed;
+}
+
+void Filter::sun(Image &orig, int percent) {
+
+    double intensity = (double) percent / 100;
+    for (int y = 0; y < orig.height; ++y) {
+        for (int x = 0; x < orig.width; ++x) {
+            double avg = 0.0;
+            for (int i = 0; i < 3; ++i) {
+                avg += orig(x, y, i);
+            }
+            avg /= 3;
+
+            double ry = min(avg * 1.95, 255.0);
+            double gy = min(avg * 1.80, 255.0);
+            double by = min(avg * 0.85, 255.0);
+
+            double r = orig(x, y, 0) * (1 - intensity) + ry * intensity;
+            double g = orig(x, y, 1) * (1 - intensity) + gy * intensity;
+            double b = orig(x, y, 2) * (1 - intensity) + by * intensity;
+
+            orig(x, y, 0) = min(255.0, max(r, 0.0));
+            orig(x, y, 1) = min(255.0, max(g, 0.0));
+            orig(x, y, 2) = min(255.0, max(b, 0.0));
+
+
+        }
+    }
+}
+
+void Filter::tv(Image &orig) {
+    for (int y = 0; y < orig.height; ++y) {
+        for (int x = 0; x < orig.width; ++x) {
+            if (y % 2) {
+                for (int k = 0; k < 3; ++k) {
+                    double val = orig(x, y, k) - orig(x, y, k) * 0.4;
+                    orig(x, y, k) = min(255.0, max(0.0, val));
+
+                }
+            }
         }
     }
 }

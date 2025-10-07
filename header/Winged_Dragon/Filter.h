@@ -50,4 +50,8 @@ public:
     void skew(Image &orig, float rad) override; // Image -> Oil Painting
     void purbleFilter(Image &orig) override; // purble filter.
     void infraredFilter(Image &orig,float precent) override; // infrared filter.
+    void sun(Image& orig, int percent) override;
+    void tv(Image& orig) override;
+    void addSolidFrame(Image &orig, double thickness) override;
+    void addBee(Image &orig, double thickness) override;// Adding a Frame to the Picture
 };

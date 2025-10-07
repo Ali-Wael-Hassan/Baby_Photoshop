@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "Image_Class\Image_Class.h"
+#include "Image_Class.h"
 
 
 
@@ -40,4 +40,8 @@ public:
     virtual void skew(Image &orig, float rad) = 0;
     virtual void purbleFilter(Image &orig) =0;//purble filter image.
     virtual void infraredFilter(Image &orig,float precent) =0;//infrared filter.
+    virtual void sun(Image& orig, int percent) = 0;
+    virtual void tv(Image& orig) = 0;
+    virtual void addSolidFrame(Image &orig, double thickness) = 0; // Adding a Frame to the Picture
+    virtual void addBee(Image &orig, double thickness) = 0; // An alternating styles frame
 };

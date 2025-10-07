@@ -32,8 +32,12 @@ class Menu {
             RESIZE,
             BLUR,
             CONTRAST,
-            PURBLEFILTER,
-            INFRAREDFILTER
+            PURPLE,
+            INFRARED,
+            SUN,
+            TV,
+            SOLID_FRAME,
+            ALT_FRAME
         };
         stack<Image> undo, redo;
         void clear();
@@ -65,4 +69,8 @@ class Menu {
         void purbleFilter();
         void infraredFilter();
         void xdoF(stack<Image> &st, stack<Image> &en, const string &msg);
+        void sun();
+        void tv();
+        void addSolidFrame();
+        void addBee();
 };
