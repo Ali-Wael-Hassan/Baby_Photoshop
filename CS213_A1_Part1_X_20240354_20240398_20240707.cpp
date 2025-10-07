@@ -1,12 +1,15 @@
 /*
     Project : Baby Photoshop
-    File    : CS213_A1_Part1_17_20240354_20240398_20240707.cpp
-    Section : S27
+    File    : CS213_A1_Part1_X_20240354_20240398_20240707.cpp
+    Section : SX
 
     Team Members:
     - Ali Wael       (ID 20240354)  -> Gray Scale (1), Merge Image (4), Darken & Lighten (7), Detect Edges (10)
     - Amr Atif       (ID 20240398)  -> Black & White (2), Flip Image (5), Crop Image (8), Resize Image (11)
     - Yousef Hassib  (ID 20240707)  -> Invert Colors (3), Rotate Image (6), Blur Image (12)
+
+    WARNING:
+        you must make image folder to run the program correctly
 
     Description:
     The program starts with the main menu which has two options:
@@ -25,7 +28,7 @@
           (-v) applies Darken and (+v) applies Lighten.
     
     Second Note: images must be put in folder in the main directory with name image example: image/myImg.jpg
-    Second Note: put only name of the image + extension
+    Third Note: put only name of the image + extension
 */
 
 #include <iostream>
@@ -38,6 +41,7 @@
 #include <exception>
 #include <limits>
 #include <iomanip>
+#include <climits>
 #include "Image_Class.h"
 using namespace std;
 
@@ -170,7 +174,7 @@ void Filter::rotateImage(Image &orig, int degree) {
         Image res(orig.height, orig.width);
         for (int y = 0; y < orig.height; ++y) {
             for (int x = 0; x < orig.width; ++x) {
-                for (int c = 0; c < 3; ++c) {
+                for (int c = 0; c < orig.channels; ++c) {
                     res(orig.height - 1 - y, x, c) = orig(x, y, c);
                 }
             }
@@ -421,8 +425,7 @@ void Menu::pause() {
     system("pause");
 }
 
-bool Menu::invalidChoice(int option, int mx, const string &message, int mn)
-    {
+bool Menu::invalidChoice(int option, int mx, const string &message, int mn) {
         if (cin.fail() || option < mn || option > mx)
         {
             clear();
@@ -432,7 +435,7 @@ bool Menu::invalidChoice(int option, int mx, const string &message, int mn)
             return true;
         }
         return false;
-    }
+}
 
 void Menu::centerize(const string &menuName, int width) {
     int spaces = max(0,(int)(width - menuName.size()) / 2);
@@ -679,7 +682,7 @@ void Menu::mergeImage() {
     
     
         cout << "Enter the top-left coordinates where you want to place the new image\n";
-        cout << "Enter x(inteher between [1," << this->img.width << "]) : ";
+        cout << "Enter x(integer between [1," << this->img.width << "]) : ";
         cin >> x;
         
         string msg1 = "x must be integer between [1," + to_string(this->img.width) + "]"; 
@@ -687,7 +690,7 @@ void Menu::mergeImage() {
         if(invalidChoice(x,this->img.width,msg1,1)) {
             return;
         }
-        cout << "Enter y(inteher between [1," << this->img.height << "]) : ";
+        cout << "Enter y(integer between [1," << this->img.height << "]) : ";
         cin >> y;
         
         if(invalidChoice(y,this->img.height,msg2,1)) {
