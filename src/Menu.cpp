@@ -1,5 +1,4 @@
 #include "Winged_Dragon/Menu.h"
-#include "Winged_Dragon/Menu.h"
 
 void Menu::clear() {
     cin.clear();
@@ -63,7 +62,9 @@ void Menu::printFilter() {
     cout << left << setw(3) << 20 << " : Sun\n";
     cout << left << setw(3) << 21 << " : Tv\n";
     cout << left << setw(3) << 22 << " : Solid ColorFrame\n";
-    cout << left << setw(3) << 23 << ": Alternating Colors Frame\n\n";
+    cout << left << setw(3) << 23 << " : Alternating Colors Frame\n";
+    cout << left << setw(3) << 24 << " : Skew Image\n";
+    cout << left << setw(3) << 25 << " : Oil Painting\n\n";
 }
 
 bool Menu::backContinue() {
@@ -93,7 +94,20 @@ void Menu::putToUndo() {
     }
 }
 
+int main()
+{
+    cout << string(45,'=') << '\n';
+    string menuName = "== Welcom to Baby Photoshop ==";
+    int spaces = max(0,(int)(45 - menuName.size()) / 2);
+    cout << string(spaces, ' ') << menuName << "\n";
+    cout << string(45,'=') << "\n\n\n\n";
+    Menu run;
+    run.startMenu();
+    return 0;
+}
+
 void Menu::startMenu() {
+
     while (true) {
         printStart();
         int option;
@@ -176,7 +190,7 @@ void Menu::filterMenu() {
         cin >> option;
 
 
-        if (invalidChoice(option, 23, "Input must be from options", 1)) {
+        if (invalidChoice(option, 25, "Input must be from options", 1)) {
             continue;
         }
 
@@ -267,6 +281,12 @@ void Menu::filterMenu() {
                 break;
             case ALT_FRAME:
                 addBee();
+                break;
+            case SKEW:
+                skew();
+                break;
+            case OIL_PAINTING:
+                oilPainting();
                 break;
         }
         cout << "\n\n";
@@ -676,12 +696,40 @@ void Menu::addBee() {
         return;
     }
     op = 100 - op;
-    applyFilter.addBee(this->img, min(img.height, img.width) / op);
+    applyFilter.addBee(this->img, min(img.height, img.width) / max(1,op));
     cout << "DONE SUCCESSFULLY\n";
     pause();
 }
 
+void Menu::skew() {
+    if (backContinue()) {
+        return;
+    }
+    putToUndo();
+    cout << "Enter Degree [0,89]: ";
+    int op;
+    cin >> op;
+    if (invalidChoice(op, 89, "Enter integer between 0 to 89", 0)) {
+        return;
+    }
+    applyFilter.skew(this->img, acos(-1) / 180 * op);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
+}
 
-
-
-
+void Menu::oilPainting() {
+    if (backContinue()) {
+        return;
+    }
+    putToUndo();
+    cout << "Enter percentage [0,100]: ";
+    int op;
+    cin >> op;
+    if (invalidChoice(op, 100, "Enter integer between 0 to 100", 0)) {
+        return;
+    }
+    op = max(1, op/10);
+    if(op != 0) applyFilter.oilPainting(this->img, op, 20);
+    cout << "DONE SUCCESSFULLY\n";
+    pause();
+}

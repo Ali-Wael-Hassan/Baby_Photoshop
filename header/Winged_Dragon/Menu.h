@@ -1,16 +1,10 @@
 #pragma once
-#include "Filter.h"
-#include <iostream>
-#include <exception>
-#include <limits>
-#include <string>
-#include <iomanip>
-#include <stack>
+#include "Manager.h"
 
 using namespace std;
 class Menu {
     private:
-        Filter applyFilter;
+        Manager applyFilter;
         Image img;
         string path = "image/";
         string name = "";
@@ -37,7 +31,9 @@ class Menu {
             SUN,
             TV,
             SOLID_FRAME,
-            ALT_FRAME
+            ALT_FRAME,
+            SKEW,
+            OIL_PAINTING
         };
         stack<Image> undo, redo;
         void clear();
@@ -50,7 +46,7 @@ class Menu {
         void putToUndo();
 
     public:
-        void startMenu(); // first menu
+        void startMenu();
         bool loadImage(Image& orig, std::string& origName);
         void filterMenu();
         void saveImage();
@@ -73,4 +69,6 @@ class Menu {
         void tv();
         void addSolidFrame();
         void addBee();
+        void skew();
+        void oilPainting();
 };
