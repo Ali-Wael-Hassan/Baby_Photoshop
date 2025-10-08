@@ -500,7 +500,6 @@ void ArtisticEffects::oilPainting(Image &orig, int radius, int intensityLevel)
     using vi = vector<int>;
     using vvi = vector<vi>;
 
-    radius = 2 * radius + 1;
     intensityLevel = min(intensityLevel, 20);
 
     Image temp(orig);
@@ -512,45 +511,69 @@ void ArtisticEffects::oilPainting(Image &orig, int radius, int intensityLevel)
             intensityMap[x][y] = ((r + g + b) * intensityLevel) / (3 * 255);
         }
     }
+    
+    vector<int> bin(intensityLevel + 1, 0), red(intensityLevel + 1, 0) , green(intensityLevel + 1, 0), blue(intensityLevel + 1, 0);
 
-    for (int x = 0; x < orig.width; ++x) {
+    for (int y = 0; y < orig.height; ++y) {
+        fill(bin.begin(), bin.end(), 0);
+        fill(red.begin(), red.end(), 0);
+        fill(green.begin(), green.end(), 0);
+        fill(blue.begin(), blue.end(), 0);
+        for(int dx = 0; dx <= radius; ++dx) {
+            if(dx >= orig.width) continue;
+            for(int dy = -radius; dy <= radius; ++dy) {
+                int ny = y + dy;
+                if(ny < 0 || ny >= orig.height) continue;
 
-        int *bin = new int[intensityLevel + 2]{};
-        int *red = new int[intensityLevel + 2]{};
-        int *green = new int[intensityLevel + 2]{};
-        int *blue = new int[intensityLevel + 2]{};
+                int i = intensityMap[dx][ny];
+                bin[i]++;
+                red[i] += orig(dx,ny,0);
+                green[i] += orig(dx,ny,1);
+                blue[i] += orig(dx,ny,2);
+            }
+        }
 
-        for (int y = 0; y < orig.height; ++y) {
-            fill(bin, bin + intensityLevel + 2, 0);
-            fill(red, red + intensityLevel + 2, 0);
-            fill(green, green + intensityLevel + 2, 0);
-            fill(blue, blue + intensityLevel + 2, 0);
+        for (int x = 0; x < orig.width; ++x) {
             int bestI = 0, bestCount = 0;
-            for (int dx = -radius; dx <= radius; ++dx)
-                for (int dy = -radius; dy <= radius; ++dy) {
-                    int nx = x + dx, ny = y + dy;
-                    if (nx < 0 || nx >= orig.width || ny < 0 || ny >= orig.height) continue;
-
-                    int i = intensityMap[nx][ny];
-                    bin[i]++;
-                    red[i] += orig(nx,ny,0);
-                    green[i] += orig(nx,ny,1);
-                    blue[i] += orig(nx,ny,2);
-
-                    if (bin[i] > bestCount) {
-                        bestCount = bin[i];
-                        bestI = i;
-                    }
+            for (int i = 0; i <= intensityLevel; ++i) {
+                if (bin[i] > bestCount) {
+                    bestCount = bin[i], bestI = i;
                 }
-
+            }
             temp(x,y,0) = red[bestI] / bestCount;
             temp(x,y,1) = green[bestI] / bestCount;
             temp(x,y,2) = blue[bestI] / bestCount;
+
+            int x1 = x - radius;
+
+            if(x1 >= 0) {
+                for(int dy = -radius; dy <= radius; ++dy) {
+                    int ny = y + dy;
+                    if(ny < 0 || ny >= orig.height) continue;
+
+                    int i = intensityMap[x1][ny];
+                    bin[i]--;
+                    red[i] -= orig(x1,ny,0);
+                    green[i] -= orig(x1,ny,1);
+                    blue[i] -= orig(x1,ny,2);
+                }
+            }
+
+            int x2 = x + radius + 1;
+
+            if(x2 < orig.width) {
+                for(int dy = -radius; dy <= radius; ++dy) {
+                    int ny = y + dy;
+                    if(ny < 0 || ny >= orig.height) continue;
+
+                    int i = intensityMap[x2][ny];
+                    bin[i]++;
+                    red[i] += orig(x2,ny,0);
+                    green[i] += orig(x2,ny,1);
+                    blue[i] += orig(x2,ny,2);
+                }
+            }
         }
-        delete [] bin;
-        delete [] red;
-        delete [] green;
-        delete [] blue;
     }
 
     swap(orig, temp);
