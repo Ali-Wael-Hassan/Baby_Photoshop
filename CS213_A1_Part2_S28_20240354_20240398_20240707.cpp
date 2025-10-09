@@ -165,14 +165,17 @@ void ToneAndColorAdjustments::purbleFilter(Image &orig)
     }
 }
 // Amr Atif 20240398
-void ToneAndColorAdjustments::infraredFilter(Image &orig,float precent)
+void Filter::infraredFilter(Image &orig,float precent =0)
 {
+    grayScale(orig);
     invertImage(orig);
-    for (int i = 0; i < orig.width; ++i) {
-        for (int j = 0; j < orig.height; ++j) {
-            orig(i, j, 0) = min(255.0f,max(0.0f,(orig(i, j, 0) + 100) * (1 + precent)));
+
+    for (int y = 0; y < orig.height; ++y)
+        for (int x = 0; x < orig.width; ++x) {
+            orig(x, y, 1) = orig(x,y,0);               
+            orig(x, y, 2) = orig(x,y,0);               
+            orig(x,y,0) = 255;
         }
-    }
 }
 // Youssef Mohamed Hassib 20240707
 void ToneAndColorAdjustments::sun(Image &orig, int percent) {
