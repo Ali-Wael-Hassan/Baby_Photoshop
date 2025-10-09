@@ -1549,7 +1549,7 @@ void Menu::sun() {
     if (invalidChoice(op, 100, "Enter integer between 0 to 100", 0)) {
         return;
     }
-    applyFilter.sun(this->img, op / 100.0f);
+    applyFilter.sun(this->img, op);
     cout << "DONE SUCCESSFULLY\n";
     pause();
 }
@@ -1570,14 +1570,14 @@ void Menu::addSolidFrame() {
         return;
     }
     putToUndo();
-    cout << "Enter percentage: ";
+    cout << "Enter percentage(Thickness): ";
     int op;
     cin >> op;
     if (invalidChoice(op, 100, "Enter integer between 0 to 100", 0)) {
         return;
     }
     op = 100 - op;
-    applyFilter.addSolidFrame(this->img, min(img.height, img.width) / op);
+    applyFilter.addSolidFrame(this->img, min(img.height, img.width) / max(op,1));
     cout << "DONE SUCCESSFULLY\n";
     pause();
 }
@@ -1587,7 +1587,7 @@ void Menu::addBee() {
         return;
     }
     putToUndo();
-    cout << "Enter percentage: ";
+    cout << "Enter percentage(Thickness): ";
     int op;
     cin >> op;
     if (invalidChoice(op, 100, "Enter integer between 0 to 100", 0)) {
