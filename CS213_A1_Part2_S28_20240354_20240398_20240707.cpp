@@ -177,26 +177,26 @@ void ToneAndColorAdjustments::infraredFilter(Image &orig,float precent)
 // Youssef Mohamed Hassib 20240707
 void ToneAndColorAdjustments::sun(Image &orig, int percent) {
 
-    double intensity = (double) percent / 100;
+    float intensity = (float) percent / 100;
     for (int y = 0; y < orig.height; ++y) {
         for (int x = 0; x < orig.width; ++x) {
-            double avg = 0.0;
+            float avg = 0.0;
             for (int i = 0; i < 3; ++i) {
                 avg += orig(x, y, i);
             }
             avg /= 3;
 
-            double ry = min(avg * 1.95, 255.0);
-            double gy = min(avg * 1.80, 255.0);
-            double by = min(avg * 0.85, 255.0);
+            float ry = min(avg * 1.95, 255.0);
+            float gy = min(avg * 1.80, 255.0);
+            float by = min(avg * 0.85, 255.0);
 
-            double r = orig(x, y, 0) * (1 - intensity) + ry * intensity;
-            double g = orig(x, y, 1) * (1 - intensity) + gy * intensity;
-            double b = orig(x, y, 2) * (1 - intensity) + by * intensity;
+            float r = orig(x, y, 0) * (1 - intensity) + ry * intensity;
+            float g = orig(x, y, 1) * (1 - intensity) + gy * intensity;
+            float b = orig(x, y, 2) * (1 - intensity) + by * intensity;
 
-            orig(x, y, 0) = min(255.0, max(r, 0.0));
-            orig(x, y, 1) = min(255.0, max(g, 0.0));
-            orig(x, y, 2) = min(255.0, max(b, 0.0));
+            orig(x, y, 0) = min(255.0f, max(r, 0.0f));
+            orig(x, y, 1) = min(255.0f, max(g, 0.0f));
+            orig(x, y, 2) = min(255.0f, max(b, 0.0f));
 
 
         }
@@ -208,8 +208,8 @@ void ToneAndColorAdjustments::tv(Image &orig) {
         for (int x = 0; x < orig.width; ++x) {
             if (y % 2) {
                 for (int k = 0; k < 3; ++k) {
-                    double val = orig(x, y, k) - orig(x, y, k) * 0.4;
-                    orig(x, y, k) = min(255.0, max(0.0, val));
+                    float val = orig(x, y, k) - orig(x, y, k) * 0.4;
+                    orig(x, y, k) = min(255.0f, max(0.0f, val));
 
                 }
             }
@@ -613,11 +613,11 @@ public:
     Overlay() = default;
     ~Overlay() = default;
 
-    void addSolidFrame(Image &orig, double thickness);
-    void addBee(Image &orig, double thickness);
+    void addSolidFrame(Image &orig, float thickness);
+    void addBee(Image &orig, float thickness);
 };
 
-void Overlay::addSolidFrame(Image &orig, double thickness) { // add(r, g, b sliders to play with the color of the frame
+void Overlay::addSolidFrame(Image &orig, float thickness) { // add(r, g, b sliders to play with the color of the frame
     int nw = orig.width + (2 * thickness);
     int nh = orig.height + (2 * thickness);
 
@@ -640,7 +640,7 @@ void Overlay::addSolidFrame(Image &orig, double thickness) { // add(r, g, b slid
     orig = framed;
 }
 
-void Overlay::addBee(Image &orig, double thickness) {
+void Overlay::addBee(Image &orig, float thickness) {
     int nw = orig.width + (2 * thickness);
     int nh = orig.height + (2 * thickness);
 
@@ -705,8 +705,8 @@ public:
     void detectEdges(Image &orig, int radius, int threshold);
     void blurImage(Image &orig, float alpha);
     void oilPainting(Image &orig, int radius, int intensityLevel);
-    void addSolidFrame(Image &orig, double thickness);
-    void addBee(Image &orig, double thickness);
+    void addSolidFrame(Image &orig, float thickness);
+    void addBee(Image &orig, float thickness);
     void boxBlur(Image &orig, int radius);
 };
 
@@ -800,12 +800,12 @@ void Manager::oilPainting(Image &orig, int radius, int intensityLevel)
     art.oilPainting(orig, radius, intensityLevel);
 }
 
-void Manager::addSolidFrame(Image &orig, double thickness)
+void Manager::addSolidFrame(Image &orig, float thickness)
 {
     layer.addSolidFrame(orig, thickness);
 }
 
-void Manager::addBee(Image &orig, double thickness)
+void Manager::addBee(Image &orig, float thickness)
 {
     layer.addBee(orig, thickness);
 }
