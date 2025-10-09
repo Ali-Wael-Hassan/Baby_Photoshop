@@ -1,2 +1,2 @@
 # Baby_Photoshop
-g++ src/Menu.cpp src/Manager.cpp src/ArtisticEffects.cpp src/Overlay.cpp src/ToneAndColorAdjustments.cpp src/TransformOperations.cpp src/stb_impl.cpp -Iheader -o BabyPhotoshop.exe
+g++ CS213_A1_Part2_S28_20240354_20240398_20240707.cpp -o BabyPhotoshop.exe
