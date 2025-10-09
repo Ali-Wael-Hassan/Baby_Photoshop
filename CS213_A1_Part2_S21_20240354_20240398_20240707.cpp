@@ -403,9 +403,7 @@ public:
 // Ali Wael 20240354
 void ArtisticEffects::detectEdges(Image &orig, int radius, int threshold) {
     apply.grayScale(orig);
-    boxBlur(orig, radius);
-    boxBlur(orig, radius + 1);
-    boxBlur(orig, radius + 2);
+    blurImage(orig, 3);
 
     Image temp(orig);
     
