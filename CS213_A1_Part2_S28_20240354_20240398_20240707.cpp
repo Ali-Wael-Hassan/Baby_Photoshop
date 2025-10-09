@@ -390,6 +390,7 @@ public:
     void detectEdges(Image &orig, float alpha, int tresh);
     void generateKernel(std::vector<float>& kernel, float sigma);
     void blurImage(Image &orig, float alpha);
+    void boxBlur(Image &orig, int radius);
     void oilPainting(Image &orig, int radius, int intensityLevel);
 };
 
@@ -492,6 +493,38 @@ void ArtisticEffects::blurImage(Image &orig, float alpha) {
         }
     }
     swap(orig,temp);
+}
+
+void ArtisticEffects::boxBlur(Image &orig, int radius) {
+    using vi = vector<int>;
+    using vvi = vector<vi>;
+    using vvvi = vector<vvi>;
+    vvvi pre(orig.height + 1, vvi(orig.width + 1, vi(orig.channels, 0)));
+    for (int i = 0; i <= orig.width; ++i) {
+        for (int j = 0; j <= orig.height; ++j) {
+            for (int k = 0; k < orig.channels; ++k) {
+                if(i && j )pre[j][i][k] = orig(i-1, j-1, k);
+                if (i)pre[j][i][k] += pre[j][i - 1][k];
+                if(j)pre[j][i][k] += pre[j-1][i][k];
+                if(i && j) pre[j][i][k] -= pre[j-1][i-1][k];
+            }
+        }
+    }
+
+    for (int i = 0; i < orig.width; ++i) {
+        for (int j = 0; j < orig.height; ++j) {
+            for (int k = 0; k < orig.channels; ++k) {
+                int x1 = max(0, i - radius);
+                int x2 = min(i + radius, orig.width - 1);
+                int y1 = max(0, j - radius);
+                int y2 = min(j + radius, orig.height - 1);
+
+                int count = (y2 - y1 + 1) * (x2 - x1 + 1);
+                int sum = pre[y2+1][x2+1][k] + pre[y1][x1][k] - pre[y2+1][x1][k] - pre[y1][x2+1][k];
+                orig(i,j,k) = sum/count;
+            }
+        }
+    }
 }
 
 // Ali Wael 20240354
@@ -680,6 +713,7 @@ public:
     void oilPainting(Image &orig, int radius, int intensityLevel);
     void addSolidFrame(Image &orig, double thickness);
     void addBee(Image &orig, double thickness);
+    void boxBlur(Image &orig, int radius);
 };
 
 void Manager::grayScale(Image &orig)
@@ -780,6 +814,10 @@ void Manager::addSolidFrame(Image &orig, double thickness)
 void Manager::addBee(Image &orig, double thickness)
 {
     layer.addBee(orig, thickness);
+}
+
+void Manager::boxBlur(Image &orig, int radius) {
+    art.boxBlur(orig, radius);
 }
 
 //===========================================================================================================================
@@ -1421,22 +1459,48 @@ void Menu::resizeImage() {
 }
 
 void Menu::blurImage() {
-    if (backContinue()) {
+     if (backContinue()) {
         return;
     }
-    cout << "Enter percentage[0,100]: ";
-    int percent;
-    cin >> percent;
+    cout << setw(3) << 1 << " : Faster Blur\n";
+    cout << setw(3) << 2 << " : Quality Blur(Gaussian Blur)\n";
+    cout << "Pick the preferred blur type from [1,2]: ";
 
-    if (invalidChoice(percent, 100, "Input must be integer from range [0,100]", 0)) {
+
+    int op;
+    cin >> op;
+    if (invalidChoice(op, 2, "Input must be an integer from range [1,2]", 1)) {
         return;
     }
-    float sigma = (15.0f * percent) / 100.0f;
+    if (op == 1) {
+        int radius;
+        cout << "Enter radius: ";
+        cin >> radius;
 
-    putToUndo();
-    applyFilter.blurImage(this->img, sigma);
-    cout << "DONE SUCCESSFULLY\n";
-    pause();
+        if (invalidChoice(op, 100, "Input must be an integer from range [1,100]", 1)) {
+            return;
+        }
+        putToUndo();
+        applyFilter.boxBlur(this->img, radius);
+        applyFilter.boxBlur(this->img, radius+1);
+        applyFilter.boxBlur(this->img, radius+2);
+        cout << "DONE SUCCESSFULLY\n";
+        pause();
+    } else {
+        cout << "Enter percentage of blur from [0,100] : ";
+        int percent;
+        cin >> percent;
+
+        if (invalidChoice(percent, 100, "Input must be integer from range [0,100]", 0)) {
+            return;
+        }
+        float sigma = (15.0f * percent) / 100.0f;
+
+        putToUndo();
+        applyFilter.blurImage(this->img, sigma);
+        cout << "DONE SUCCESSFULLY\n";
+        pause();
+    }
 }
 
 void Menu::contrast() {
