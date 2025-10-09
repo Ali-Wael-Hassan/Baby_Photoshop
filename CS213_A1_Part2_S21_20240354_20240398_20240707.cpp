@@ -165,7 +165,7 @@ void ToneAndColorAdjustments::purbleFilter(Image &orig)
     }
 }
 // Amr Atif 20240398
-void Filter::infraredFilter(Image &orig,float precent =0)
+void ToneAndColorAdjustments::infraredFilter(Image &orig,float precent =0)
 {
     grayScale(orig);
     invertImage(orig);
