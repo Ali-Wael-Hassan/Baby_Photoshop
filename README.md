@@ -1,2 +1,2 @@
 # Baby_Photoshop
-g++ main.cpp src/Menu.cpp src/Filter.cpp src/stb_impl.cpp -Iheader -o BabyPhotoshop.exe
+g++ src/Menu.cpp src/Manager.cpp src/ArtisticEffects.cpp src/Overlay.cpp src/ToneAndColorAdjustments.cpp src/TransformOperations.cpp src/stb_impl.cpp -Iheader -o BabyPhotoshop.exe
