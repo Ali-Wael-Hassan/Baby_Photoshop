@@ -1,8 +1,8 @@
 # Faculty of Computing and Artificial Intelligence, Cairo University
 
-## CS213: Object-Oriented
+## CS213: Object-Oriented Programming
 
-### Assignment 1
+### Assignment 1(2025/2026)
 
 **Instructor:** Dr. Mohammad El-Ramly
 
