@@ -2,6 +2,9 @@
     Project : Baby Photoshop
     File    : CS213_A1_Part2_S21_20240354_20240398_20240707.cpp
     Section : S21
+    Shared Doc: https://docs.google.com/document/d/1XpUVXOXLNeZ7ruow05zSkyhaaLbyuGkJlGEf6zF-cU0/edit?usp=sharing
+    Video : https://drive.google.com/file/d/1brwPCwfGVSnSFMbLySWFKLdh0o159eB3/view?usp=sharing
+    Drive : https://drive.google.com/drive/folders/1gBReT9baY_2BQJw4FysjCGYuIM_Iej4d?usp=sharing
 
     Team Members:
     - Ali Wael       (ID 20240354)  -> Gray Scale (1), Merge Image (4), Darken & Lighten (7), Detect Edges (10)
