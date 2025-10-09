@@ -393,7 +393,7 @@ public:
     // Destructor
     ~ArtisticEffects() = default;
 
-    void detectEdges(Image &orig, int radius, int threshold);
+    void detectEdges(Image &orig, int threshold);
     void generateKernel(std::vector<float>& kernel, float sigma);
     void blurImage(Image &orig, float alpha);
     void boxBlur(Image &orig, int radius);
@@ -401,7 +401,7 @@ public:
 };
 
 // Ali Wael 20240354
-void ArtisticEffects::detectEdges(Image &orig, int radius, int threshold) {
+void ArtisticEffects::detectEdges(Image &orig, int threshold) {
     apply.grayScale(orig);
     blurImage(orig, 3);
 
@@ -706,7 +706,7 @@ public:
     void cropImage(Image  &orig, pair<int,int> st, pair<int,int> dimension);
     void resizeImage(Image &orig, int width, int height);
     void skew(Image &orig, float rad);
-    void detectEdges(Image &orig, int radius, int threshold);
+    void detectEdges(Image &orig, int threshold);
     void blurImage(Image &orig, float alpha);
     void oilPainting(Image &orig, int radius, int intensityLevel);
     void addSolidFrame(Image &orig, float thickness);
@@ -789,9 +789,9 @@ void Manager::skew(Image &orig, float rad)
     transform.skew(orig, rad);
 }
 
-void Manager::detectEdges(Image &orig, int radius, int threshold)
+void Manager::detectEdges(Image &orig, int threshold)
 {
-    art.detectEdges(orig, radius, threshold);
+    art.detectEdges(orig, threshold);
 }
 
 void Manager::blurImage(Image &orig, float alpha)
@@ -1411,7 +1411,7 @@ void Menu::detectEdges() {
     int threshhold = 120 - 0.9 * percent;
 
     putToUndo();
-    applyFilter.detectEdges(this->img, 2, threshhold);
+    applyFilter.detectEdges(this->img, threshhold);
     cout << "DONE SUCCESSFULLY\n";
     pause();
 }
