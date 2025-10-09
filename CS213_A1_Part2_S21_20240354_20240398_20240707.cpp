@@ -66,7 +66,7 @@ public:
     void darkenLightn(Image &orig, int percent);
     void contrast(Image &orig, int percent);
     void purbleFilter(Image &orig);
-    void infraredFilter(Image &orig,float percent);
+    void infraredFilter(Image &orig);
     void sun(Image& orig, int percent);
     void tv(Image& orig);
 };
@@ -165,7 +165,7 @@ void ToneAndColorAdjustments::purbleFilter(Image &orig)
     }
 }
 // Amr Atif 20240398
-void ToneAndColorAdjustments::infraredFilter(Image &orig,float precent =0)
+void ToneAndColorAdjustments::infraredFilter(Image &orig)
 {
     grayScale(orig);
     invertImage(orig);
@@ -696,7 +696,7 @@ public:
     void darkenLightn(Image &orig, int percent);
     void contrast(Image &orig, int percent);
     void purbleFilter(Image &orig);
-    void infraredFilter(Image &orig,float percent);
+    void infraredFilter(Image &orig);
     void sun(Image& orig, int percent);
     void tv(Image& orig);
     void mergeImage(Image &orig, Image &merged, int option, int transparency, int startX, int startY);
@@ -743,9 +743,9 @@ void Manager::purbleFilter(Image &orig)
     color.purbleFilter(orig);
 }
 
-void Manager::infraredFilter(Image &orig, float percent)
+void Manager::infraredFilter(Image &orig)
 {
-    color.infraredFilter(orig, percent);
+    color.infraredFilter(orig);
 }
 
 void Manager::sun(Image &orig, int percent)
@@ -1530,13 +1530,7 @@ void Menu::infraredFilter() {
         return;
     }
     putToUndo();
-    cout << "Enter percentage: ";
-    int op;
-    cin >> op;
-    if (invalidChoice(op, 100, "Enter integer between 0 to 100", 0)) {
-        return;
-    }
-    applyFilter.infraredFilter(this->img, op / 100.0f);
+    applyFilter.infraredFilter(this->img);
     cout << "DONE SUCCESSFULLY\n";
     pause();
 }
