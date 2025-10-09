@@ -1241,9 +1241,6 @@ void Menu::invertImage() {
 }
 
 void Menu::mergeImage() {
-    if (backContinue()) {
-        return;
-    }
     string newName;
     Image merged;
     int x = 1, y = 1;
