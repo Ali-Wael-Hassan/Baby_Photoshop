@@ -1042,7 +1042,8 @@ bool Menu::loadImage(Image &orig, string &origName) {
     }
 
     cout << "Enter image name with extension: ";
-    cin >> origName;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, origName);
     Image temp = orig;
     try {
         temp.loadNewImage(path + origName);
@@ -1197,7 +1198,8 @@ void Menu::saveImage() {
     }
     cout << "Enter name of the new image with extension: ";
     string newName;
-    cin >> newName;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, newName);
 
     try {
         img.saveImage(path + newName);
