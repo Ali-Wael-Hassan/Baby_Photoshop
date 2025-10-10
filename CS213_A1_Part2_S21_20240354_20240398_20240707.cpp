@@ -1043,15 +1043,17 @@ bool Menu::loadImage(Image &orig, string &origName) {
 
     cout << "Enter image name with extension: ";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    getline(cin, origName);
+    string newName;
+    getline(cin, newName);
     Image temp = orig;
     try {
-        temp.loadNewImage(path + origName);
+        temp.loadNewImage(path + newName);
     }
     catch (const exception &e) {
         cerr << e.what() << "\n";
         return false;
     }
+    origName = newName;
     putToUndo();
     swap(orig, temp);
     cout << "Loaded successfully\n";
