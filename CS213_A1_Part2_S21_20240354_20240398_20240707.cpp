@@ -853,7 +853,7 @@ class Menu {
             SKEW,
             OIL_PAINTING
         };
-        stack<Image> undo, redo;
+        stack<pair<Image,string>> undo, redo;
         void clear();
         void pause();
         bool invalidChoice(int option, int mx, const std::string &message, int mn = 1);
@@ -882,7 +882,7 @@ class Menu {
         void contrast();
         void purbleFilter();
         void infraredFilter();
-        void xdoF(stack<Image> &st, stack<Image> &en, const string &msg);
+        void xdoF(stack<pair<Image,string>> &st, stack<pair<Image,string>> &en, const string &msg);
         void sun();
         void tv();
         void addSolidFrame();
@@ -979,7 +979,7 @@ bool Menu::backContinue() {
 }
 
 void Menu::putToUndo() {
-    undo.push(this->img);
+    undo.push({this->img, this->name});
     while (!redo.empty()) {
         redo.pop();
     }
@@ -1053,8 +1053,8 @@ bool Menu::loadImage(Image &orig, string &origName) {
         cerr << e.what() << "\n";
         return false;
     }
-    origName = newName;
     putToUndo();
+    origName = newName;
     swap(orig, temp);
     cout << "Loaded successfully\n";
     cout << "\n\n";
@@ -1509,14 +1509,15 @@ void Menu::contrast() {
     pause();
 }
 
-void Menu::xdoF(stack<Image> &st, stack<Image> &en, const string &msg) {
+void Menu::xdoF(stack<pair<Image,string>> &st, stack<pair<Image,string>> &en, const string &msg) {
     if (st.empty()) {
         cout << msg << '\n';
         pause();
         return;
     }
-    en.push(this->img);
-    this->img = st.top();
+    en.push({this->img, this->name});
+    this->img = st.top().first;
+    this->name = st.top().second;
     st.pop();
     cout << "DONE SUCCESSFULLY\n";
 }
