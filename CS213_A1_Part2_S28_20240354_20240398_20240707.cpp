@@ -1,3 +1,4 @@
+
 /*
     Project : Baby Photoshop
     File    : CS213_A1_Part2_S28_20240354_20240398_20240707.cpp
@@ -29,7 +30,7 @@
             - All filters listed above
 
     First Note: darkenLight is Darken and Lighten combined: 
-          (-v) applies Darken and (+v) applies Lighten.
+          (-ve) applies Darken and (+ve) applies Lighten.
     
     Second Note: images must be put in folder in the main directory with name image example: image/myImg.jpg
     Third Note: put only name of the image + extension
@@ -55,34 +56,43 @@ using namespace std;
 
 using namespace std;
 
-class ToneAndColorAdjustments{
+class ToneAndColorAdjustments {
 public:
     ToneAndColorAdjustments() = default;
+
     ~ToneAndColorAdjustments() = default;
 
     void grayScale(Image &orig);
+
     void blackWhite(Image &orig);
+
     void invertImage(Image &orig);
+
     void darkenLightn(Image &orig, int percent);
+
     void contrast(Image &orig, int percent);
+
     void purbleFilter(Image &orig);
-    void infraredFilter(Image &orig,float percent);
-    void sun(Image& orig, int percent);
-    void tv(Image& orig);
+
+    void infraredFilter(Image &orig, float percent);
+
+    void sun(Image &orig, int percent);
+
+    void tv(Image &orig);
 };
 
 // Ali Wael 20240354
 void ToneAndColorAdjustments::grayScale(Image &orig) {
-    for(int x = 0; x < orig.width; ++x) {
-        for(int y = 0; y < orig.height; ++y) {
-            int R = orig(x,y,0),
-                G = orig(x,y,1),
-                B = orig(x,y,2);
-            
-            int gray= min(0.299f*R+0.587f*G+0.114f*B + 0.5f, 255.0f);
+    for (int x = 0; x < orig.width; ++x) {
+        for (int y = 0; y < orig.height; ++y) {
+            int R = orig(x, y, 0),
+                    G = orig(x, y, 1),
+                    B = orig(x, y, 2);
 
-            for(int c = 0; c < orig.channels; ++ c) {
-                orig(x,y,c) = gray;
+            int gray = min(0.299f * R + 0.587f * G + 0.114f * B + 0.5f, 255.0f);
+
+            for (int c = 0; c < orig.channels; ++c) {
+                orig(x, y, c) = gray;
 
             }
         }
@@ -92,10 +102,10 @@ void ToneAndColorAdjustments::grayScale(Image &orig) {
 // Amr Atif 20240398
 void ToneAndColorAdjustments::blackWhite(Image &orig) {
     grayScale(orig);
-    for(int i = 0;i<orig.width;i++){
-        for(int j = 0;j<orig.height;j++){
-            for(int c = 0;c<orig.channels;c++){
-                orig(i,j,c)=((orig(i,j,c)>=128)? 255:0);
+    for (int i = 0; i < orig.width; i++) {
+        for (int j = 0; j < orig.height; j++) {
+            for (int c = 0; c < orig.channels; c++) {
+                orig(i, j, c) = ((orig(i, j, c) >= 128) ? 255 : 0);
             }
         }
     }
@@ -116,47 +126,47 @@ void ToneAndColorAdjustments::invertImage(Image &orig) {
 //Ali Wael 20240354
 void ToneAndColorAdjustments::darkenLightn(Image &orig, int percent) {
     // percent -100 to 100
-    float v = pow((float) std::abs(percent) / 100,1.5);
-    
+    float v = pow((float) std::abs(percent) / 100, 1.5);
+
     bool dark = 0;
-    if(percent < 0) dark = 1;
-    
-    for(int x = 0; x < orig.width; ++x) {
-        for(int y = 0; y < orig.height; ++y) {
-            for(int c = 0; c < orig.channels; ++c) {
-                if(dark) orig(x,y,c) = max(0.0f,(1-v) * orig(x,y,c));
-                else orig(x,y,c) = min(255.0f,(1+v) * orig(x,y,c));
+    if (percent < 0) dark = 1;
+
+    for (int x = 0; x < orig.width; ++x) {
+        for (int y = 0; y < orig.height; ++y) {
+            for (int c = 0; c < orig.channels; ++c) {
+                if (dark) orig(x, y, c) = max(0.0f, (1 - v) * orig(x, y, c));
+                else orig(x, y, c) = min(255.0f, (1 + v) * orig(x, y, c));
             }
         }
     }
 }
 
 // Ali Wael 20240354
-void ToneAndColorAdjustments::contrast(Image &orig, int percent){ 
+void ToneAndColorAdjustments::contrast(Image &orig, int percent) {
     // -100 to 100
     float v = 1.0f + (float) percent / 100;
-    if(percent >= 0) v = 1.0f + (float) percent / 100;
+    if (percent >= 0) v = 1.0f + (float) percent / 100;
     else v = 1.0f + (float) percent / 200;
-    
-    for(int x = 0; x < orig.width; ++x) {
-        for(int y = 0; y < orig.height; ++y) {
-            for(int c = 0; c < orig.channels; ++c) {
-                float val = (orig(x,y,c)-128.0f) * v + 128.0f;
-                val = max(0.0f,min(255.0f,val));
-                orig(x,y,c) = val;
+
+    for (int x = 0; x < orig.width; ++x) {
+        for (int y = 0; y < orig.height; ++y) {
+            for (int c = 0; c < orig.channels; ++c) {
+                float val = (orig(x, y, c) - 128.0f) * v + 128.0f;
+                val = max(0.0f, min(255.0f, val));
+                orig(x, y, c) = val;
             }
         }
     }
 }
+
 // Amr Atif 20240398
-void ToneAndColorAdjustments::purbleFilter(Image &orig)
-{
+void ToneAndColorAdjustments::purbleFilter(Image &orig) {
     for (int i = 0; i < orig.width; i++) {
         for (int j = 0; j < orig.height; j++) {
 
-            float R_new =min(max(orig(i, j, 0) * 1.2 + 10.0, 0.0), 255.0);
-            float G_new =min(max(orig(i, j, 1) * 0.8 - 10.0, 0.0), 255.0);
-            float B_new =min(max(orig(i, j, 2) * 1.3 + 20.0, 0.0), 255.0);
+            float R_new = min(max(orig(i, j, 0) * 1.2 + 10.0, 0.0), 255.0);
+            float G_new = min(max(orig(i, j, 1) * 0.8 - 10.0, 0.0), 255.0);
+            float B_new = min(max(orig(i, j, 2) * 1.3 + 20.0, 0.0), 255.0);
 
             orig(i, j, 0) = static_cast<unsigned char>(R_new);
             orig(i, j, 1) = static_cast<unsigned char>(G_new);
@@ -164,19 +174,22 @@ void ToneAndColorAdjustments::purbleFilter(Image &orig)
         }
     }
 }
+
 // Amr Atif 20240398
-void ToneAndColorAdjustments::infraredFilter(Image &orig,float precent)
-{
+void ToneAndColorAdjustments::infraredFilter(Image &orig, float precent) {
+    grayScale(orig);
     invertImage(orig);
-    for (int i = 0; i < orig.width; ++i) {
-        for (int j = 0; j < orig.height; ++j) {
-            orig(i, j, 0) = min(255.0f,max(0.0f,(orig(i, j, 0) + 100) * (1 + precent)));
+    for (int y = 0; y < orig.height; ++y) {
+        for (int x = 0; x < orig.width; ++x) {
+            orig(x, y, 1) = orig(x, y, 0);
+            orig(x, y, 2) = orig(x, y, 0);
+            orig(x, y, 0) = 255;
         }
     }
 }
+
 // Youssef Mohamed Hassib 20240707
 void ToneAndColorAdjustments::sun(Image &orig, int percent) {
-
     double intensity = (double) percent / 100;
     for (int y = 0; y < orig.height; ++y) {
         for (int x = 0; x < orig.width; ++x) {
@@ -202,6 +215,7 @@ void ToneAndColorAdjustments::sun(Image &orig, int percent) {
         }
     }
 }
+
 // Youssef Mohamed Hassib 20240707
 void ToneAndColorAdjustments::tv(Image &orig) {
     for (int y = 0; y < orig.height; ++y) {
@@ -218,16 +232,22 @@ void ToneAndColorAdjustments::tv(Image &orig) {
 }
 //===========================================================================================================================
 
-class TransformOperations{
+class TransformOperations {
 public:
     TransformOperations() = default;
+
     ~TransformOperations() = default;
 
     void mergeImage(Image &orig, Image &merged, int option, int transparency, int startX, int startY);
-    void flipImage(Image &orig, bool& horiz);
+
+    void flipImage(Image &orig, bool &horiz);
+
     void rotateImage(Image &orig, int degree);
-    void cropImage(Image  &orig, pair<int,int> st, pair<int,int> dimension);
+
+    void cropImage(Image &orig, pair<int, int> st, pair<int, int> dimension);
+
     void resizeImage(Image &orig, int width, int height);
+
     void skew(Image &orig, float rad);
 };
 
@@ -237,35 +257,35 @@ void TransformOperations::mergeImage(Image &orig, Image &merged, int option, int
     int w;
     int h;
 
-    if(option == 1) {
+    if (option == 1) {
         w = max(orig.width, merged.width);
         h = max(orig.height, merged.height);
-        resizeImage(orig,w,h);
-        resizeImage(merged,w,h);
+        resizeImage(orig, w, h);
+        resizeImage(merged, w, h);
     } else {
         w = min(orig.width - startX, merged.width);
         h = min(orig.height - startY, merged.height);
-        cropImage(orig,{startX,startY}, {w,h});
-        cropImage(merged,{0,0}, {w,h});
+        cropImage(orig, {startX, startY}, {w, h});
+        cropImage(merged, {0, 0}, {w, h});
     }
 
     // create Temp image    
-    Image temp(w,h);
+    Image temp(w, h);
 
-    for(int x = 0; x < w; ++x) {
-        for(int y = 0; y < h; ++y) {
-            for(int c = 0; c < temp.channels; ++c) {
-                float val = (1-dx) * orig(x,y,c) + dx * merged(x,y,c);
-                temp(x,y,c) = min(255.0f, max(0.0f,val));
+    for (int x = 0; x < w; ++x) {
+        for (int y = 0; y < h; ++y) {
+            for (int c = 0; c < temp.channels; ++c) {
+                float val = (1 - dx) * orig(x, y, c) + dx * merged(x, y, c);
+                temp(x, y, c) = min(255.0f, max(0.0f, val));
             }
         }
     }
 
-    swap(orig,temp);
+    swap(orig, temp);
 }
 
 // Amr Atif 20240398
-void TransformOperations::flipImage(Image &orig, bool& horiz) {
+void TransformOperations::flipImage(Image &orig, bool &horiz) {
     int l = 0;
     int r = (horiz) ? (orig.width - 1) : (orig.height - 1);
     int direction = (horiz) ? orig.height : orig.width;
@@ -297,22 +317,22 @@ void TransformOperations::rotateImage(Image &orig, int degree) {
                 }
             }
         }
-        swap(orig,res);
+        swap(orig, res);
     }
 
 }
 
 // Amr Atif 20240398
-void  TransformOperations::cropImage(Image  &orig, std::pair<int,int> st, std::pair<int,int> dimension) {
-    Image temp(dimension.first, dimension.second); 
-    for (int i = 0; i < dimension.first; i++) {           
-        for (int j = 0; j < dimension.second; j++) {       
+void TransformOperations::cropImage(Image &orig, std::pair<int, int> st, std::pair<int, int> dimension) {
+    Image temp(dimension.first, dimension.second);
+    for (int i = 0; i < dimension.first; i++) {
+        for (int j = 0; j < dimension.second; j++) {
             for (int c = 0; c < orig.channels; c++) {
                 temp(i, j, c) = orig(st.first + i, st.second + j, c);
             }
         }
     }
-    swap(orig,temp);
+    swap(orig, temp);
 }
 
 // Amr Atif 20240398
@@ -322,9 +342,9 @@ void TransformOperations::resizeImage(Image &orig, int width, int height) {
     float sh = static_cast<float>(orig.height) / height;
 
     for (int j = 0; j < height; j++) {
-        float sy = j * sh;
+        float sy = j * sh; // new position
         int y = static_cast<int>(sy);
-        float dy = sy - y;
+        float dy = sy - y; //delta y = diff in position
 
         for (int i = 0; i < width; i++) {
             float sx = i * sw;
@@ -332,26 +352,25 @@ void TransformOperations::resizeImage(Image &orig, int width, int height) {
             float dx = sx - x;
 
             for (int c = 0; c < orig.channels; c++) {
-                
-                int x0 = min(orig.width-1,max(0,x));
-                int x1 = min(orig.width-1,max(0,x+1));
-                int y0 = min(orig.height-1,max(0,y));
-                int y1 = min(orig.height-1,max(0,y+1));
+                int x0 = min(orig.width - 1, max(0, x));
+                int x1 = min(orig.width - 1, max(0, x + 1));
+                int y0 = min(orig.height - 1, max(0, y));
+                int y1 = min(orig.height - 1, max(0, y + 1));
+                //contribution calculating
                 float top = orig(x0, y0, c) * (1 - dx) + orig(x1, y0, c) * dx;
                 float bottom = orig(x0, y1, c) * (1 - dx) + orig(x1, y1, c) * dx;
                 float val = top * (1 - dy) + bottom * dy;
 
-                temp(i, j, c) = static_cast<uint8_t>(min(255.0f,max(0.0f,val)));
+                temp(i, j, c) = static_cast<uint8_t>(min(255.0f, max(0.0f, val)));
             }
         }
     }
 
-    swap(orig,temp);
+    swap(orig, temp);
 }
 
 // Ali Wael 20240354
-void TransformOperations::skew(Image &orig, float rad)
-{
+void TransformOperations::skew(Image &orig, float rad) {
     int offset = ceil(fabs(tan(rad) * orig.height));
     int w = orig.width + abs(offset);
     int h = orig.height;
@@ -360,7 +379,7 @@ void TransformOperations::skew(Image &orig, float rad)
     fill(temp.imageData, temp.imageData + w * h * temp.channels, 255);
 
     for (int y = 0; y < h; ++y) {
-        float ratio = (float) y / (h - 1);
+        float ratio = (float) y / (h - 1);//handling off by one error
         int shift = ceil(offset * (1.0f - ratio));
 
         for (int x = 0; x < orig.width; ++x) {
@@ -388,29 +407,38 @@ public:
     ~ArtisticEffects() = default;
 
     void detectEdges(Image &orig, float alpha, int tresh);
-    void generateKernel(std::vector<float>& kernel, float sigma);
+
+    void generateKernel(std::vector<float> &kernel, float sigma);
+
     void blurImage(Image &orig, float alpha);
+
     void boxBlur(Image &orig, int radius);
+
     void oilPainting(Image &orig, int radius, int intensityLevel);
 };
 
+
 // Ali Wael 20240354
-void ArtisticEffects::detectEdges(Image &orig, float alpha, int tresh) {
+void ArtisticEffects::detectEdges(Image &orig, float alpha, int threshold) {
     apply.grayScale(orig);
     blurImage(orig, alpha);
 
     int w = orig.width;
     int h = orig.height;
 
-    int g1[3][3] = {{-1,0,1},{-2,0,2},{-1,0,1}};
-    int g2[3][3] = {{-1,-2,-1},{0,0,0},{1,2,1}};
+    int g1[3][3] = {{-1, 0, 1},
+                    {-2, 0, 2},
+                    {-1, 0, 1}};
+    int g2[3][3] = {{-1, -2, -1},
+                    {0,  0,  0},
+                    {1,  2,  1}};
 
-    float *arr = new float[w*h], mx = 0.0f;
+    float *arr = new float[w * h], mx = 0.0f;
 
     for (int x = 1; x < w - 1; ++x) {
         for (int y = 1; y < h - 1; ++y) {
             float sum1 = 0, sum2 = 0;
-            
+
             for (int dx = -1; dx <= 1; ++dx) {
                 for (int dy = -1; dy <= 1; ++dy) {
                     float val = orig(x + dx, y + dy, 0);
@@ -418,7 +446,7 @@ void ArtisticEffects::detectEdges(Image &orig, float alpha, int tresh) {
                     sum2 += val * g2[dy + 1][dx + 1];
                 }
             }
-            
+
             float grad = sqrt(sum1 * sum1 + sum2 * sum2);
 
             arr[y * w + x] = grad;
@@ -427,18 +455,18 @@ void ArtisticEffects::detectEdges(Image &orig, float alpha, int tresh) {
 
     for (int x = 1; x < w - 1; ++x) {
         for (int y = 1; y < h - 1; ++y) {
-            int out = (arr[y * w + x] >= tresh? 0 : 255);
-            for(int c = 0; c < orig.channels; ++c) {
-                orig(x,y,c) = out;
+            int out = (arr[y * w + x] >= threshold ? 0 : 255);
+            for (int c = 0; c < orig.channels; ++c) {
+                orig(x, y, c) = out;
             }
         }
     }
 
-    delete [] arr;
+    delete[] arr;
 }
 
 // Youssef Mohamed Hassib 20240707
-void ArtisticEffects::generateKernel(vf& kernel, float sigma) { // generates the kernel used to blur efficiently
+void ArtisticEffects::generateKernel(vf &kernel, float sigma) { // generates the kernel used to blur efficiently
     int radius = ceil(3 * sigma);
     int size = 2 * radius + 1;
     kernel.assign(size, 0.0f);
@@ -458,7 +486,7 @@ void ArtisticEffects::generateKernel(vf& kernel, float sigma) { // generates the
 
 // Youssef Mohamed Hassib 20240707
 void ArtisticEffects::blurImage(Image &orig, float alpha) {
-    if(alpha < 1e-9) return;
+    if (alpha < 1e-9) return;
     vf kernel;
     generateKernel(kernel, alpha);
     int half = kernel.size() / 2;
@@ -492,7 +520,7 @@ void ArtisticEffects::blurImage(Image &orig, float alpha) {
             }
         }
     }
-    swap(orig,temp);
+    swap(orig, temp);
 }
 
 void ArtisticEffects::boxBlur(Image &orig, int radius) {
@@ -503,10 +531,10 @@ void ArtisticEffects::boxBlur(Image &orig, int radius) {
     for (int i = 0; i <= orig.width; ++i) {
         for (int j = 0; j <= orig.height; ++j) {
             for (int k = 0; k < orig.channels; ++k) {
-                if(i && j )pre[j][i][k] = orig(i-1, j-1, k);
+                if (i && j)pre[j][i][k] = orig(i - 1, j - 1, k);
                 if (i)pre[j][i][k] += pre[j][i - 1][k];
-                if(j)pre[j][i][k] += pre[j-1][i][k];
-                if(i && j) pre[j][i][k] -= pre[j-1][i-1][k];
+                if (j)pre[j][i][k] += pre[j - 1][i][k];
+                if (i && j) pre[j][i][k] -= pre[j - 1][i - 1][k];
             }
         }
     }
@@ -520,16 +548,15 @@ void ArtisticEffects::boxBlur(Image &orig, int radius) {
                 int y2 = min(j + radius, orig.height - 1);
 
                 int count = (y2 - y1 + 1) * (x2 - x1 + 1);
-                int sum = pre[y2+1][x2+1][k] + pre[y1][x1][k] - pre[y2+1][x1][k] - pre[y1][x2+1][k];
-                orig(i,j,k) = sum/count;
+                int sum = pre[y2 + 1][x2 + 1][k] + pre[y1][x1][k] - pre[y2 + 1][x1][k] - pre[y1][x2 + 1][k];
+                orig(i, j, k) = sum / count;
             }
         }
     }
 }
 
 // Ali Wael 20240354
-void ArtisticEffects::oilPainting(Image &orig, int radius, int intensityLevel)
-{
+void ArtisticEffects::oilPainting(Image &orig, int radius, int intensityLevel) {
     using vi = vector<int>;
     using vvi = vector<vi>;
 
@@ -540,29 +567,30 @@ void ArtisticEffects::oilPainting(Image &orig, int radius, int intensityLevel)
     vvi intensityMap(orig.width, vi(orig.height));
     for (int x = 0; x < orig.width; ++x) {
         for (int y = 0; y < orig.height; ++y) {
-            int r = orig(x,y,0), g = orig(x,y,1), b = orig(x,y,2);
+            int r = orig(x, y, 0), g = orig(x, y, 1), b = orig(x, y, 2);
             intensityMap[x][y] = ((r + g + b) * intensityLevel) / (3 * 255);
         }
     }
-    
-    vector<int> bin(intensityLevel + 1, 0), red(intensityLevel + 1, 0) , green(intensityLevel + 1, 0), blue(intensityLevel + 1, 0);
+
+    vector<int> bin(intensityLevel + 1, 0), red(intensityLevel + 1, 0), green(intensityLevel + 1, 0), blue(
+            intensityLevel + 1, 0);
 
     for (int y = 0; y < orig.height; ++y) {
         fill(bin.begin(), bin.end(), 0);
         fill(red.begin(), red.end(), 0);
         fill(green.begin(), green.end(), 0);
         fill(blue.begin(), blue.end(), 0);
-        for(int dx = 0; dx <= radius; ++dx) {
-            if(dx >= orig.width) continue;
-            for(int dy = -radius; dy <= radius; ++dy) {
+        for (int dx = 0; dx <= radius; ++dx) {
+            if (dx >= orig.width) continue;
+            for (int dy = -radius; dy <= radius; ++dy) {
                 int ny = y + dy;
-                if(ny < 0 || ny >= orig.height) continue;
+                if (ny < 0 || ny >= orig.height) continue;
 
                 int i = intensityMap[dx][ny];
                 bin[i]++;
-                red[i] += orig(dx,ny,0);
-                green[i] += orig(dx,ny,1);
-                blue[i] += orig(dx,ny,2);
+                red[i] += orig(dx, ny, 0);
+                green[i] += orig(dx, ny, 1);
+                blue[i] += orig(dx, ny, 2);
             }
         }
 
@@ -573,37 +601,37 @@ void ArtisticEffects::oilPainting(Image &orig, int radius, int intensityLevel)
                     bestCount = bin[i], bestI = i;
                 }
             }
-            temp(x,y,0) = red[bestI] / bestCount;
-            temp(x,y,1) = green[bestI] / bestCount;
-            temp(x,y,2) = blue[bestI] / bestCount;
+            temp(x, y, 0) = red[bestI] / bestCount;
+            temp(x, y, 1) = green[bestI] / bestCount;
+            temp(x, y, 2) = blue[bestI] / bestCount;
 
             int x1 = x - radius;
 
-            if(x1 >= 0) {
-                for(int dy = -radius; dy <= radius; ++dy) {
+            if (x1 >= 0) {
+                for (int dy = -radius; dy <= radius; ++dy) {
                     int ny = y + dy;
-                    if(ny < 0 || ny >= orig.height) continue;
+                    if (ny < 0 || ny >= orig.height) continue;
 
                     int i = intensityMap[x1][ny];
                     bin[i]--;
-                    red[i] -= orig(x1,ny,0);
-                    green[i] -= orig(x1,ny,1);
-                    blue[i] -= orig(x1,ny,2);
+                    red[i] -= orig(x1, ny, 0);
+                    green[i] -= orig(x1, ny, 1);
+                    blue[i] -= orig(x1, ny, 2);
                 }
             }
 
             int x2 = x + radius + 1;
 
-            if(x2 < orig.width) {
-                for(int dy = -radius; dy <= radius; ++dy) {
+            if (x2 < orig.width) {
+                for (int dy = -radius; dy <= radius; ++dy) {
                     int ny = y + dy;
-                    if(ny < 0 || ny >= orig.height) continue;
+                    if (ny < 0 || ny >= orig.height) continue;
 
                     int i = intensityMap[x2][ny];
                     bin[i]++;
-                    red[i] += orig(x2,ny,0);
-                    green[i] += orig(x2,ny,1);
-                    blue[i] += orig(x2,ny,2);
+                    red[i] += orig(x2, ny, 0);
+                    green[i] += orig(x2, ny, 1);
+                    blue[i] += orig(x2, ny, 2);
                 }
             }
         }
@@ -614,12 +642,14 @@ void ArtisticEffects::oilPainting(Image &orig, int radius, int intensityLevel)
 
 //===========================================================================================================================
 
-class Overlay{
+class Overlay {
 public:
     Overlay() = default;
+
     ~Overlay() = default;
 
     void addSolidFrame(Image &orig, double thickness);
+
     void addBee(Image &orig, double thickness);
 };
 
@@ -666,7 +696,7 @@ void Overlay::addBee(Image &orig, double thickness) {
                 for (int y = by; y < by + thickness && y < nh; ++y) {
                     for (int x = bx; x < bx + thickness && x < nw; ++x) {
                         framed(x, y, 0) = 255;
-                        framed(x, y, 1) = 165;
+                        framed(x, y, 1) = 0;
                         framed(x, y, 2) = 0;
                     }
                 }
@@ -694,125 +724,125 @@ private:
     Overlay layer;
 public:
     void grayScale(Image &orig);
+
     void blackWhite(Image &orig);
+
     void invertImage(Image &orig);
+
     void darkenLightn(Image &orig, int percent);
+
     void contrast(Image &orig, int percent);
+
     void purbleFilter(Image &orig);
-    void infraredFilter(Image &orig,float percent);
-    void sun(Image& orig, int percent);
-    void tv(Image& orig);
+
+    void infraredFilter(Image &orig, float percent);
+
+    void sun(Image &orig, int percent);
+
+    void tv(Image &orig);
+
     void mergeImage(Image &orig, Image &merged, int option, int transparency, int startX, int startY);
-    void flipImage(Image &orig, bool& horiz);
+
+    void flipImage(Image &orig, bool &horiz);
+
     void rotateImage(Image &orig, int degree);
-    void cropImage(Image  &orig, pair<int,int> st, pair<int,int> dimension);
+
+    void cropImage(Image &orig, pair<int, int> st, pair<int, int> dimension);
+
     void resizeImage(Image &orig, int width, int height);
+
     void skew(Image &orig, float rad);
+
     void detectEdges(Image &orig, float alpha, int tresh);
+
     void blurImage(Image &orig, float alpha);
+
     void oilPainting(Image &orig, int radius, int intensityLevel);
+
     void addSolidFrame(Image &orig, double thickness);
+
     void addBee(Image &orig, double thickness);
+
     void boxBlur(Image &orig, int radius);
 };
 
-void Manager::grayScale(Image &orig)
-{
+void Manager::grayScale(Image &orig) {
     color.grayScale(orig);
 }
 
-void Manager::blackWhite(Image &orig)
-{
+void Manager::blackWhite(Image &orig) {
     color.blackWhite(orig);
 }
 
-void Manager::invertImage(Image &orig)
-{
+void Manager::invertImage(Image &orig) {
     color.invertImage(orig);
 }
 
-void Manager::darkenLightn(Image &orig, int percent)
-{
+void Manager::darkenLightn(Image &orig, int percent) {
     color.darkenLightn(orig, percent);
 }
 
-void Manager::contrast(Image &orig, int percent)
-{
+void Manager::contrast(Image &orig, int percent) {
     color.contrast(orig, percent);
 }
 
-void Manager::purbleFilter(Image &orig)
-{
+void Manager::purbleFilter(Image &orig) {
     color.purbleFilter(orig);
 }
 
-void Manager::infraredFilter(Image &orig, float percent)
-{
+void Manager::infraredFilter(Image &orig, float percent) {
     color.infraredFilter(orig, percent);
 }
 
-void Manager::sun(Image &orig, int percent)
-{
+void Manager::sun(Image &orig, int percent) {
     color.sun(orig, percent);
 }
 
-void Manager::tv(Image &orig)
-{
+void Manager::tv(Image &orig) {
     color.tv(orig);
 }
 
-void Manager::mergeImage(Image &orig, Image &merged, int option, int transparency, int startX, int startY)
-{
+void Manager::mergeImage(Image &orig, Image &merged, int option, int transparency, int startX, int startY) {
     transform.mergeImage(orig, merged, option, transparency, startX, startY);
 }
 
-void Manager::flipImage(Image &orig, bool &horiz)
-{
+void Manager::flipImage(Image &orig, bool &horiz) {
     transform.flipImage(orig, horiz);
 }
 
-void Manager::rotateImage(Image &orig, int degree)
-{
+void Manager::rotateImage(Image &orig, int degree) {
     transform.rotateImage(orig, degree);
 }
 
-void Manager::cropImage(Image &orig, pair<int, int> st, pair<int, int> dimension)
-{
+void Manager::cropImage(Image &orig, pair<int, int> st, pair<int, int> dimension) {
     transform.cropImage(orig, st, dimension);
 }
 
-void Manager::resizeImage(Image &orig, int width, int height)
-{
+void Manager::resizeImage(Image &orig, int width, int height) {
     transform.resizeImage(orig, width, height);
 }
 
-void Manager::skew(Image &orig, float rad)
-{
+void Manager::skew(Image &orig, float rad) {
     transform.skew(orig, rad);
 }
 
-void Manager::detectEdges(Image &orig, float alpha, int tresh)
-{
+void Manager::detectEdges(Image &orig, float alpha, int tresh) {
     art.detectEdges(orig, alpha, tresh);
 }
 
-void Manager::blurImage(Image &orig, float alpha)
-{
+void Manager::blurImage(Image &orig, float alpha) {
     art.blurImage(orig, alpha);
 }
 
-void Manager::oilPainting(Image &orig, int radius, int intensityLevel)
-{
+void Manager::oilPainting(Image &orig, int radius, int intensityLevel) {
     art.oilPainting(orig, radius, intensityLevel);
 }
 
-void Manager::addSolidFrame(Image &orig, double thickness)
-{
+void Manager::addSolidFrame(Image &orig, double thickness) {
     layer.addSolidFrame(orig, thickness);
 }
 
-void Manager::addBee(Image &orig, double thickness)
-{
+void Manager::addBee(Image &orig, double thickness) {
     layer.addBee(orig, thickness);
 }
 
@@ -823,74 +853,106 @@ void Manager::boxBlur(Image &orig, int radius) {
 //===========================================================================================================================
 
 class Menu {
-    private:
-        Manager applyFilter;
-        Image img;
-        string path = "image/";
-        string name = "";
-        enum TYPE {
-            SAVE = 1,
-            LOAD,
-            BACK,
-            UNDO,
-            REDO,
-            GRAY,
-            BLACK_WHITE, 
-            INVERT, 
-            MERGE, 
-            FLIP, 
-            ROTATE,
-            BRIGHTNESS,
-            CROP,
-            DETECT_EDGES,
-            RESIZE,
-            BLUR,
-            CONTRAST,
-            PURPLE,
-            INFRARED,
-            SUN,
-            TV,
-            SOLID_FRAME,
-            ALT_FRAME,
-            SKEW,
-            OIL_PAINTING
-        };
-        stack<Image> undo, redo;
-        void clear();
-        void pause();
-        bool invalidChoice(int option, int mx, const std::string &message, int mn = 1);
-        void centerize(const std::string &menuName, int width);
-        void printStart();
-        void printFilter();
-        bool backContinue();
-        void putToUndo();
+private:
+    Manager applyFilter;
+    Image img;
+    string path = "image/";
+    string name = "";
+    enum TYPE {
+        SAVE = 1,
+        LOAD,
+        BACK,
+        UNDO,
+        REDO,
+        GRAY,
+        BLACK_WHITE,
+        INVERT,
+        MERGE,
+        FLIP,
+        ROTATE,
+        BRIGHTNESS,
+        CROP,
+        DETECT_EDGES,
+        RESIZE,
+        BLUR,
+        CONTRAST,
+        PURPLE,
+        INFRARED,
+        SUN,
+        TV,
+        SOLID_FRAME,
+        ALT_FRAME,
+        SKEW,
+        OIL_PAINTING
+    };
+    stack<Image> undo, redo;
 
-    public:
-        void startMenu();
-        bool loadImage(Image& orig, std::string& origName);
-        void filterMenu();
-        void saveImage();
-        void grayScale();
-        void blackWhite();
-        void invertImage();
-        void mergeImage();
-        void flipImage();
-        void rotateImage();
-        void brightness();
-        void cropImage();
-        void detectEdges();
-        void resizeImage();
-        void blurImage();
-        void contrast();
-        void purbleFilter();
-        void infraredFilter();
-        void xdoF(stack<Image> &st, stack<Image> &en, const string &msg);
-        void sun();
-        void tv();
-        void addSolidFrame();
-        void addBee();
-        void skew();
-        void oilPainting();
+    void clear();
+
+    void pause();
+
+    bool invalidChoice(int option, int mx, const std::string &message, int mn = 1);
+
+    void centerize(const std::string &menuName, int width);
+
+    void printStart();
+
+    void printFilter();
+
+    bool backContinue();
+
+    void putToUndo();
+
+public:
+    void startMenu();
+
+    bool loadImage(Image &orig, std::string &origName);
+
+    void filterMenu();
+
+    void saveImage();
+
+    void grayScale();
+
+    void blackWhite();
+
+    void invertImage();
+
+    void mergeImage();
+
+    void flipImage();
+
+    void rotateImage();
+
+    void brightness();
+
+    void cropImage();
+
+    void detectEdges();
+
+    void resizeImage();
+
+    void blurImage();
+
+    void contrast();
+
+    void purbleFilter();
+
+    void infraredFilter();
+
+    void xdoF(stack<Image> &st, stack<Image> &en, const string &msg);
+
+    void sun();
+
+    void tv();
+
+    void addSolidFrame();
+
+    void addBee();
+
+    void skew();
+
+    void oilPainting();
 };
 
 void Menu::clear() {
@@ -987,13 +1049,12 @@ void Menu::putToUndo() {
     }
 }
 
-int main()
-{
-    cout << string(45,'=') << '\n';
+int main() {
+    cout << string(45, '=') << '\n';
     string menuName = "== Welcom to Baby Photoshop ==";
-    int spaces = max(0,(int)(45 - menuName.size()) / 2);
+    int spaces = max(0, (int) (45 - menuName.size()) / 2);
     cout << string(spaces, ' ') << menuName << "\n";
-    cout << string(45,'=') << "\n\n\n\n";
+    cout << string(45, '=') << "\n\n\n\n";
     Menu run;
     run.startMenu();
     return 0;
@@ -1459,7 +1520,7 @@ void Menu::resizeImage() {
 }
 
 void Menu::blurImage() {
-     if (backContinue()) {
+    if (backContinue()) {
         return;
     }
     cout << setw(3) << 1 << " : Faster Blur\n";
@@ -1482,8 +1543,8 @@ void Menu::blurImage() {
         }
         putToUndo();
         applyFilter.boxBlur(this->img, radius);
-        applyFilter.boxBlur(this->img, radius+1);
-        applyFilter.boxBlur(this->img, radius+2);
+        applyFilter.boxBlur(this->img, radius + 1);
+        applyFilter.boxBlur(this->img, radius + 2);
         cout << "DONE SUCCESSFULLY\n";
         pause();
     } else {
@@ -1591,14 +1652,14 @@ void Menu::addSolidFrame() {
         return;
     }
     putToUndo();
-    cout << "Enter percentage: ";
+    cout << "Enter thickness [1,100]: ";
     int op;
     cin >> op;
     if (invalidChoice(op, 100, "Enter integer between 0 to 100", 0)) {
         return;
     }
     op = 100 - op;
-    applyFilter.addSolidFrame(this->img, min(img.height, img.width) / op);
+    applyFilter.addSolidFrame(this->img, min(img.height, img.width) / max(1, op));
     cout << "DONE SUCCESSFULLY\n";
     pause();
 }
@@ -1608,14 +1669,14 @@ void Menu::addBee() {
         return;
     }
     putToUndo();
-    cout << "Enter percentage: ";
+    cout << "Enter thickness [1,100]: ";
     int op;
     cin >> op;
     if (invalidChoice(op, 100, "Enter integer between 0 to 100", 0)) {
         return;
     }
     op = 100 - op;
-    applyFilter.addBee(this->img, min(img.height, img.width) / max(1,op));
+    applyFilter.addBee(this->img, min(img.height, img.width) / max(1, op));
     cout << "DONE SUCCESSFULLY\n";
     pause();
 }
@@ -1647,8 +1708,8 @@ void Menu::oilPainting() {
     if (invalidChoice(op, 100, "Enter integer between 0 to 100", 0)) {
         return;
     }
-    op = max(1, op/10);
-    if(op != 0) applyFilter.oilPainting(this->img, op, 20);
+    op = max(1, op / 10);
+    if (op != 0) applyFilter.oilPainting(this->img, op, 20);
     cout << "DONE SUCCESSFULLY\n";
     pause();
 }
