@@ -641,7 +641,7 @@ void Overlay::addSolidFrame(Image &orig, float thickness) { // add(r, g, b slide
             }
         }
     }
-    orig = framed;
+    swap(orig, framed);
 }
 
 void Overlay::addBee(Image &orig, float thickness) {
@@ -672,14 +672,14 @@ void Overlay::addBee(Image &orig, float thickness) {
         }
     }
 
-    for (int y = thickness; y < framed.height - thickness + 1; ++y) {
-        for (int x = thickness; x < framed.width - thickness + 1; ++x) {
+    for (int y = (int)thickness; y < framed.height - (int)thickness; ++y) {
+        for (int x = (int)thickness; x < framed.width - (int)thickness; ++x) {
             for (int k = 0; k < orig.channels; ++k) {
-                framed(x, y, k) = orig(x - thickness, y - thickness, k);
+                framed(x, y, k) = orig(x - (int) thickness, y - (int) thickness, k);
             }
         }
     }
-    orig = framed;
+    swap(orig, framed);
 }
 
 //===========================================================================================================================
@@ -1043,15 +1043,16 @@ bool Menu::loadImage(Image &orig, string &origName) {
 
     cout << "Enter image name with extension: ";
     cin >> origName;
-
+    Image temp = orig;
     try {
-        orig.loadNewImage(path + origName);
+        temp.loadNewImage(path + origName);
     }
     catch (const exception &e) {
         cerr << e.what() << "\n";
         return false;
     }
-
+    putToUndo();
+    swap(orig, temp);
     cout << "Loaded successfully\n";
     cout << "\n\n";
 
