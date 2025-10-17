@@ -4,6 +4,18 @@
 
 # DUCK: Simple Image Editor Application
 
+## Team Members
+
+- Ali Wael Abdalla             20240354
+- Amr Atif Abd-ElKarim Saad    20240398
+- Youssef Mohamed Hassib       20240707
+
+## Instructor
+
+- Dr. Mohammad El-Ramly
+
+
+
 ## Project Overview
 
 DUCK is a desktop application developed for the **CS213: Object-Oriented Programming** course (2025/2026) at the **Faculty of Computing and Artificial Intelligence, Cairo University**.
@@ -56,9 +68,3 @@ Navigate to the following directory and run the application:
 ```bash
 \Baby_Photoshop_fix\build\Desktop_Qt_6_10_0_MinGW_64_bit-Release\DUCK.exe
 ```
-
-## Team Members
-
-- Ali Wael Abdalla             20240354
-- Amr Atif Abd-ElKarim Saad    20240398
-- Youssef Mohamed Hassib       20240707
