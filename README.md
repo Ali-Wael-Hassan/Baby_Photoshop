@@ -10,6 +10,10 @@
 
 Simple image editing application developed as part of the CS213 Object-Oriented Programming course. The program allows users to apply a variety of filters and effects to images.
 
+### Execution
+
+To execute, you must open \Baby_Photoshop_fix\build\Desktop_Qt_6_10_0_MinGW_64_bit-Release\DUCK.exe
+
 ### Team Members
 
 - Ali Wael Abdalla             20240354
