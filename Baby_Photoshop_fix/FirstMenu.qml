@@ -18,14 +18,14 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Image {
-                    source: "file:///" + menu.getAppDirPath() + "/icon/Baby_Photoshop.png"
+                    source: "icon/DUCK.jpg"
                     width: 100
                     height: 100
                     fillMode: Image.PreserveAspectFit
                 }
 
                 Text {
-                    text: "Baby Photoshop"
+                    text: "DUCK"
                     font.pixelSize: 64
                     font.bold: true
                     color: "white"

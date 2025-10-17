@@ -3,12 +3,16 @@
 #include <menu.h>
 #include <QQmlContext>
 #include <QtQuickControls2/QQuickStyle>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     QQuickStyle::setStyle("Fusion");
+    app.setWindowIcon(QIcon("icon/DUCK.jpg"));
+    app.setApplicationName("DUCK");
+    app.setOrganizationName("El 3esha Company");
 
     qmlRegisterType<Menu>("ImageEditor", 1, 0, "Menu");
 

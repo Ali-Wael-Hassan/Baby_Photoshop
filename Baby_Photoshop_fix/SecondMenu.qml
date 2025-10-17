@@ -42,13 +42,14 @@ Page {
     }
 
     property string imagePath: ""
+    property bool dark: true
 
     Rectangle {
         id: mainRect
-        color: "#1E1E1E"
+        color: (filterMenu.dark? "#1E1E1E" : "#E1E1E1")
         gradient: Gradient {
-            GradientStop { position: 0.0; color: "#1F1F1F" }
-            GradientStop { position: 1.0; color: "#1B1B1B" }
+            GradientStop { position: 0.0; color: (filterMenu.dark? "#1F1F1F" : "#E0E0E0") }
+            GradientStop { position: 1.0; color: (filterMenu.dark? "#1B1B1B" : "#E4E4E4") }
         }
         anchors.fill: parent
         z: 0
@@ -66,7 +67,7 @@ Page {
             colorPicker.visible = false
         }
         function showMessage(success, text) {
-            notify.color = success? "#28A745" : "#A72845"
+            notify.color = success? (filterMenu.dark? "#28A745" : "#D758BA") : (filterMenu.dark? "#A72845" : "#58D7BA")
             notifyText.text = text
             notify.visible = true
             flow.start()
@@ -112,7 +113,7 @@ Page {
         // Notification
         Rectangle {
             id: notify
-            color: "#28A745"
+            color: (filterMenu.dark? "#28A745" : "#D758BA")
             width: parent.width * 0.6
             height: parent.height * 0.05
             radius: height / 2
@@ -126,7 +127,7 @@ Page {
                 id: notifyText
                 anchors.centerIn: parent
                 text: "default"
-                color: "white"
+                color: (filterMenu.dark? "white" : "#000000")
                 font.pixelSize: 18
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -137,13 +138,13 @@ Page {
         // Exit messages
         Rectangle {
             id: exit
-            color: "#2D2D2D"
+            color: (filterMenu.dark? "#2D2D2D" : "#D2D2D2")
             radius: 10
             width: parent.width * 0.15
             height: parent.height * 0.12
             anchors.centerIn: parent
             visible: false
-            border.color: "#666"
+            border.color: (filterMenu.dark? "#666" : "#999999")
             border.width: 1
             z: 10000
 
@@ -155,7 +156,7 @@ Page {
 
                 Text {
                     text: "Are you sure you want to exit?"
-                    color: "white"
+                    color: (filterMenu.dark? "white" : "#000000")
                     font.pixelSize: 18
                     horizontalAlignment: Text.AlignHCenter
                 }
@@ -172,7 +173,7 @@ Page {
 
                         contentItem: Text {
                             text: ok.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -180,8 +181,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (ok.pressed ? "#007ACC" : (ok.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (ok.pressed ? "#007ACC" : (ok.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -198,7 +199,7 @@ Page {
 
                         contentItem: Text {
                             text: cancel.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -206,8 +207,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (cancel.pressed ? "#007ACC" : (cancel.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (cancel.pressed ? "#007ACC" : (cancel.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: exit.visible = false
@@ -220,19 +221,19 @@ Page {
         //Merge bar
         Rectangle {
             id: mergeParam
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
             z: 50
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Row {
@@ -255,8 +256,8 @@ Page {
                     }
                     background: Rectangle {
                         radius: 5
-                        color: (resizeOption.pressed ? "#007ACC" : (resizeOption.hovered ? "#505050" : "#3C3C3C"))
-                        border.color: "#555555"
+                        color: (resizeOption.pressed ? "#007ACC" : (resizeOption.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                        border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                     }
                     onClicked: {
                         menu.mergeImage(imageDisplay2.source, 1, 50, 0, 0, 0, 0, 1, 1)
@@ -279,8 +280,8 @@ Page {
                     }
                     background: Rectangle {
                         radius: 5
-                        color: (cropOption.pressed ? "#007ACC" : (cropOption.hovered ? "#505050" : "#3C3C3C"))
-                        border.color: "#555555"
+                        color: (cropOption.pressed ? "#007ACC" : (cropOption.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                        border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                     }
                     onClicked: {
                         let overlapLeft   = Math.max(imageDisplay.x, imageDisplay2.x)
@@ -335,8 +336,8 @@ Page {
                     }
                     background: Rectangle {
                         radius: 5
-                        color: (cancelMerge.pressed ? "#007ACC" : (cancelMerge.hovered ? "#505050" : "#3C3C3C"))
-                        border.color: "#555555"
+                        color: (cancelMerge.pressed ? "#007ACC" : (cancelMerge.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                        border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                     }
                     onClicked: {
                         imageDisplay2.source = ""
@@ -350,19 +351,19 @@ Page {
         // Flip bar
         Rectangle {
             id: flipOption
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
             z: 50
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
             Row {
                 id: flipRow
@@ -384,8 +385,8 @@ Page {
                     }
                     background: Rectangle {
                         radius: 5
-                        color: (vertical.pressed ? "#007ACC" : (vertical.hovered ? "#505050" : "#3C3C3C"))
-                        border.color: "#555555"
+                        color: (vertical.pressed ? "#007ACC" : (vertical.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                        border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                     }
                     onClicked: {
                         menu.flipImage(false)
@@ -407,8 +408,8 @@ Page {
                     }
                     background: Rectangle {
                         radius: 5
-                        color: (horizontal.pressed ? "#007ACC" : (horizontal.hovered ? "#505050" : "#3C3C3C"))
-                        border.color: "#555555"
+                        color: (horizontal.pressed ? "#007ACC" : (horizontal.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                        border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                     }
                     onClicked: {
                         menu.flipImage(true)
@@ -430,8 +431,8 @@ Page {
                     }
                     background: Rectangle {
                         radius: 5
-                        color: (cancelFlip.pressed ? "#007ACC" : (cancelFlip.hovered ? "#505050" : "#3C3C3C"))
-                        border.color: "#555555"
+                        color: (cancelFlip.pressed ? "#007ACC" : (cancelFlip.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                        border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                     }
                     onClicked: {
                         flipOption.visible = false
@@ -443,19 +444,19 @@ Page {
         // Rotate bar
         Rectangle {
             id: rotateOption
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
             z: 50
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Row {
@@ -478,8 +479,8 @@ Page {
                     }
                     background: Rectangle {
                         radius: 5
-                        color: (degree1.pressed ? "#007ACC" : (degree1.hovered ? "#505050" : "#3C3C3C"))
-                        border.color: "#555555"
+                        color: (degree1.pressed ? "#007ACC" : (degree1.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                        border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                     }
                     onClicked: {
                         menu.rotateImage(90)
@@ -501,8 +502,8 @@ Page {
                     }
                     background: Rectangle {
                         radius: 5
-                        color: (degree2.pressed ? "#007ACC" : (degree2.hovered ? "#505050" : "#3C3C3C"))
-                        border.color: "#555555"
+                        color: (degree2.pressed ? "#007ACC" : (degree2.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                        border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                     }
                     onClicked: {
                         menu.rotateImage(180)
@@ -524,8 +525,8 @@ Page {
                     }
                     background: Rectangle {
                         radius: 5
-                        color: (degree3.pressed ? "#007ACC" : (degree3.hovered ? "#505050" : "#3C3C3C"))
-                        border.color: "#555555"
+                        color: (degree3.pressed ? "#007ACC" : (degree3.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                        border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                     }
                     onClicked: {
                         menu.rotateImage(270)
@@ -547,8 +548,8 @@ Page {
                     }
                     background: Rectangle {
                         radius: 5
-                        color: (cancelRotate.pressed ? "#007ACC" : (cancelRotate.hovered ? "#505050" : "#3C3C3C"))
-                        border.color: "#555555"
+                        color: (cancelRotate.pressed ? "#007ACC" : (cancelRotate.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                        border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                     }
                     onClicked: {
                         rotateOption.visible = false
@@ -560,19 +561,19 @@ Page {
         // Crop bar
         Rectangle {
             id: crop
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
             z: 50
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Button {
@@ -590,8 +591,8 @@ Page {
                 }
                 background: Rectangle {
                     radius: 5
-                    color: (cancelFlip.pressed ? "#007ACC" : (cancelFlip.hovered ? "#505050" : "#3C3C3C"))
-                    border.color: "#555555"
+                    color: (cancelFlip.pressed ? "#007ACC" : (cancelFlip.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                    border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                 }
                 onClicked: {
                     selectionRect.width = 0
@@ -606,19 +607,19 @@ Page {
         // Frame bar
         Rectangle {
             id: frameOption
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
             z: 50
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             property string path: ""
@@ -665,7 +666,7 @@ Page {
 
                         contentItem: Text {
                             text: applyFrame.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -673,8 +674,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (applyFrame.pressed ? "#007ACC" : (applyFrame.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (applyFrame.pressed ? "#007ACC" : (applyFrame.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -693,7 +694,7 @@ Page {
 
                         contentItem: Text {
                             text: cancelFrame.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -701,8 +702,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (cancelFrame.pressed ? "#007ACC" : (cancelFrame.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (cancelFrame.pressed ? "#007ACC" : (cancelFrame.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -717,19 +718,19 @@ Page {
         // Resize Bar
         Rectangle {
             id: resizeBar
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
             z: 50
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             property int newWidth: 0
@@ -745,7 +746,7 @@ Page {
 
                     Text {
                         text: "Width:"
-                        color: "white"
+                        color: (filterMenu.dark? "white" : "#000000")
                         font.pixelSize: 16
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -773,7 +774,7 @@ Page {
 
                     Text {
                         text: "Height:"
-                        color: "white"
+                        color: (filterMenu.dark? "white" : "#000000")
                         font.pixelSize: 16
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -812,7 +813,7 @@ Page {
 
                         contentItem: Text {
                             text: applyResize.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -820,8 +821,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (applyResize.pressed ? "#007ACC" : (applyResize.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (applyResize.pressed ? "#007ACC" : (applyResize.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -844,7 +845,7 @@ Page {
 
                         contentItem: Text {
                             text: cancelResize.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -852,8 +853,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (cancelResize.pressed ? "#007ACC" : (cancelResize.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (cancelResize.pressed ? "#007ACC" : (cancelResize.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: resizeBar.visible = false
@@ -864,19 +865,19 @@ Page {
 
         Rectangle {
             id: sizeOfImage
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 20
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             visible: true
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
             z: 70
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Row {
@@ -887,15 +888,15 @@ Page {
                 Text {
                     id: name
                     text: menu.cleanName()
-                    color: "white"
+                    color: (filterMenu.dark? "white" : "#000000")
                     font.pixelSize: 16
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
 
                 Text {
-                    text: imageDisplay.implicitWidth + "x" + imageDisplay.implicitHeight + "px"
-                    color: "white"
+                    text: imageDisplay.implicitWidth + "x" + imageDisplay.implicitHeight + "px" + "   made by El 3esha Company"
+                    color: (filterMenu.dark? "white" : "#000000")
                     font.pixelSize: 16
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -915,8 +916,8 @@ Page {
                 z: 60
 
                 gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#3A3A3A" }
-                    GradientStop { position: 1.0; color: "#252525" }
+                    GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                    GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
                 }
                 border.color: "#666666"
                 border.width: 1
@@ -944,7 +945,7 @@ Page {
                         text: "Pick Color"
                         font.bold: true
                         font.pixelSize: 24
-                        color: "white"
+                        color: (filterMenu.dark? "white" : "#000000")
                     }
                 }
 
@@ -955,7 +956,7 @@ Page {
                     height: 70
                     radius: 4
                     border.width: 2
-                    border.color: "#666"
+                    border.color: (filterMenu.dark? "#666" : "#999999")
                     color: Qt.rgba(colorPicker.redVal, colorPicker.greenVal, colorPicker.blueVal, 1)
                 }
 
@@ -980,7 +981,7 @@ Page {
                         width: 200
                         height: 10
                         radius: 5
-                        color: "#1E1E1E"
+                        color: (filterMenu.dark? "#1E1E1E" : "#E1E1E1")
                         Layout.alignment : Qt.AlignHCenter
 
                         Rectangle {
@@ -1038,7 +1039,7 @@ Page {
                         width: 200
                         height: 10
                         radius: 5
-                        color: "#1E1E1E"
+                        color: (filterMenu.dark? "#1E1E1E" : "#E1E1E1")
                         Layout.alignment : Qt.AlignHCenter
 
                         Rectangle {
@@ -1097,7 +1098,7 @@ Page {
                         width: 200
                         height: 10
                         radius: 5
-                        color: "#1E1E1E"
+                        color: (filterMenu.dark? "#1E1E1E" : "#E1E1E1")
                         Layout.alignment : Qt.AlignHCenter
 
                         Rectangle {
@@ -1222,7 +1223,7 @@ Page {
                     Rectangle {
                         width: checkerboard.width / 20
                         height: checkerboard.height / 20
-                        color: "#2D2D2D"
+                        color: (filterMenu.dark? "#2D2D2D" : "#D2D2D2")
                     }
                 }
             }
@@ -1320,7 +1321,7 @@ Page {
             Rectangle {
                 id: selectionRect
                 color: "transparent"
-                border.color: "#00FFFF"
+                border.color: (filterMenu.dark? "#00FFFF" : "#FF0000")
                 border.width: 2
                 visible: imageArea.cropMode
                 z: 200
@@ -1390,10 +1391,10 @@ Page {
         // Save, Load, Home, Undo, Redo
         Rectangle {
             id: fileSave
-            color: "#2B2B2B"
+            color: (filterMenu.dark? "#2B2B2B" : "#D4D4D4")
             gradient: Gradient {
                 GradientStop { position: 0.0; color: "#2C2C2C" }
-                GradientStop { position: 1.0; color: "#1F1F1F" }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#1F1F1F" : "#E0E0E0") }
             }
             width: 1920
             height: 43
@@ -1426,7 +1427,7 @@ Page {
 
                     background: Rectangle {
                         radius: 5
-                        color: (save.pressed ? "#007ACC" : (save.hovered ? "#505050" : "transparent"))
+                        color: (save.pressed ? "#007ACC" : (save.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
                         border.color: "transparent"
                         border.width: 1
                     }
@@ -1453,7 +1454,7 @@ Page {
 
                     background: Rectangle {
                         radius: 5
-                        color: (saveAs.pressed ? "#007ACC" : (saveAs.hovered ? "#505050" : "transparent"))
+                        color: (saveAs.pressed ? "#007ACC" : (saveAs.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
                         border.color: "transparent"
                         border.width: 1
                     }
@@ -1478,7 +1479,7 @@ Page {
 
                     background: Rectangle {
                         radius: 5
-                        color: (load.pressed ? "#007ACC" : (load.hovered ? "#505050" : "transparent"))
+                        color: (load.pressed ? "#007ACC" : (load.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
                         border.color:"transparent"
                         border.width: 1
                     }
@@ -1492,6 +1493,30 @@ Page {
                 spacing: 20
                 anchors.right: parent.right
                 height: 30
+
+                Button {
+                    id: themeToggle
+                    icon.source: filterMenu.dark ? "icon/sun2.png" : "icon/dark.png"
+                    width: 40
+                    height: parent.height
+                    icon.width: parent.width
+                    icon.height: parent.height
+
+                    ToolTip.visible: hovered
+                    ToolTip.delay: 500
+                    ToolTip.text: filterMenu.dark ? "Switch to Light Mode" : "Switch to Dark Mode"
+
+                    background: Rectangle {
+                        radius: 5
+                        color: (enabled? (themeToggle.pressed ? "#007ACC" : (themeToggle.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent")) : (filterMenu.dark? "#303030" : "#CFCFCF"))
+                        border.color: "transparent"
+                        border.width: 1
+                    }
+
+                    onClicked: {
+                        filterMenu.dark = !filterMenu.dark
+                    }
+                }
 
                 Button {
                     id: undo
@@ -1509,7 +1534,7 @@ Page {
 
                     background: Rectangle {
                         radius: 5
-                        color: (enabled? (undo.pressed ? "#007ACC" : (undo.hovered ? "#505050" : "transparent")) : "#303030")
+                        color: (enabled? (undo.pressed ? "#007ACC" : (undo.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent")) : (filterMenu.dark? "#303030" : "#CFCFCF"))
                         border.color: "transparent"
                         border.width: 1
                     }
@@ -1535,7 +1560,7 @@ Page {
 
                     background: Rectangle {
                         radius: 5
-                        color: (enabled? (redo.pressed ? "#007ACC" : (redo.hovered ? "#505050" : "transparent")) : "#303030")
+                        color: (enabled? (redo.pressed ? "#007ACC" : (redo.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent")) : (filterMenu.dark? "#303030" : "#CFCFCF"))
                         border.color: "transparent"
                         border.width: 1
                     }
@@ -1559,7 +1584,7 @@ Page {
 
                     background: Rectangle {
                         radius: 5
-                        color: (home.pressed ? "#007ACC" : (home.hovered ? "#505050" : "transparent"))
+                        color: (home.pressed ? "#007ACC" : (home.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
                         border.color: "transparent"
                         border.width: 1
                     }
@@ -1572,10 +1597,10 @@ Page {
         // left side bar
         Rectangle {
             id: filter
-            color: "#2B2B2B"
+            color: (filterMenu.dark? "#2B2B2B" : "#D4D4D4")
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#444444" }
-                GradientStop { position: 1.0; color: "#222222" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#444444" : "#BBBBBB") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#222222" : "#DDDDDD") }
             }
             border.color: "#1A1A1A"
             border.width: 1
@@ -1601,8 +1626,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (gray.pressed ? "#007ACC" : (gray.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (gray.pressed ? "#007ACC" : (gray.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: { menu.grayScale() }
@@ -1621,8 +1646,8 @@ Page {
                         ToolTip.text: "Black and White"
                         background: Rectangle {
                             radius: 5
-                            color: (bw.pressed ? "#007ACC" : (bw.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (bw.pressed ? "#007ACC" : (bw.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: { menu.blackWhite() }
@@ -1642,8 +1667,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (invert.pressed ? "#007ACC" : (invert.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (invert.pressed ? "#007ACC" : (invert.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: { menu.invertImage() }
@@ -1663,8 +1688,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (merge.pressed ? "#007ACC" : (merge.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (merge.pressed ? "#007ACC" : (merge.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: fileDialog2.open()
@@ -1684,8 +1709,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (flip.pressed ? "#007ACC" : (flip.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (flip.pressed ? "#007ACC" : (flip.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: flipOption.visible = !flipOption.visible
@@ -1705,8 +1730,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (rotate.pressed ? "#007ACC" : (rotate.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (rotate.pressed ? "#007ACC" : (rotate.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: rotateOption.visible = !rotateOption.visible
@@ -1726,8 +1751,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (brightness.pressed ? "#007ACC" : (brightness.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (brightness.pressed ? "#007ACC" : (brightness.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: { sliders.visible = !sliders.visible }
@@ -1747,8 +1772,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (cropButton.pressed ? "#007ACC" : (cropButton.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (cropButton.pressed ? "#007ACC" : (cropButton.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: {
@@ -1772,8 +1797,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (detect.pressed ? "#007ACC" : (detect.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (detect.pressed ? "#007ACC" : (detect.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: {
@@ -1796,8 +1821,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (resize.pressed ? "#007ACC" : (resize.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (resize.pressed ? "#007ACC" : (resize.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: resizeBar.visible = !resizeBar.visible
@@ -1817,8 +1842,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (blur.pressed ? "#007ACC" : (blur.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (blur.pressed ? "#007ACC" : (blur.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: {
@@ -1841,8 +1866,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (contrast.pressed ? "#007ACC" : (contrast.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (contrast.pressed ? "#007ACC" : (contrast.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: {
@@ -1865,8 +1890,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (purple.pressed ? "#007ACC" : (purple.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (purple.pressed ? "#007ACC" : (purple.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: { menu.purbleFilter() }
@@ -1886,8 +1911,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (infrared.pressed ? "#007ACC" : (infrared.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (infrared.pressed ? "#007ACC" : (infrared.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: { menu.infraredFilter() }
@@ -1907,8 +1932,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (sun.pressed ? "#007ACC" : (sun.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (sun.pressed ? "#007ACC" : (sun.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: {
@@ -1931,8 +1956,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (tv.pressed ? "#007ACC" : (tv.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (tv.pressed ? "#007ACC" : (tv.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: { menu.tv() }
@@ -1952,8 +1977,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (frame.pressed ? "#007ACC" : (frame.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (frame.pressed ? "#007ACC" : (frame.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: {
@@ -1976,8 +2001,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (skew.pressed ? "#007ACC" : (skew.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (skew.pressed ? "#007ACC" : (skew.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: {
@@ -2000,8 +2025,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (oil.pressed ? "#007ACC" : (oil.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (oil.pressed ? "#007ACC" : (oil.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: {
@@ -2024,8 +2049,8 @@ Page {
 
                         background: Rectangle {
                             radius: 5
-                            color: (oldPhoto.pressed ? "#007ACC" : (oldPhoto.hovered ? "#505050" : "transparent"))
-                            border.color: "#555555"
+                            color: (oldPhoto.pressed ? "#007ACC" : (oldPhoto.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : "transparent"))
+                            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
                             border.width: 1
                         }
                         onClicked: {
@@ -2039,18 +2064,18 @@ Page {
         // Sliders
         Rectangle {
             id: sliders
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Column {
@@ -2063,7 +2088,7 @@ Page {
 
                     Text {
                         text: "Brightness"
-                        color: "white"
+                        color: (filterMenu.dark? "white" : "#000000")
                         font.pixelSize: 18
                         font.bold: true
                     }
@@ -2125,7 +2150,7 @@ Page {
 
                         contentItem: Text {
                             text: apply.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2133,8 +2158,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (apply.pressed ? "#007ACC" : (apply.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (apply.pressed ? "#007ACC" : (apply.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -2151,7 +2176,7 @@ Page {
 
                         contentItem: Text {
                             text: cancelBright.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2159,8 +2184,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (cancelBright.pressed ? "#007ACC" : (cancelBright.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (cancelBright.pressed ? "#007ACC" : (cancelBright.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: sliders.visible = false
@@ -2171,18 +2196,18 @@ Page {
 
         Rectangle {
             id: detectSlider
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Column {
@@ -2195,7 +2220,7 @@ Page {
 
                     Text {
                         text: "Edegs"
-                        color: "white"
+                        color: (filterMenu.dark? "white" : "#000000")
                         font.pixelSize: 18
                         font.bold: true
                     }
@@ -2256,7 +2281,7 @@ Page {
 
                         contentItem: Text {
                             text: applyDetect.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2264,8 +2289,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (applyDetect.pressed ? "#007ACC" : (applyDetect.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (applyDetect.pressed ? "#007ACC" : (applyDetect.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -2282,7 +2307,7 @@ Page {
 
                         contentItem: Text {
                             text: cancelDetect.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2290,8 +2315,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (cancelDetect.pressed ? "#007ACC" : (cancelDetect.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (cancelDetect.pressed ? "#007ACC" : (cancelDetect.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: detectSlider.visible = false
@@ -2302,18 +2327,18 @@ Page {
 
         Rectangle {
             id: blurSlider
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Column {
@@ -2326,7 +2351,7 @@ Page {
 
                     Text {
                         text: "Blur"
-                        color: "white"
+                        color: (filterMenu.dark? "white" : "#000000")
                         font.pixelSize: 18
                         font.bold: true
                     }
@@ -2387,7 +2412,7 @@ Page {
 
                         contentItem: Text {
                             text: applyblur.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2395,8 +2420,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (applyblur.pressed ? "#007ACC" : (applyblur.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (applyblur.pressed ? "#007ACC" : (applyblur.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -2413,7 +2438,7 @@ Page {
 
                         contentItem: Text {
                             text: cancelBlur.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2421,8 +2446,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (cancelBlur.pressed ? "#007ACC" : (cancelBlur.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (cancelBlur.pressed ? "#007ACC" : (cancelBlur.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: blurSlider.visible  = false
@@ -2433,18 +2458,18 @@ Page {
 
         Rectangle {
             id: contrastSlider
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Column {
@@ -2457,7 +2482,7 @@ Page {
 
                     Text {
                         text: "Contrast"
-                        color: "white"
+                        color: (filterMenu.dark? "white" : "#000000")
                         font.pixelSize: 18
                         font.bold: true
                     }
@@ -2518,7 +2543,7 @@ Page {
 
                         contentItem: Text {
                             text: applyContrast.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2526,8 +2551,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (applyContrast.pressed ? "#007ACC" : (applyContrast.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (applyContrast.pressed ? "#007ACC" : (applyContrast.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -2544,7 +2569,7 @@ Page {
 
                         contentItem: Text {
                             text: cancelContrast.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2552,8 +2577,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (cancelContrast.pressed ? "#007ACC" : (cancelContrast.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (cancelContrast.pressed ? "#007ACC" : (cancelContrast.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: contrastSlider.visible = false
@@ -2564,18 +2589,18 @@ Page {
 
         Rectangle {
             id: sunsSlider
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Column {
@@ -2588,7 +2613,7 @@ Page {
 
                     Text {
                         text: "Sun"
-                        color: "white"
+                        color: (filterMenu.dark? "white" : "#000000")
                         font.pixelSize: 18
                         font.bold: true
                     }
@@ -2649,7 +2674,7 @@ Page {
 
                         contentItem: Text {
                             text: applySun.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2657,8 +2682,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (applySun.pressed ? "#007ACC" : (applySun.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (applySun.pressed ? "#007ACC" : (applySun.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -2675,7 +2700,7 @@ Page {
 
                         contentItem: Text {
                             text: cancelSun.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2683,8 +2708,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (cancelSun.pressed ? "#007ACC" : (cancelSun.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (cancelSun.pressed ? "#007ACC" : (cancelSun.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: sunsSlider.visible = false
@@ -2695,18 +2720,18 @@ Page {
 
         Rectangle {
             id: skewSlider
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Column {
@@ -2719,7 +2744,7 @@ Page {
 
                     Text {
                         text: "Degree"
-                        color: "white"
+                        color: (filterMenu.dark? "white" : "#000000")
                         font.pixelSize: 18
                         font.bold: true
                     }
@@ -2780,7 +2805,7 @@ Page {
 
                         contentItem: Text {
                             text: applySkew.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2788,8 +2813,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (applySkew.pressed ? "#007ACC" : (applySkew.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (applySkew.pressed ? "#007ACC" : (applySkew.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -2806,7 +2831,7 @@ Page {
 
                         contentItem: Text {
                             text: cancelSkew.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2814,8 +2839,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (cancelSkew.pressed ? "#007ACC" : (cancelSkew.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (cancelSkew.pressed ? "#007ACC" : (cancelSkew.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: skewSlider.visible = false
@@ -2826,18 +2851,18 @@ Page {
 
         Rectangle {
             id: oilSlider
-            color: "#555555"
+            color: (filterMenu.dark? "#555555" : "#AAAAAA")
             height: 150
             anchors.bottom: parent.bottom
             anchors.left: filter.right
             anchors.right: parent.right
             visible: false
-            border.color: "#555555"
+            border.color: (filterMenu.dark? "#555555" : "#AAAAAA")
             border.width: 1
 
             gradient: Gradient {
-                GradientStop { position: 0.0; color: "#3A3A3A" }
-                GradientStop { position: 1.0; color: "#252525" }
+                GradientStop { position: 0.0; color: (filterMenu.dark? "#3A3A3A" : "#C5C5C5") }
+                GradientStop { position: 1.0; color: (filterMenu.dark? "#252525" : "#DADADA") }
             }
 
             Column {
@@ -2850,7 +2875,7 @@ Page {
 
                     Text {
                         text: "Percentage"
-                        color: "white"
+                        color: (filterMenu.dark? "white" : "#000000")
                         font.pixelSize: 18
                         font.bold: true
                     }
@@ -2911,7 +2936,7 @@ Page {
 
                         contentItem: Text {
                             text: applyOil.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2919,8 +2944,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (applyOil.pressed ? "#007ACC" : (applyOil.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (applyOil.pressed ? "#007ACC" : (applyOil.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: {
@@ -2937,7 +2962,7 @@ Page {
 
                         contentItem: Text {
                             text: cancelOil.text
-                            color: "white"
+                            color: (filterMenu.dark? "white" : "#000000")
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -2945,8 +2970,8 @@ Page {
 
                         background: Rectangle {
                             radius: 6
-                            color: (cancelOil.pressed ? "#007ACC" : (cancelOil.hovered ? "#505050" : "#3C3C3C"))
-                            border.color: "#666"
+                            color: (cancelOil.pressed ? "#007ACC" : (cancelOil.hovered ? (filterMenu.dark? "#505050" : "#AFAFAF") : (filterMenu.dark? "#3C3C3C" : "#C3C3C3")))
+                            border.color: (filterMenu.dark? "#666" : "#999999")
                         }
 
                         onClicked: oilSlider.visible = false

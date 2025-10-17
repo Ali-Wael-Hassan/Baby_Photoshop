@@ -10,6 +10,7 @@ qt_standard_project_setup(REQUIRES 6.8)
 
 qt_add_executable(appBaby_Photoshop_fix
     main.cpp
+    app_icon.rc
 )
 
 qt_add_qml_module(appBaby_Photoshop_fix
@@ -56,6 +57,10 @@ qt_add_qml_module(appBaby_Photoshop_fix
                 icon/plus.png
                 icon/Baby_Photoshop.png
                 icon/edge.png
+                icon/sun2.png
+                icon/dark.png
+                icon/DUCK.jpg
+                RESOURCES app_icon.rc
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -67,6 +72,7 @@ set_target_properties(appBaby_Photoshop_fix PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
+    OUTPUT_NAME "DUCK"
 )
 
 target_link_libraries(appBaby_Photoshop_fix
