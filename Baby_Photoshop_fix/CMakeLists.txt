@@ -55,6 +55,7 @@ qt_add_qml_module(appBaby_Photoshop_fix
                 icon/undo.png
                 icon/plus.png
                 icon/Baby_Photoshop.png
+                icon/edge.png
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
