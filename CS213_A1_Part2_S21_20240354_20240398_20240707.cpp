@@ -210,17 +210,18 @@ void ToneAndColorAdjustments::sun(Image &orig, int percent) {
 }
 // Youssef Mohamed Hassib 20240707
 void ToneAndColorAdjustments::tv(Image &orig) {
+    Image temp(orig);
+    const float PI = acos(-1);
     for (int y = 0; y < orig.height; ++y) {
+        float dark = ((y/3) % 2 == 1? 0.4f : 1.0f);
         for (int x = 0; x < orig.width; ++x) {
-            if (y % 2) {
-                for (int k = 0; k < 3; ++k) {
-                    float val = orig(x, y, k) - orig(x, y, k) * 0.4;
-                    orig(x, y, k) = min(255.0f, max(0.0f, val));
-
-                }
+            float noise = 1.0f + (((std::rand())%11) - 5) / 100.0f;
+            for(int c = 0; c < orig.channels; ++c) {
+                temp(x,y,c) = std::min(255.0f,std::max(orig(x,y,c) * dark * noise,0.0f));
             }
         }
     }
+    std::swap(orig,temp);
 }
 //===========================================================================================================================
 
